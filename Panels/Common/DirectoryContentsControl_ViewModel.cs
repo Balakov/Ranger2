@@ -257,6 +257,21 @@ namespace Ranger2
                     AddNewFile();
                 });
             }
+
+            public void ShowFileProperties()
+            {
+                var selectedFileViewModels = m_files.Where(x => x.IsSelected);
+                int numSelected = selectedFileViewModels.Count();
+
+                if (numSelected == 1)
+                {
+                    FileOperations.ShowFileProperties(selectedFileViewModels.First().FullPath);
+                }
+                else if (numSelected > 1)
+                {
+                    FileOperations.ShowMultiFileProperties(selectedFileViewModels.Select(x => x.FullPath).ToList());
+                }
+            }
         }
 
     }

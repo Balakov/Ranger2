@@ -356,7 +356,7 @@ namespace Ranger2
 
             MenuPropertiesCommand = DelegateCommand.Create(() => 
             {
-                FileOperations.ShowFileProperties(FullPath);
+                m_parentViewModel.ShowFileProperties();
             });
         }
     }

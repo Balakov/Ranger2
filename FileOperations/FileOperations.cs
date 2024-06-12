@@ -313,16 +313,14 @@ namespace Ranger2
         // http://www.codeproject.com/KB/files/JFileManager.aspx
         //
 
-        /*
         public static void ShowMultiFileProperties(List<string> paths)
         {
             var pdtobj = new DataObject();
             MemoryStream msLinks = FileListToShellIDListArray(paths);
-            pdtobj.SetData("Shell IDList Array", true, msLinks);
+            pdtobj.SetData("Shell IDList Array", msLinks, true);
 
             SHMultiFileProperties(pdtobj, 0);
         }
-        */
 
         private static object[] FileListToIDListArray(List<string> listObjects)
         {

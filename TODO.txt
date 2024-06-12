@@ -1,2 +1,3 @@
 ﻿Key sorting doesn't work.
 Status bar showing total directory size and drive free space.
+Can't drop files into empty directory
