@@ -93,7 +93,9 @@ namespace Ranger2
             {
                 case IconType.File:
                     string fileExtension = System.IO.Path.GetExtension(path);
-                    if (m_fileExtensionCache.TryGetValue(fileExtension, out var bitmapSource))
+                    // Don't cache exe icons by extension as they will all be different.
+                    if (fileExtension != ".exe" && 
+                        m_fileExtensionCache.TryGetValue(fileExtension, out var bitmapSource))
                     {
                         owner.IconLoaded(bitmapSource);
                         return;
