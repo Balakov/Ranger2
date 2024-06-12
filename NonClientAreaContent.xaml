@@ -1,0 +1,51 @@
+﻿<Grid x:Class="Ranger2.NonClientAreaContent"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
+      xmlns:converters="clr-namespace:Ranger2.Converters"
+      Height="29"
+      xmlns:hc="https://handyorg.github.io/handycontrol">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+    </Grid.ColumnDefinitions>
+
+    <Grid.Resources>
+        <converters:BoolToIconConverter x:Key="BoolToIconConverterSetLight" TrueValue="Sun" FalseValue="SunFill" />
+        <converters:BoolToIconConverter x:Key="BoolToIconConverterSetDark" TrueValue="MoonFill" FalseValue="Moon" />
+    </Grid.Resources>
+    
+    <!--
+    <StackPanel VerticalAlignment="Stretch" Orientation="Horizontal">
+        <Menu Margin="10,0,0,0" Background="Transparent">
+            <MenuItem Height="29" Header="Repository">
+                <MenuItem Header="GitHub">
+                </MenuItem>
+                <MenuItem Header="NuGet">
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Height="29" Header="About">
+                <MenuItem Header="Contributors">
+                </MenuItem>
+                <MenuItem Header="Email">
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+    </StackPanel>
+    -->
+
+    <Button Grid.Column="1" 
+            Command="{Binding SetLightModeCommand}"
+            Background="Transparent"
+            BorderBrush="Transparent">
+        <bi:BootstrapIcon Icon="{Binding IsLightMode,Converter={StaticResource BoolToIconConverterSetLight}}" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+    </Button>
+
+    <Button Grid.Column="2" 
+            Command="{Binding SetDarkModeCommand}"
+            Background="Transparent"
+            BorderBrush="Transparent">
+        <bi:BootstrapIcon Icon="{Binding IsLightMode,Converter={StaticResource BoolToIconConverterSetDark}}" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+    </Button>
+</Grid>

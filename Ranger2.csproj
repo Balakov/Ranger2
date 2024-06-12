@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+    <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Art\Ranger 2 Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Art\Ranger 2 Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BootstrapIcons.Wpf" Version="1.11.0" />
+    <PackageReference Include="HandyControls" Version="3.5.3" />
+    <PackageReference Include="Magick.NET-Q8-x64" Version="13.9.1" />
+    <PackageReference Include="Magick.NET.SystemWindowsMedia" Version="7.2.6" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Extended" Version="2.0.0" />
+    <PackageReference Include="SkiaSharp.HarfBuzz" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="2.88.8" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DynamicViewModelProperties\" />
+    <Folder Include="NetworkShares\" />
+  </ItemGroup>
+
+</Project>

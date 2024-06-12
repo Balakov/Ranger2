@@ -1,0 +1,263 @@
+﻿using HandyControl.Tools.Command;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Windows.Input;
+
+namespace Ranger2
+{
+    public partial class DirectoryContentsControl
+    {
+        public interface IScrollIntoViewProvider
+        {
+            void ScrollIntoView(FileSystemObjectViewModel item);
+        }
+
+        public abstract partial class ViewModel : Utility.UndoableViewModelBase,
+                                                  KeySearch.IVisualSearchProvider
+        {
+            private string m_currentDirectory;
+
+            protected PanelContext m_context;
+            protected UserSettings.FilePanelSettings m_settings;
+            protected ViewFilter.ViewMask m_viewMask = ViewFilter.ViewMask.ShowHidden | ViewFilter.ViewMask.ShowSystem;
+            protected DirectoryScanner m_directoryScanner = new DirectoryScanner();
+            protected PathHistory m_pathHistory;
+            protected IDirectoryWatcher m_directoryWatcher;
+            protected bool m_isLoading;
+
+            protected ObservableCollection<FileSystemObjectViewModel> m_files { get; } = new();
+            public IEnumerable<FileSystemObjectViewModel> Files => m_files;
+
+            public bool ShowLoadingUI => m_isLoading;
+            public bool ShowFilesUI => !m_isLoading && m_files.Count > 0;
+            public bool ShowNoFilesUI => !m_isLoading && m_files.Count == 0;
+
+            public ICommand MenuCommandPropmtCommand { get; private set; }
+            public ICommand MenuCopyFileListCommand { get; private set; }
+            public ICommand MenuNewFolderCommand { get; private set; }
+            public ICommand MenuNewFileCommand { get; private set; }
+
+            public BreadcrumbsViewModel Breadcrumbs { get; } = new();
+            public ICommand OnBreadcrumbClickedCommand { get; }
+
+            private bool m_isFocused;
+            public bool IsFocused
+            {
+                get => m_isFocused;
+                set => OnPropertyChanged(ref m_isFocused, value);
+            }
+
+            private bool m_isCurrentPanel;
+            public bool IsCurrentPanel
+            {
+                get => m_isCurrentPanel;
+                set
+                {
+                    if (OnPropertyChanged(ref m_isCurrentPanel, value))
+                    {
+                        var dirChange = m_context.DirectoryChangeRequester;
+
+                        if (value)
+                        {
+                            dirChange.OnDirectoryChanged += OnDirectoryChangedInternal;
+                            m_pathHistory.EnablePathChangeCapture();
+                            IsFocused = true;
+                        }
+                        else
+                        {
+                            dirChange.OnDirectoryChanged -= OnDirectoryChangedInternal;
+                            m_pathHistory.DisablePathChangeCapture();
+                        }
+                    }
+                }
+            }
+
+            public string CurrentPath => m_settings.Path;
+
+            public void HistoryBack() => m_pathHistory.Back();
+            public void HistoryForward() => m_pathHistory.Forward();
+
+            // Derived class overrides
+            public abstract DirectoryListingType ListingType { get; }
+
+            private IScrollIntoViewProvider m_scrollIntoViewProvider;
+            public void SetScrollIntoViewProvider(IScrollIntoViewProvider scrollIntoViewProvider) => m_scrollIntoViewProvider = scrollIntoViewProvider;
+
+            protected abstract void OnDirectoryChanged(string path);
+            protected abstract void OnActivateItem(FileSystemObjectViewModel viewModel);
+            protected abstract void OnItemAdded(string path);
+
+            protected KeySearch m_keySearch;
+
+            protected ViewModel(PanelContext context,
+                                UserSettings.FilePanelSettings settings,
+                                PathHistory history,
+                                IDirectoryWatcher directoryWatcher)
+            {
+                m_context = context;
+                m_settings = settings;
+                m_pathHistory = history;
+                m_directoryWatcher = directoryWatcher;
+
+                if (!string.IsNullOrEmpty(settings.Path))
+                {
+                    OnDirectoryChangedInternal(settings.Path, null);
+                    m_pathHistory.PushPath(settings.Path);
+                }
+
+                OnBreadcrumbClickedCommand = DelegateCommand.Create((o) =>
+                {
+                    m_context.DirectoryChangeRequester.SetDirectory(o as string);
+                });
+
+                m_keySearch = new(this);
+
+                CreateCommands();
+            }
+
+            protected void UpdateUIVisibility()
+            {
+                OnPropertyChanged(nameof(ShowLoadingUI));
+                OnPropertyChanged(nameof(ShowFilesUI));
+                OnPropertyChanged(nameof(ShowNoFilesUI));
+            }
+
+            private void OnDirectoryChangedInternal(string path, string previousPath)
+            {
+                m_currentDirectory = path;
+                m_settings.Path = path;
+
+                Breadcrumbs.SetPath(path);
+
+                OnDirectoryChanged(path);
+            }
+
+            private bool TryFindFile(string path, out FileSystemObjectViewModel fileViewModel)
+            {
+                fileViewModel = m_files.FirstOrDefault(x => x.FullPath == path);
+                return fileViewModel != null;
+            }
+
+            public void RefreshDirectory()
+            {
+                OnDirectoryChanged(m_currentDirectory);
+            }
+
+            public void OnCommonMouseDoubleClick(FileSystemObjectViewModel viewModel)
+            {
+                OnActivateItem(viewModel);
+            }
+
+            public void OnCommonItemKeyDown(KeyEventArgs e, FileSystemObjectViewModel viewModel)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    OnActivateItem(viewModel);
+                }
+            }
+
+            private bool TryGetSelectedFiles(out IEnumerable<FileSystemObjectViewModel> viewModels)
+            {
+                viewModels = Files.Where(x => x.IsSelected).ToList();
+                return viewModels.Any();
+            }
+
+            private bool TryGetSelectedFile(out FileSystemObjectViewModel viewModel)
+            {
+                var selectedFiles = Files.Where(x => x.IsSelected);
+                if (selectedFiles.Count() == 1)
+                {
+                    viewModel = selectedFiles.First();
+                    return true;
+                }
+                else
+                {
+                    viewModel = null;
+                    return false;
+                }
+            }
+
+            public void OnItemsSelected(System.Collections.IList addedItems)
+            {
+                if (ShouldEnableEventHandlers && addedItems.Count > 0)
+                {
+                    m_keySearch.SetSearchLimitType((addedItems[0] is DirectoryViewModel) ? KeySearch.SearchLimitType.Directories : KeySearch.SearchLimitType.Files);
+                }
+            }
+
+            protected DirectoryViewModel CreateDirectoryViewModel(string directory, ViewFilter.ViewMask viewMask)
+            {
+                try
+                {
+                    if (FileSystemObjectViewModel.DirectoryPassesViewFilter(directory, viewMask, out var info))
+                    {
+                        var directoryViewModel = new DirectoryViewModel(info,
+                                                                        m_context.DirectoryChangeRequester,
+                                                                        m_context.IconCache,
+                                                                        this);
+                        return directoryViewModel;
+                    }
+                }
+                catch
+                {
+                    // We may not be able to create info objects for private network shares 
+                }
+
+                return null;
+            }
+
+            protected IEnumerable<DirectoryViewModel> CreateDirectoryViewModels(IEnumerable<string> directories)
+            {
+                List<DirectoryViewModel> viewModels = new();
+
+                foreach (string subdirectory in directories)
+                {
+                    var directoryViewModel = CreateDirectoryViewModel(subdirectory, m_viewMask);
+                    if (directoryViewModel != null)
+                    {
+                        viewModels.Add(directoryViewModel);
+                    }
+                }
+
+                return viewModels;
+            }
+
+            private void CreateCommands()
+            {
+                MenuCommandPropmtCommand = DelegateCommand.Create(() =>
+                {
+                    FileOperations.ExecuteFile("cmd.exe", null, CurrentPath);
+                });
+
+                MenuCopyFileListCommand = DelegateCommand.Create(() =>
+                {
+                    try
+                    {
+                        var files = Directory.EnumerateFiles(CurrentPath, "*", SearchOption.AllDirectories);
+                        if (files.Any())
+                        {
+                            ClipboardManager.CopyPathsToClipboard(files.Select(x => new ClipboardManager.FileOperationPath() { FullPath = x }),
+                                                                  FileOperations.OperationType.Copy,
+                                                                  ClipboardManager.ClipboardDataTypes.Text);
+                        }
+                    }
+                    catch { }
+                });
+
+                MenuNewFolderCommand = DelegateCommand.Create(() =>
+                {
+                    AddNewFolder();
+                });
+
+                MenuNewFileCommand = DelegateCommand.Create(() =>
+                {
+                    AddNewFile();
+                });
+            }
+        }
+
+    }
+}

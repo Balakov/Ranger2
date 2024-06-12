@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="Ranger2.FontPanel"
+             xmlns:local="clr-namespace:Ranger2"
+             xmlns:converters="clr-namespace:Ranger2.Converters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.WPF"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d"
+             FocusManager.FocusedElement="{Binding ElementName=ListViewInstance}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Common\DirectoryContentsControlResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <local:FontPanelTemplateSelector x:Key="FontPanelTemplateSelector" />
+
+            <DataTemplate x:Key="FontTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Name}" Style="{StaticResource TextBlockDefaultSecLight}" HorizontalAlignment="Stretch" Margin="10,0,0,0" />
+                    <skia:SKElement Grid.Row="1" PaintSurface="OnPaintSurface" IgnorePixelScaling="False" Height="45" Loaded="SKElement_Loaded" Margin="10,0,0,0" />
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Button Visibility="{Binding ShowNoFilesUI,Converter={StaticResource BoolToVisibilityConverter}}" Style="{x:Null}">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </Button.Template>
+            <TextBlock Text="No Font Files" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockDefault}" />
+        </Button>
+
+        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Background="Transparent" Foreground="#40000000" 
+                      Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+        <Grid Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <hc:SearchBar Text="{Binding FontFilterText,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5" />
+
+            <ListView Grid.Row="1" 
+                      x:Name="ListViewInstance"
+                      SelectionMode="Extended"
+                      local:FocusExtension.IsFocused="{Binding IsFocused}"
+                      ItemsSource="{Binding FilteredFiles}"
+                      ItemTemplateSelector="{StaticResource FontPanelTemplateSelector}"
+                      Style="{StaticResource ListView.Small}"
+                      SelectionChanged="ListView_Selected"
+                      AllowDrop="True"
+                      DragOver="ListView_DragOver"
+                      Drop="ListView_Drop">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}" />
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu ItemsSource="{StaticResource FileContextMenuItems}" />
+                            </Setter.Value>
+                        </Setter>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                        <EventSetter Event="KeyDown" Handler="ListViewItem_KeyDown" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+
+        <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+            <Border x:Name="DragSelectionBorder"
+                    BorderBrush="{DynamicResource PrimaryBrush}"
+                    BorderThickness="1"
+                    Background="LightBlue"
+                    CornerRadius="1"
+                    Opacity="0.5" />
+        </Canvas>
+    </Grid>
+</UserControl>

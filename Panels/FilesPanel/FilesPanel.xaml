@@ -1,0 +1,99 @@
+<UserControl x:Class="Ranger2.FilesPanel"
+             xmlns:local="clr-namespace:Ranger2"
+             xmlns:converters="clr-namespace:Ranger2.Converters"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             Background="Transparent"
+             FocusManager.FocusedElement="{Binding ElementName=ListViewInstance}"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Common\DirectoryContentsControlResourceDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+
+        <Button Visibility="{Binding ShowNoFilesUI,Converter={StaticResource BoolToVisibilityConverter}}" Style="{x:Null}">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </Button.Template>
+            <TextBlock Text="No Files" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockDefault}" />
+        </Button>
+
+        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Foreground="#40000000" 
+                      Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
+        
+        <ListView x:Name="ListViewInstance"
+                  SelectionMode="Extended"
+                  local:FocusExtension.IsFocused="{Binding IsFocused}"
+                  ItemsSource="{Binding Files}"
+                  ItemTemplate="{StaticResource DCCFileSystemObjectTemplate}"
+                  Style="{StaticResource ListView.Small}"
+                  Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}"
+                  SelectionChanged="ListView_Selected"
+                  AllowDrop="True"
+                  DragOver="ListView_DragOver"
+                  Drop="ListView_Drop"
+                  SizeChanged="ListView_SizeChanged"
+                  local:GridViewSort.ShowSortGlyph="True"
+                  local:GridViewSort.AutoSort="True">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu ItemsSource="{StaticResource FileContextMenuItems}" />
+                        </Setter.Value>
+                    </Setter>
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                    <EventSetter Event="KeyDown" Handler="ListViewItem_KeyDown" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Header="File" CellTemplate="{StaticResource DCCFileSystemObjectTemplate}" local:GridViewSort.PropertyName="NameSortValue" />
+                    <GridViewColumn Header="Size" Width="100" local:GridViewSort.PropertyName="SizeSortValue">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding SizeString}" HorizontalAlignment="Left" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Attribs" Width="70">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding AttribsString}" HorizontalAlignment="Left" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Date" Width="140" local:GridViewSort.PropertyName="DateSortValue">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DateString}" HorizontalAlignment="Left" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+            <Border x:Name="DragSelectionBorder"
+                    BorderBrush="{DynamicResource PrimaryBrush}"
+                    BorderThickness="1"
+                    Background="LightBlue"
+                    CornerRadius="1"
+                    Opacity="0.5" />
+        </Canvas>
+    </Grid> 
+</UserControl>

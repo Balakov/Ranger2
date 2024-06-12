@@ -1,0 +1,58 @@
+﻿<Window x:Class="Ranger2.RenameBookmarkDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
+        xmlns:local="clr-namespace:Ranger2"
+        mc:Ignorable="d"
+        Width="640"
+        SizeToContent="Height"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        ShowInTaskbar="false"
+        Title="Rename Bookmark"
+        FocusManager.FocusedElement="{Binding ElementName=NameTextBoxInstance}"
+        Background="Transparent">
+    <hc:TransitioningContentControl>
+        <Border CornerRadius="10" 
+                Background="{DynamicResource RegionBrush}" 
+                Effect="{DynamicResource EffectShadow5}" 
+                Margin="30" 
+                BorderThickness="1" 
+                BorderBrush="{DynamicResource BorderBrush}">
+            <DockPanel Margin="30">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Rename Bookmark" Style="{StaticResource TextBlockSubTitle}" Margin="0,0,0,10" />
+
+                    <TextBox Grid.Row="1" Margin="0,0,0,10" x:Name="NameTextBoxInstance" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Margin="0,0,0,10" x:Name="PathTextBoxInstance" VerticalAlignment="Center" />
+
+                    <hc:SimpleStackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
+                        <Button Content="OK" 
+                                IsDefault="True"
+                                Margin="0,0,3,0" 
+                                Width="100" 
+                                Click="OKButtonClick" 
+                                x:Name="OKButtonInstance"
+                                Style="{StaticResource ButtonSuccess}" />
+                        <Button Content="Cancel" 
+                                IsCancel="True"
+                                Margin="3,0,0,0" 
+                                Width="100" 
+                                Click="CancelButtonClick" />
+                    </hc:SimpleStackPanel>
+                </Grid>
+            </DockPanel>
+        </Border>
+    </hc:TransitioningContentControl>
+</Window>
+

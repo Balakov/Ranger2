@@ -1,0 +1,2 @@
+﻿Can't add new files/folders to empty directory
+Key sorting doesn't work.
