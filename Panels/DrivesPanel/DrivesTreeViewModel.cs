@@ -84,12 +84,14 @@ namespace Ranger2
                 if (string.IsNullOrEmpty(path))
                     return;
 
-                // Expand the nodes of the tree and select the new directory
+                // Expand the nodes of the tree up to the selected directory
                 DrivesTreeDirectoryViewModel currentDirectory = Directories.First();
-                currentDirectory.IsExpanded = true;
 
-                string[] pathSplit = path.ToLower().Split([Path.DirectorySeparatorChar, 
-                                                            Path.AltDirectorySeparatorChar]);
+                IEnumerable<string> pathSplit = path.ToLower().Split([Path.DirectorySeparatorChar, 
+                                                                      Path.AltDirectorySeparatorChar]);
+
+                // Remove the leaf entry as we don't want to expand into the path automatically
+                pathSplit = pathSplit.Take(pathSplit.Count() - 1);
 
                 string currentPath = string.Empty;
 
@@ -109,6 +111,7 @@ namespace Ranger2
                         if (childDirectory.Path.ToLower() == currentPath)
                         {
                             childDirectory.IsExpanded = true;
+                            Debug.Log($"Expanding {currentPath}");
                             currentDirectory = childDirectory;
                             break;
                         }
