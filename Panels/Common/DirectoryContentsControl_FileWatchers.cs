@@ -18,12 +18,14 @@ namespace Ranger2
                             {
                                 m_files.Add(directoryViewModel);
                                 UpdateUIVisibility();
+                                UpdateStatusBar(driveSpaceChanged: true);
                             }
                         }
                         else if (File.Exists(path))
                         {
                             OnItemAdded(path);
                             UpdateUIVisibility();
+                            UpdateStatusBar(driveSpaceChanged: true);
                         }
                         break;
                     case WatcherChangeTypes.Deleted:
@@ -31,6 +33,7 @@ namespace Ranger2
                         {
                             m_files.Remove(deletedFileViewModel);
                             UpdateUIVisibility();
+                            UpdateStatusBar(driveSpaceChanged: true);
                         }
                         break;
                     case WatcherChangeTypes.Changed:

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -42,12 +43,27 @@ namespace Ranger2
 
             public BreadcrumbsViewModel Breadcrumbs { get; } = new();
             public ICommand OnBreadcrumbClickedCommand { get; }
+            public DriveInfoStatusBar m_statusBar = new DriveInfoStatusBar();
 
             private bool m_isFocused;
             public bool IsFocused
             {
                 get => m_isFocused;
                 set => OnPropertyChanged(ref m_isFocused, value);
+            }
+
+            private string m_statusBarDriveSpaceString;
+            public string StatusBarDriveSpaceString
+            {
+                get => m_statusBarDriveSpaceString;
+                set => OnPropertyChanged(ref m_statusBarDriveSpaceString, value);
+            }
+
+            private string m_statusBarSelectedFilesString;
+            public string StatusBarSelectedFilesString
+            {
+                get => m_statusBarSelectedFilesString;
+                set => OnPropertyChanged(ref m_statusBarSelectedFilesString, value);
             }
 
             private bool m_isCurrentPanel;
@@ -125,12 +141,18 @@ namespace Ranger2
                 OnPropertyChanged(nameof(ShowNoFilesUI));
             }
 
+            protected void UpdateStatusBar(bool driveSpaceChanged)
+            {
+                m_statusBar.UpdateStatus(driveSpaceChanged, this);
+            }
+
             private void OnDirectoryChangedInternal(string path, string previousPath)
             {
                 m_currentDirectory = path;
                 m_settings.Path = path;
 
                 Breadcrumbs.SetPath(path);
+                UpdateStatusBar(true);
 
                 OnDirectoryChanged(path);
             }
@@ -182,6 +204,8 @@ namespace Ranger2
 
             public void OnItemsSelected(System.Collections.IList addedItems)
             {
+                UpdateStatusBar(false);
+
                 if (ShouldEnableEventHandlers && addedItems.Count > 0)
                 {
                     m_keySearch.SetSearchLimitType((addedItems[0] is DirectoryViewModel) ? KeySearch.SearchLimitType.Directories : KeySearch.SearchLimitType.Files);

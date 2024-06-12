@@ -29,12 +29,13 @@
             <local:FontPanel />
         </DataTemplate>
     </UserControl.Resources>
-    
+
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Border Height="10" Margin="0,0,0,3" Background="Transparent">
@@ -79,7 +80,7 @@
             </hc:UniformSpacingPanel>
         </Grid>
 
-        <ContentPresenter Grid.Row="2" ContentTemplateSelector="{StaticResource DirectoryContentsTemplateSelector}" Content="{Binding {}}">
+        <ContentPresenter Grid.Row="2" ContentTemplateSelector="{StaticResource DirectoryContentsTemplateSelector}" Content="{Binding {}}" Margin="0,0,0,5">
             <ContentPresenter.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="New Folder" Command="{Binding MenuNewFolderCommand}" />
@@ -92,5 +93,17 @@
                 </ContextMenu>
             </ContentPresenter.ContextMenu>
         </ContentPresenter>
+
+        <Border Grid.Row="3" Padding="10,5" Style="{StaticResource BorderRegion}" Margin="0,0,2,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="{Binding StatusBarDriveSpaceString}" />
+                <TextBlock Grid.Column="1" Text="{Binding StatusBarSelectedFilesString}" HorizontalAlignment="Right" />
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
