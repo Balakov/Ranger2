@@ -27,7 +27,7 @@ namespace Ranger2
                 {
                     try
                     {
-                        File.WriteAllText(newFilePath, string.Empty);
+                        File.WriteAllText(dialog.RenamedFile, string.Empty);
                     }
                     catch { }
                 }
