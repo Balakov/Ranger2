@@ -20,33 +20,20 @@
     </UserControl.Resources>
     
     <Grid>
-
-        <Button Visibility="{Binding ShowNoFilesUI,Converter={StaticResource BoolToVisibilityConverter}}" Style="{x:Null}">
-            <Button.Template>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <ContentPresenter />
-                </ControlTemplate>
-            </Button.Template>
-            <TextBlock Text="No Files" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockDefault}" />
-        </Button>
-
-        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Foreground="#40000000" 
-                      Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
-        
         <ListView x:Name="ListViewInstance"
                   SelectionMode="Extended"
                   local:FocusExtension.IsFocused="{Binding IsFocused}"
                   ItemsSource="{Binding Files}"
                   ItemTemplate="{StaticResource DCCFileSystemObjectTemplate}"
                   Style="{StaticResource ListView.Small}"
-                  Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}"
                   SelectionChanged="ListView_Selected"
                   AllowDrop="True"
                   DragOver="ListView_DragOver"
                   Drop="ListView_Drop"
                   SizeChanged="ListView_SizeChanged"
                   local:GridViewSort.ShowSortGlyph="True"
-                  local:GridViewSort.AutoSort="True">
+                  local:GridViewSort.AutoSort="True"
+                  hc:Empty.ShowEmpty="True">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">
                     <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}" />
@@ -86,6 +73,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Foreground="#40000000" 
+              Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"
+              Margin="0,0,0,150"/>
 
         <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
             <Border x:Name="DragSelectionBorder"

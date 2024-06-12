@@ -50,6 +50,7 @@ namespace Ranger2
 
                 public override void OnActivate()
                 {
+                    FileOperations.ExecuteFile(FullPath);
                 }
             }
 

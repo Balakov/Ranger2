@@ -32,18 +32,6 @@
     </UserControl.Resources>
     
     <Grid>
-        <Button Visibility="{Binding ShowNoFilesUI,Converter={StaticResource BoolToVisibilityConverter}}" Style="{x:Null}">
-            <Button.Template>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <ContentPresenter />
-                </ControlTemplate>
-            </Button.Template>
-            <TextBlock Text="No Font Files" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockDefault}" />
-        </Button>
-
-        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Background="Transparent" Foreground="#40000000" 
-                      Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
-
         <Grid Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -62,7 +50,8 @@
                       SelectionChanged="ListView_Selected"
                       AllowDrop="True"
                       DragOver="ListView_DragOver"
-                      Drop="ListView_Drop">
+                      Drop="ListView_Drop"
+                      hc:Empty.ShowEmpty="True">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}" />
@@ -77,6 +66,9 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
+
+        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Background="Transparent" Foreground="#40000000"
+                              Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
 
         <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
             <Border x:Name="DragSelectionBorder"

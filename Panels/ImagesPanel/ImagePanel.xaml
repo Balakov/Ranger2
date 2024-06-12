@@ -65,29 +65,17 @@
     </UserControl.Resources> 
     
     <Grid>
-        <Button Visibility="{Binding ShowNoFilesUI,Converter={StaticResource BoolToVisibilityConverter}}" Style="{x:Null}">
-            <Button.Template>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <ContentPresenter />
-                </ControlTemplate>
-            </Button.Template>
-            <TextBlock Text="No Supported Files" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource TextBlockDefault}" />
-        </Button>
-
-        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Background="Transparent" Foreground="#40000000" 
-                              Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"/>
-        
         <ListBox x:Name="ListBoxInstance"
                  ItemsSource="{Binding Files}"
                  ItemContainerStyle="{StaticResource CentredListBoxItem}" 
                  ItemTemplateSelector="{StaticResource ImagePanelTemplateSelector}"
                  SelectionMode="Extended"
-                 Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}"
                  local:FocusExtension.IsFocused="{Binding IsFocused}"
                  AllowDrop="True"
                  DragOver="ListBox_DragOver"
                  Drop="ListBox_Drop"
-                 SelectionChanged="ListBox_Selected">
+                 SelectionChanged="ListBox_Selected"
+                 hc:Empty.ShowEmpty="True">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <hc:WaterfallPanel hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY200}" 
@@ -97,6 +85,10 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
+
+        <hc:CircleProgressBar IsIndeterminate="True" Width="20" Height="20" ArcThickness="2" Background="Transparent" Foreground="#40000000" 
+                              Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"
+                              Margin="0,0,0,150"/>
 
         <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
             <Border x:Name="DragSelectionBorder"
