@@ -1,2 +1,2 @@
-﻿Can't add new files/folders to empty directory
-Key sorting doesn't work.
+﻿Key sorting doesn't work.
+Status bar showing total directory size and drive free space.

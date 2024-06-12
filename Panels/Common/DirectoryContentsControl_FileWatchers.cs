@@ -17,17 +17,20 @@ namespace Ranger2
                             if (directoryViewModel != null)
                             {
                                 m_files.Add(directoryViewModel);
+                                UpdateUIVisibility();
                             }
                         }
                         else if (File.Exists(path))
                         {
                             OnItemAdded(path);
+                            UpdateUIVisibility();
                         }
                         break;
                     case WatcherChangeTypes.Deleted:
                         if (TryFindFile(path, out var deletedFileViewModel))
                         {
                             m_files.Remove(deletedFileViewModel);
+                            UpdateUIVisibility();
                         }
                         break;
                     case WatcherChangeTypes.Changed:
