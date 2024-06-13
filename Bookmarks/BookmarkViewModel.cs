@@ -68,7 +68,7 @@ namespace Ranger2
 
             public ICommand ActivateBookmarkCommand { get; }
             public ICommand DeleteBookmarkCommand { get; }
-            public ICommand RenameBookmarkCommand { get; }
+            public ICommand EditBookmarkCommand { get; }
             public ICommand OrganiseBookmarksCommand { get; }
 
             public BookmarkViewModel(UserSettings.Bookmark bookmark, BookmarkContext context, ViewModel parentViewModel)
@@ -82,7 +82,7 @@ namespace Ranger2
 
                 ActivateBookmarkCommand = DelegateCommand.Create(Activate);
                 DeleteBookmarkCommand = DelegateCommand.Create(Delete);
-                RenameBookmarkCommand = DelegateCommand.Create(Rename);
+                EditBookmarkCommand = DelegateCommand.Create(EditBookmark);
                 OrganiseBookmarksCommand = DelegateCommand.Create(() => m_parentViewModel.OrganiseBookmarks());
             }
 
@@ -120,9 +120,9 @@ namespace Ranger2
                 m_context.BookmarkDeleter.DeleteBookmark(this);
             }
 
-            private void Rename()
+            private void EditBookmark()
             {
-                var dialog = new RenameBookmarkDialog(m_bookmark);
+                var dialog = new EditBookmarkDialog(m_bookmark);
                 if(dialog.ShowDialog() == true)
                 {
                     m_isFile = File.Exists(dialog.RenamedBookmarkPath);

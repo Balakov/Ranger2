@@ -3,12 +3,12 @@ using System.Windows;
 
 namespace Ranger2
 {
-    public partial class RenameBookmarkDialog : Window
+    public partial class EditBookmarkDialog : Window
     {
         public string RenamedBookmark => NameTextBoxInstance.Text;
         public string RenamedBookmarkPath => PathTextBoxInstance.Text;
 
-        public RenameBookmarkDialog(UserSettings.Bookmark bookmark)
+        public EditBookmarkDialog(UserSettings.Bookmark bookmark)
         {
             InitializeComponent();
             Owner = Application.Current.MainWindow;

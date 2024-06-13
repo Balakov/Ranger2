@@ -113,10 +113,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Style="{StaticResource ToolbarButton}" Command="{Binding ActivateBookmarkCommand}" Margin="0,0,5,0">
+                    <Button Style="{StaticResource ToolbarButton}" Command="{Binding ActivateBookmarkCommand}" Margin="0,0,5,0" ToolTip="{Binding Path}">
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Rename Bookmark..."
+                                <MenuItem Header="Edit Bookmark..."
                                           Command="{Binding RenameBookmarkCommand}" />
                                 <MenuItem Header="Delete Bookmark"
                                           Command="{Binding DeleteBookmarkCommand}" />

@@ -1,4 +1,4 @@
-﻿<Window x:Class="Ranger2.RenameBookmarkDialog"
+﻿<Window x:Class="Ranger2.EditBookmarkDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,7 +13,7 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         ShowInTaskbar="false"
-        Title="Rename Bookmark"
+        Title="Edit Bookmark"
         FocusManager.FocusedElement="{Binding ElementName=NameTextBoxInstance}"
         Background="Transparent">
     <hc:TransitioningContentControl>
@@ -31,7 +31,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Rename Bookmark" Style="{StaticResource TextBlockSubTitle}" Margin="0,0,0,10" />
+                    <TextBlock Grid.Row="0" Text="Edit Bookmark" Style="{StaticResource TextBlockSubTitle}" Margin="0,0,0,10" />
 
                     <TextBox Grid.Row="1" Margin="0,0,0,10" x:Name="NameTextBoxInstance" VerticalAlignment="Center" />
                     <TextBox Grid.Row="2" Margin="0,0,0,10" x:Name="PathTextBoxInstance" VerticalAlignment="Center" />
