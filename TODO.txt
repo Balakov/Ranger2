@@ -1,5 +1,4 @@
-﻿Key sorting doesn't work.
-Can't drag files into root of a directory that's full of directories.
+﻿Can't drag files into root of a directory that's full of directories.
 Drive insertion/removal events.
 Keep selected file when going back/forward
 Select directory in tree when syncing directory.

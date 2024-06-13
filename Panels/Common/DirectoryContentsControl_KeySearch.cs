@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Ranger2
 {
@@ -6,44 +7,38 @@ namespace Ranger2
     {
         public partial class ViewModel
         {
-            public bool SelectClosestFile(string searchString, KeySearch.SearchLimitType limitType)
+            public bool SelectClosestFile(string search, int searchIndex)
             {
-                FileSystemObjectViewModel matchingItem = null;
+                search = search.ToLower();
 
-                switch (limitType)
-                {
-                    case KeySearch.SearchLimitType.None:
-                        matchingItem = m_files.FirstOrDefault(x => x.Name.ToLower().StartsWith(searchString.ToLower()));
-                        break;
-                    case KeySearch.SearchLimitType.Files:
-                        matchingItem = m_files.FirstOrDefault(x => !(x is DirectoryViewModel) &&
-                                                                   x.Name.ToLower().StartsWith(searchString.ToLower()));
-                        break;
-                    case KeySearch.SearchLimitType.Directories:
-                        matchingItem = m_files.FirstOrDefault(x => (x is DirectoryViewModel) &&
-                                                                   x.Name.ToLower().StartsWith(searchString.ToLower()));
-                        break;
-                }
+                List<FileSystemObjectViewModel> matches = m_files.Where(x => x.Name.ToLower().StartsWith(search)).ToList();
 
-                if (matchingItem != null)
+                if (matches.Any())
                 {
+                    FileSystemObjectViewModel choosenMatch = null;
+
+                    if (searchIndex == 0)
+                    {
+                        choosenMatch = matches.First();
+                    }
+                    else
+                    {
+                        choosenMatch = matches[searchIndex % matches.Count];
+                    }
+
                     DisableEventHandlers();
 
                     foreach (var file in Files)
                     {
-                        file.IsSelected = false;
+                        file.IsSelected = file == choosenMatch;
                     }
 
-                    matchingItem.IsSelected = true;
-                    m_scrollIntoViewProvider?.ScrollIntoView(matchingItem);
+                    m_scrollIntoViewProvider?.ScrollIntoView(choosenMatch);
+                    
                     EnableEventHandlers();
+                }
 
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }

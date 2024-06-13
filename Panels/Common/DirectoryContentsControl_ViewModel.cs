@@ -209,11 +209,6 @@ namespace Ranger2
             public void OnItemsSelected(System.Collections.IList addedItems)
             {
                 UpdateStatusBar(false);
-
-                if (ShouldEnableEventHandlers && addedItems.Count > 0)
-                {
-                    m_keySearch.SetSearchLimitType((addedItems[0] is DirectoryViewModel) ? KeySearch.SearchLimitType.Directories : KeySearch.SearchLimitType.Files);
-                }
             }
 
             protected DirectoryViewModel CreateDirectoryViewModel(string directory, ViewFilter.ViewMask viewMask)
