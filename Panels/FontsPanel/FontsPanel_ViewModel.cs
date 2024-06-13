@@ -179,13 +179,13 @@ namespace Ranger2
                 {
                     var fi = new FileInfo(path);
                     FileAttributes fileAttribs = FileSystemObjectViewModel.Sentinels.InvalidAttributes;
-                    long fileSize = FileSystemObjectViewModel.Sentinels.InvalidSize;
+                    ulong fileSize = 0;
                     DateTime lastWriteTime = FileSystemObjectViewModel.Sentinels.InvalidDate;
 
                     try
                     {
                         fileAttribs = fi.Attributes;
-                        fileSize = fi.Length;
+                        fileSize = (ulong)fi.Length;
                         lastWriteTime = fi.LastWriteTime;
                     }
                     catch { }

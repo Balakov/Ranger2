@@ -5,7 +5,7 @@ namespace Ranger2
     public class DriveInfoStatusBar
     {
         private System.Windows.Threading.DispatcherTimer m_updateTimer = new();
-        private readonly TimeSpan m_updateDelay = TimeSpan.FromMilliseconds(500);
+        private readonly TimeSpan m_updateDelay = TimeSpan.FromMilliseconds(250);
         private bool m_updateFreeDriveSpace;
         private DirectoryContentsControl.ViewModel m_viewModel; // We assume all updates are only called fron a single view model.
 
@@ -36,17 +36,17 @@ namespace Ranger2
             if (m_updateFreeDriveSpace)
             {
                 ulong currentDriveFreeSpace = FileOperations.GetDriveFreeBytes(m_viewModel.CurrentPath);
-                m_viewModel.StatusBarDriveSpaceString = $"Free space {currentDriveFreeSpace:N0} bytes";
+                m_viewModel.StatusBarDriveSpaceString = $"Free space {NumberFormatter.FormatBytes(currentDriveFreeSpace)}";
                 m_updateFreeDriveSpace = false;
             }
 
             int selectedFileCount = 0;
             int selectedDirectoryCount = 0;
-            long selectedFileSize = 0;
+            ulong selectedFileSize = 0;
 
             int totalFileCount = 0;
             int totalDirectoryCount = 0;
-            long totalFileSize = 0;
+            ulong totalFileSize = 0;
 
             foreach (var item in m_viewModel.Files)
             {
@@ -74,7 +74,7 @@ namespace Ranger2
             bool showSelectedInfo = selectedFileCount > 0;
 
             int fileCount = showSelectedInfo ? selectedFileCount : totalFileCount;
-            long fileSize = showSelectedInfo ? selectedFileSize : totalFileSize;
+            ulong fileSize = showSelectedInfo ? selectedFileSize : totalFileSize;
             int directoryCount = showSelectedInfo ? selectedDirectoryCount : totalDirectoryCount;
             string selectedText = showSelectedInfo ? " selected" : string.Empty;
             
@@ -102,8 +102,8 @@ namespace Ranger2
 
                 if (fileCount > 0)
                 {
-                    string bytesText = fileSize == 1 ? "byte" : "bytes";
-                    text += $" totalling {fileSize:N0} {bytesText}";
+                    string bytesText = NumberFormatter.FormatBytes(fileSize);
+                    text += $" totalling {bytesText}";
                 }
             }
 

@@ -15,12 +15,12 @@ namespace Ranger2
         {
             public readonly string Path;
             public readonly FileAttributes Attribs;
-            public readonly long Size;
+            public readonly ulong Size;
             public readonly DateTime LastWriteTime;
             public readonly bool IsGreyedOut;
             public readonly bool IsDirectory;
 
-            public FileSystemObjectInfo(string path, FileAttributes attribs, long size, DateTime lastWriteTime, bool isDirectory, bool isGreyedOut)
+            public FileSystemObjectInfo(string path, FileAttributes attribs, ulong size, DateTime lastWriteTime, bool isDirectory, bool isGreyedOut)
             {
                 Path = path;
                 Attribs = attribs;
@@ -34,8 +34,6 @@ namespace Ranger2
         public static class Sentinels
         {
             public const FileAttributes InvalidAttributes = 0;
-            public const int InvalidSize = -1;
-            public const int DirectorySize = -2;
             public static readonly DateTime InvalidDate = DateTime.MinValue;
         }
 
@@ -67,8 +65,8 @@ namespace Ranger2
             set => OnPropertyChanged(ref m_sizeString, value);
         }
 
-        private long m_sizeSortValue;
-        public long SizeSortValue
+        private ulong m_sizeSortValue;
+        public ulong SizeSortValue
         {
             get => m_sizeSortValue;
             set => OnPropertyChanged(ref m_sizeSortValue, value);
@@ -155,13 +153,13 @@ namespace Ranger2
             FileInfo fi = new FileInfo(path);
 
             FileAttributes fileAttribs = Sentinels.InvalidAttributes;
-            long fileSize = Sentinels.InvalidSize;
+            ulong fileSize = 0;
             DateTime lastWriteTime = Sentinels.InvalidDate;
 
             try
             {
                 fileAttribs = fi.Attributes;
-                fileSize = fi.Length;
+                fileSize = (ulong)fi.Length;
                 lastWriteTime = fi.LastWriteTime;
             }
             catch { }
@@ -194,7 +192,7 @@ namespace Ranger2
 
             if (ViewFilter.FilterViewByAttributes(fileAttribs, viewMask, di.Name.StartsWith("."), out var isGreyedOut))
             {
-                info = new FileSystemObjectInfo(path, fileAttribs, Sentinels.DirectorySize, lastWriteTime, isDirectory: true, isGreyedOut);
+                info = new FileSystemObjectInfo(path, fileAttribs, 0, lastWriteTime, isDirectory: true, isGreyedOut);
                 return true;
             }
             else
@@ -209,11 +207,7 @@ namespace Ranger2
             AttribsString = AttribsToString(info.Attribs);
             IsGreyedOut = info.IsGreyedOut;
 
-            if (info.Size == Sentinels.InvalidSize)
-            {
-                SizeString = null;
-            }
-            else if (info.Size == Sentinels.DirectorySize)
+            if (info.IsDirectory)
             {
                 SizeString = "<Folder>";
             }
