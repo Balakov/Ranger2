@@ -40,28 +40,46 @@ namespace Ranger2
                 m_updateFreeDriveSpace = false;
             }
 
-            int fileCount = 0;
-            int directoryCount = 0;
-            long totalSelectedFileSize = 0;
+            int selectedFileCount = 0;
+            int selectedDirectoryCount = 0;
+            long selectedFileSize = 0;
+
+            int totalFileCount = 0;
+            int totalDirectoryCount = 0;
+            long totalFileSize = 0;
 
             foreach (var item in m_viewModel.Files)
             {
-                if (item.IsSelected)
+                if (item is DirectoryViewModel)
                 {
-                    if (item is DirectoryViewModel)
+                    totalDirectoryCount++;
+                    if (item.IsSelected)
                     {
-                        directoryCount++;
+                        selectedDirectoryCount++;
                     }
-                    else
+                }
+                else
+                {
+                    totalFileCount++;
+                    totalFileSize += item.SizeSortValue;
+
+                    if (item.IsSelected)
                     {
-                        fileCount++;
-                        totalSelectedFileSize += item.SizeSortValue;
+                        selectedFileCount++;
+                        selectedFileSize += item.SizeSortValue;
                     }
                 }
             }
 
+            bool showSelectedInfo = selectedFileCount > 0;
+
+            int fileCount = showSelectedInfo ? selectedFileCount : totalFileCount;
+            long fileSize = showSelectedInfo ? selectedFileSize : totalFileSize;
+            int directoryCount = showSelectedInfo ? selectedDirectoryCount : totalDirectoryCount;
+            string selectedText = showSelectedInfo ? " selected" : string.Empty;
+            
             string text = string.Empty;
-            string totalSizeText = string.Empty;
+            string sizeText = string.Empty;
 
             if (directoryCount > 0)
             {
@@ -80,12 +98,12 @@ namespace Ranger2
 
             if (fileCount > 0 || directoryCount > 0)
             {
-                text += " selected";
+                text += selectedText;
 
                 if (fileCount > 0)
                 {
-                    string bytesText = totalSelectedFileSize == 1 ? "byte" : "bytes";
-                    text += $" totalling {totalSelectedFileSize:N0} {bytesText}";
+                    string bytesText = fileSize == 1 ? "byte" : "bytes";
+                    text += $" totalling {fileSize:N0} {bytesText}";
                 }
             }
 

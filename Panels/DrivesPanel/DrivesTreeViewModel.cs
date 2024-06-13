@@ -87,16 +87,15 @@ namespace Ranger2
                 // Expand the nodes of the tree up to the selected directory
                 DrivesTreeDirectoryViewModel currentDirectory = Directories.First();
 
-                IEnumerable<string> pathSplit = path.ToLower().Split([Path.DirectorySeparatorChar, 
-                                                                      Path.AltDirectorySeparatorChar]);
-
-                // Remove the leaf entry as we don't want to expand into the path automatically
-                pathSplit = pathSplit.Take(pathSplit.Count() - 1);
+                var pathSplit = path.ToLower().Split([Path.DirectorySeparatorChar, 
+                                                      Path.AltDirectorySeparatorChar]);
 
                 string currentPath = string.Empty;
 
-                foreach (string pathPart in pathSplit)
+                for (int i=0; i < pathSplit.Length; i++)
                 {
+                    string pathPart = pathSplit[i];
+
                     if (string.IsNullOrEmpty(currentPath))
                     {
                         currentPath = pathPart + Path.DirectorySeparatorChar;
@@ -110,8 +109,19 @@ namespace Ranger2
                     {
                         if (childDirectory.Path.ToLower() == currentPath)
                         {
-                            childDirectory.IsExpanded = true;
-                            Debug.Log($"Expanding {currentPath}");
+                            if (i == pathSplit.Length - 1)
+                            {
+                                // Don't expand the leaf directory automatically, just select it.
+                                DisableEventHandlers();
+                                UnSelectAll(Directories.First());
+                                childDirectory.IsSelected = true;
+                                EnableEventHandlers();
+                            }
+                            else
+                            {
+                                childDirectory.IsExpanded = true;
+                            }
+
                             currentDirectory = childDirectory;
                             break;
                         }
@@ -119,6 +129,15 @@ namespace Ranger2
                 }
 
                 OnDirectoryChanged?.Invoke(path, m_panelLayout.CurrentPanel?.CurrentPath);
+            }
+
+            private void UnSelectAll(DrivesTreeDirectoryViewModel root)
+            {
+                root.IsSelected = false;
+                foreach (var child in root.Directories)
+                {
+                    UnSelectAll(child);
+                }
             }
 
             public void SetDirectoryToParent()

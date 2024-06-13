@@ -47,7 +47,7 @@ namespace Ranger2
             m_fileWatcher.Renamed += OnFilesChanged;
             m_fileWatcher.Deleted += OnFilesChanged;
 
-            Unloaded += (s, e) =>
+            Dispatcher.ShutdownStarted += (s, e) =>
             {
                 DisableDirectoryWatcher();
                 m_fileWatcher.Changed -= OnFilesChanged;
@@ -63,8 +63,12 @@ namespace Ranger2
             if (!string.IsNullOrEmpty(directory) &&
                 Directory.Exists(directory))
             {
-                m_fileWatcher.Path = directory;
-                m_fileWatcher.EnableRaisingEvents = true;
+                try
+                {
+                    m_fileWatcher.Path = directory;
+                    m_fileWatcher.EnableRaisingEvents = true;
+                }
+                catch { }
             }
         }
 
@@ -182,7 +186,11 @@ namespace Ranger2
         {
             if (!Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() => { OnFilesChanged(source, e); });
+                try
+                {
+                    Dispatcher.Invoke(() => { OnFilesChanged(source, e); });
+                }
+                catch { }
             }
             else
             {
