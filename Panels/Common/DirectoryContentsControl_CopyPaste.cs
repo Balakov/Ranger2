@@ -32,20 +32,10 @@ namespace Ranger2
                 IEnumerable<ClipboardManager.FileOperationPath> paths = ClipboardManager.GetPathsFromClipboard(out fileOp);
                 OnDropOrPaste(paths, CurrentPath, fileOp, FileOperations.PasteOverSelfType.Allowed);
             }
-            
-            private static void OnDropOrPaste(IEnumerable<ClipboardManager.FileOperationPath> paths,
-                                              string destinationDirectory,
-                                              FileOperations.OperationType fileOp,
-                                              FileOperations.PasteOverSelfType pasteOverSelf)
-            {
-                if (paths.Count() == 0)
-                {
-                    return;
-                }
 
-                // Find the common root
+            private static string FindCommonRoot(IEnumerable<ClipboardManager.FileOperationPath> paths)
+            {
                 string[] firstPathSplit = null;
-                string commonRoot;
 
                 int lowestMatchIndex = int.MaxValue;
                 foreach (ClipboardManager.FileOperationPath path in paths)
@@ -78,9 +68,41 @@ namespace Ranger2
 
                 if (lowestMatchIndex > 0)
                 {
-                    commonRoot = string.Join(Path.DirectorySeparatorChar.ToString(), firstPathSplit, 0, lowestMatchIndex) + Path.DirectorySeparatorChar;
+                    return string.Join(Path.DirectorySeparatorChar.ToString(), firstPathSplit, 0, lowestMatchIndex) + Path.DirectorySeparatorChar;
                 }
                 else
+                {
+                    return null;
+                }
+            }
+
+            private static string BuildDestinationPathForFileCopy(ClipboardManager.FileOperationPath path, string commonRoot, string destinationDirectory)
+            {
+                // Remove the common root
+                string relativeDestination = path.FullPath.Substring(commonRoot.Length);
+                string destinationPath = Path.Combine(destinationDirectory, relativeDestination);
+
+                if (path.Name != null)
+                {
+                    string dirPart = Path.GetDirectoryName(destinationPath);
+                    destinationPath = Path.Combine(dirPart, path.Name);
+                }
+
+                return destinationPath;
+            }
+
+            private static void OnDropOrPaste(IEnumerable<ClipboardManager.FileOperationPath> paths,
+                                              string destinationDirectory,
+                                              FileOperations.OperationType fileOp,
+                                              FileOperations.PasteOverSelfType pasteOverSelf)
+            {
+                if (paths.Count() == 0)
+                {
+                    return;
+                }
+
+                string commonRoot = FindCommonRoot(paths);
+                if(commonRoot == null)
                 {
                     return;
                 }
@@ -90,16 +112,7 @@ namespace Ranger2
 
                 foreach (ClipboardManager.FileOperationPath path in paths)
                 {
-                    // Remove the common root
-                    string relativeDestination = path.FullPath.Substring(commonRoot.Length);
-
-                    string destinationPath = Path.Combine(destinationDirectory, relativeDestination);
-
-                    if (path.Name != null)
-                    {
-                        string dirPart = Path.GetDirectoryName(destinationPath);
-                        destinationPath = Path.Combine(dirPart, path.Name);
-                    }
+                    string destinationPath = BuildDestinationPathForFileCopy(path, commonRoot, destinationDirectory);
 
                     if (path.FullPath == destinationPath)
                     {

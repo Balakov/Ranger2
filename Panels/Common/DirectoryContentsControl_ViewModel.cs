@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Ranger2
@@ -44,6 +45,9 @@ namespace Ranger2
             public BreadcrumbsViewModel Breadcrumbs { get; } = new();
             public ICommand OnBreadcrumbClickedCommand { get; }
             public DriveInfoStatusBar m_statusBar = new DriveInfoStatusBar();
+
+            private UIElement m_dragDropTarget;
+            public void SetDragDropTarget(UIElement element) => m_dragDropTarget = element;
 
             private bool m_isFocused;
             public bool IsFocused

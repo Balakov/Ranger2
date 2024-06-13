@@ -9,7 +9,6 @@ namespace Ranger2
                                       DirectoryContentsControl.IScrollIntoViewProvider
     {
         private DragDropSelectionSupport m_dragDropSelection;
-        private ViewModel m_viewModel = null;
 
         public FilesPanel()
         {
@@ -18,8 +17,11 @@ namespace Ranger2
 
             DataContextChanged += (s, e) =>
             {
-                m_viewModel = DataContext as ViewModel;
-                m_viewModel?.SetScrollIntoViewProvider(this);
+                if (DataContext is ViewModel viewModel)
+                {
+                    viewModel.SetScrollIntoViewProvider(this);
+                    viewModel.SetDragDropTarget(ListViewInstance);
+                }
             };
         }
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Markup.Localizer;
 
 namespace Ranger2
 {
@@ -39,20 +39,46 @@ namespace Ranger2
                     if (droppedData.Files != null &&
                         droppedData.Files.Count() > 0)
                     {
-                        string currentPathRoot = Path.GetPathRoot(CurrentPath);
+                        // Copy the files to the current directory unless we dragged onto a specific directory
+                        FileSystemObjectViewModel dropItem = (m_dragDropTarget.InputHitTest(e.GetPosition(m_dragDropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
+                        string destinationDirectory = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : CurrentPath;
 
-                        // If all files are on the same drive, or ALT is pressed, move the files.
-                        bool shouldMove = droppedData.Files.All((x) =>
+                        bool isDropOntoSelf = false;
+                        string commonRoot = FindCommonRoot(droppedData.Files);
+                        if (commonRoot != null)
                         {
-                            return Path.GetPathRoot(x.FullPath) == currentPathRoot;
-                        });
+                            foreach (ClipboardManager.FileOperationPath file in droppedData.Files)
+                            {
+                                string destinationPath = BuildDestinationPathForFileCopy(file, commonRoot, destinationDirectory);
 
-                        if (KeyboardUtilities.IsAltDown)
-                        {
-                            shouldMove = !shouldMove;
+                                // Can't copy to the same directory it's already in and can't
+                                // copy to a directory that is a subdirectory of itself
+                                if (file.FullPath == destinationPath ||
+                                    destinationPath.StartsWith(file.FullPath + Path.DirectorySeparatorChar))
+                                {
+                                    isDropOntoSelf = true;
+                                    break;
+                                }
+                            }
                         }
 
-                        return shouldMove ? DragDropEffects.Move : DragDropEffects.Copy;
+                        if (!isDropOntoSelf)
+                        {
+                            string destinationDirectoryRoot = Path.GetPathRoot(destinationDirectory);
+
+                            // If all files are on the same drive, or ALT is pressed, move the files.
+                            bool shouldMove = droppedData.Files.All(x =>
+                            {
+                                return Path.GetPathRoot(x.FullPath) == destinationDirectoryRoot;
+                            });
+
+                            if (KeyboardUtilities.IsAltDown)
+                            {
+                                shouldMove = !shouldMove;
+                            }
+
+                            return shouldMove ? DragDropEffects.Move : DragDropEffects.Copy;
+                        }
                     }
                 }
                 else if (e.Data.GetDataPresent("FileGroupDescriptor"))
