@@ -11,7 +11,7 @@ namespace Ranger2
             Small = 1
         }
 
-        public static Icon GetFileIcon(string name, IconSize size, bool linkOverlay, bool isDirectory, out int iIcon)
+        public static Icon GetFileIcon(string name, IconSize size, bool linkOverlay, bool isDirectory)
         {
             Shell32.SHFILEINFO shfi = new Shell32.SHFILEINFO();
             uint flags = Shell32.SHGFI_ICON | Shell32.SHGFI_USEFILEATTRIBUTES;
@@ -35,13 +35,25 @@ namespace Ranger2
                                   (uint)Marshal.SizeOf(shfi),
                                   flags);
 
-            iIcon = shfi.iIcon;
+            if (shfi.hIcon == 0)
+            {
+                // Provide a fallback icon if the call failed.
+                Shell32.SHGetFileInfo("DummyName",
+                                      isDirectory ? Shell32.FILE_ATTRIBUTE_DIRECTORY : Shell32.FILE_ATTRIBUTE_NORMAL,
+                                      ref shfi,
+                                      (uint)Marshal.SizeOf(shfi),
+                                      flags);
+            }
 
-            // Copy (clone) the returned icon to a new object, thus allowing us to clean-up properly
-            Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
-            User32.DestroyIcon(shfi.hIcon);     // Cleanup
+            if (shfi.hIcon != 0)
+            {
+                // Copy (clone) the returned icon to a new object, thus allowing us to clean-up properly
+                Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
+                User32.DestroyIcon(shfi.hIcon);     // Cleanup
+                return icon;
+            }
 
-            return icon;
+            return null;
         }
 
         public static Icon GetStockIcon(Shell32.SHSTOCKICONID iconID, out int iIcon)

@@ -92,7 +92,7 @@ namespace Ranger2
                 else
                 {
                     // If this is the first part of a UNC path it's not a real directory, it's a share - we need to skip some checks
-                    string[] UNCParts = directory.Split('\\');
+                    string[] UNCParts = directory.TrimEnd('\\').Split('\\');
                     if (UNCParts.Length <= 4)
                     {
                         isRootUNCOrShare = true;
@@ -139,7 +139,7 @@ namespace Ranger2
                                                                         networkShare.ShareType.HasFlag(Trinet.Networking.ShareType.Disk)))
                             {
                                 // Don't use ToString() as the TriNet code seems to add a random number of leading slashes.
-                                directories.Add(networkShare.Server + '\\' + networkShare.NetName);
+                                directories.Add(networkShare.Server + networkShare.NetName);
                             }
                         }
                     }
@@ -149,19 +149,19 @@ namespace Ranger2
 
                         bool isRoot = directory.Length < 4;
 
-                        foreach (var file in Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly))
+                        foreach (var directory in Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly))
                         {
                             bool fileAllowed = true;
 
                             if (allowedExtensions != null)
                             {
-                                string fileExtension = Path.GetExtension(file).ToLower();
+                                string fileExtension = Path.GetExtension(directory).ToLower();
                                 fileAllowed = allowedExtensions.Any(x => x == fileExtension);
                             }
 
                             if (fileAllowed)
                             {
-                                files.Add(new ScanResult.Filename(file, null));
+                                files.Add(new ScanResult.Filename(directory, null));
                             }
                         }
                     }

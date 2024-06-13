@@ -195,7 +195,7 @@ namespace Ranger2
 
         private BitmapSource GetIconForPath(string path, bool isDirectory, bool isOverlay)
         {
-            using (var icon = ShellIcons.GetFileIcon(path, ShellIcons.IconSize.Small, isOverlay, isDirectory, out int iIcon))
+            using (var icon = ShellIcons.GetFileIcon(path, ShellIcons.IconSize.Small, isOverlay, isDirectory))
             {
                 return GetBitmapSourceFromIcon(icon);
             }

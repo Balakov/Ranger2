@@ -137,7 +137,17 @@ namespace Ranger2
         {
             m_parentViewModel = parentViewModel;
 
-            Name = name ?? Path.GetFileName(info.Path);
+            if (name == null && info.Path.StartsWith("\\\\"))
+            {
+                // Path.GetFileName fails on UNC paths
+                string[] split = info.Path.TrimEnd('\\').Split('\\');
+                Name = split[split.Length - 1];
+            }
+            else
+            {
+                Name = name ?? Path.GetFileName(info.Path);
+            }
+
             FullPath = info.Path;
 
             NameSortValue = (info.IsDirectory ? "A" : "Z") + Name;
