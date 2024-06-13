@@ -199,7 +199,7 @@ namespace Ranger2
             System.Diagnostics.ProcessStartInfo si = new System.Diagnostics.ProcessStartInfo()
             {
                 FileName = path,
-                Arguments = args,
+                Arguments = $"\"{args}\"",
                 WorkingDirectory = !string.IsNullOrEmpty(cwd) ? cwd : Path.GetDirectoryName(path),
                 UseShellExecute = true
             };
