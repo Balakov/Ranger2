@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -212,25 +211,21 @@ namespace Ranger2
             }
         }
 
-        private void Breadcrumb_DragOver(object sender, DragEventArgs e)
+        private BreadcrumbsViewModel.PathPart GetBreadcrumb(object sender)
         {
-            if (sender is Button button &&
-                button.DataContext is BreadcrumbsViewModel.PathPart pathPart)
-            {
-                ViewModel.OnCommonDragOver(e, pathPart.Path, button);
-            }
+            if (sender is Button button)
+                return button.DataContext as BreadcrumbsViewModel.PathPart;
+            else
+                return null;
         }
 
-        private void Breadcrumb_Drop(object sender, DragEventArgs e)
-        {
-            if (sender is Button button &&
-                button.DataContext is BreadcrumbsViewModel.PathPart pathPart)
-            {
-                ViewModel.OnCommonDrop(e, pathPart.Path, button);
-            }
-        }
+        private void Breadcrumb_DragOver(object sender, DragEventArgs e) => GetBreadcrumb(sender)?.OnDragOver(sender, e);
+        private void Breadcrumb_Drop(object sender, DragEventArgs e) => GetBreadcrumb(sender)?.OnDrop(sender, e);
+        private void Breadcrumb_MouseUp(object sender, MouseButtonEventArgs e) => GetBreadcrumb(sender)?.OnMouseUp(sender, e);
+        private void Breadcrumb_MouseDown(object sender, MouseButtonEventArgs e) => GetBreadcrumb(sender)?.OnMouseDown(sender, e);
+        private void Breadcrumb_MouseMove(object sender, MouseEventArgs e) => GetBreadcrumb(sender)?.OnMouseMove(sender, e);
     }
-            
+
     public class DirectoryContentsTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)

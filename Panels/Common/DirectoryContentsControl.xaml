@@ -64,6 +64,9 @@
                                 AllowDrop="True"
                                 DragOver="Breadcrumb_DragOver"
                                 Drop="Breadcrumb_Drop"
+                                PreviewMouseUp="Breadcrumb_MouseUp"
+                                PreviewMouseDown="Breadcrumb_MouseDown"
+                                PreviewMouseMove="Breadcrumb_MouseMove"
 >                            <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding Name}" />
                         </Button>
                     </DataTemplate>
