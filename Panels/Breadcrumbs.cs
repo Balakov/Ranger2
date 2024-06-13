@@ -50,7 +50,8 @@ namespace Ranger2
                 for(int i=0; i < parts.Length; i++)
                 {
                     combinedPath += parts[i] + Path.DirectorySeparatorChar;
-                    m_pathParts.Add(new PathPart(combinedPath, parts[i], i != parts.Length-1));
+                    //m_pathParts.Add(new PathPart(combinedPath, parts[i], i != parts.Length-1));
+                    m_pathParts.Add(new PathPart(combinedPath, parts[i], isEnabled: true));
                 }
             }
         }

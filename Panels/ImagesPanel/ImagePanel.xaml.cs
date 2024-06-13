@@ -45,7 +45,7 @@ namespace Ranger2
         {
             if (DataContext is DirectoryContentsControl.ViewModel viewModel)
             {
-                viewModel.OnCommonDrop(e, ListBoxInstance);
+                ViewModel.OnCommonDrop(e, viewModel.CurrentPath, ListBoxInstance);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Ranger2
 
             if (DataContext is DirectoryContentsControl.ViewModel viewModel)
             {
-                viewModel.OnCommonDragOver(e);
+                ViewModel.OnCommonDragOver(e, viewModel.CurrentPath, ListBoxInstance);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -210,9 +211,26 @@ namespace Ranger2
                 }
             }
         }
+
+        private void Breadcrumb_DragOver(object sender, DragEventArgs e)
+        {
+            if (sender is Button button &&
+                button.DataContext is BreadcrumbsViewModel.PathPart pathPart)
+            {
+                ViewModel.OnCommonDragOver(e, pathPart.Path, button);
+            }
+        }
+
+        private void Breadcrumb_Drop(object sender, DragEventArgs e)
+        {
+            if (sender is Button button &&
+                button.DataContext is BreadcrumbsViewModel.PathPart pathPart)
+            {
+                ViewModel.OnCommonDrop(e, pathPart.Path, button);
+            }
+        }
     }
-
-
+            
     public class DirectoryContentsTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)

@@ -60,8 +60,11 @@
                     <DataTemplate>
                         <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}},
                                                   Path=DataContext.OnBreadcrumbClickedCommand}" CommandParameter="{Binding Path}"
-                                IsEnabled="{Binding IsEnabled}">
-                            <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding Name}" />
+                                IsEnabled="{Binding IsEnabled}"
+                                AllowDrop="True"
+                                DragOver="Breadcrumb_DragOver"
+                                Drop="Breadcrumb_Drop"
+>                            <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding Name}" />
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

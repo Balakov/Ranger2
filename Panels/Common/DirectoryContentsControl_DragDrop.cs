@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Markup.Localizer;
 
 namespace Ranger2
 {
@@ -12,9 +11,9 @@ namespace Ranger2
     {
         public partial class ViewModel
         {
-            public void OnCommonDrop(DragEventArgs e, UIElement dropTarget)
+            public static void OnCommonDrop(DragEventArgs e, string currentDirectory, UIElement dropTarget)
             {
-                var effect = GetDesiredDragDropOperation(e);
+                var effect = GetDesiredDragDropOperation(e, currentDirectory, dropTarget);
 
                 DroppedFiles droppedData = PathsFromDragDropSource(e.Data, effect);
 
@@ -24,12 +23,12 @@ namespace Ranger2
                     // Copy the files to the current directory unless we dragged onto a specific directory
                     FileSystemObjectViewModel dropItem = (dropTarget.InputHitTest(e.GetPosition(dropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
                         
-                    string destinationPath = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : m_currentDirectory;
+                    string destinationPath = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : currentDirectory;
                     OnDropOrPaste(droppedData.Files, destinationPath, droppedData.FileOp, FileOperations.PasteOverSelfType.NotAllowed);
                 }
             }
 
-            private DragDropEffects GetDesiredDragDropOperation(DragEventArgs e)
+            private static DragDropEffects GetDesiredDragDropOperation(DragEventArgs e, string currentPath, UIElement dropTarget)
             {
                 if (e.Data.GetDataPresent(typeof(ClipboardManager.FileOperationPathList)) ||
                     e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -40,8 +39,8 @@ namespace Ranger2
                         droppedData.Files.Count() > 0)
                     {
                         // Copy the files to the current directory unless we dragged onto a specific directory
-                        FileSystemObjectViewModel dropItem = (m_dragDropTarget.InputHitTest(e.GetPosition(m_dragDropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
-                        string destinationDirectory = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : CurrentPath;
+                        FileSystemObjectViewModel dropItem = (dropTarget.InputHitTest(e.GetPosition(dropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
+                        string destinationDirectory = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : currentPath;
 
                         bool isDropOntoSelf = false;
                         string commonRoot = FindCommonRoot(droppedData.Files);
@@ -89,9 +88,9 @@ namespace Ranger2
                 return DragDropEffects.None;
             }
 
-            public void OnCommonDragOver(DragEventArgs e)
+            public static void OnCommonDragOver(DragEventArgs e, string currentDirectory, UIElement dropTarget)
             {
-                e.Effects = GetDesiredDragDropOperation(e);
+                e.Effects = GetDesiredDragDropOperation(e, currentDirectory, dropTarget);
                 e.Handled = true;
             }
 
@@ -101,7 +100,7 @@ namespace Ranger2
                 public FileOperations.OperationType FileOp;
             }
 
-            private DroppedFiles PathsFromDragDropSource(IDataObject data, DragDropEffects effect)
+            private static DroppedFiles PathsFromDragDropSource(IDataObject data, DragDropEffects effect)
             {
                 if (data.GetDataPresent(typeof(ClipboardManager.FileOperationPathList)))
                 {
