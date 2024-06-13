@@ -257,7 +257,7 @@ namespace Ranger2
             {
                 MenuCommandPropmtCommand = DelegateCommand.Create(() =>
                 {
-                    FileOperations.ExecuteFile("cmd.exe", null, CurrentPath);
+                    FileOperations.ExecuteFile("cmd.exe", null, false, CurrentPath);
                 });
 
                 MenuCopyFileListCommand = DelegateCommand.Create(() =>

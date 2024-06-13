@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Collections.Concurrent;
 using SkiaSharp;
-using SkiaSharp.Views.WPF;
 
 namespace Ranger2
 {

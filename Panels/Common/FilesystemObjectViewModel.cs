@@ -262,7 +262,7 @@ namespace Ranger2
             MenuOpenWithCommand = DelegateCommand.Create(() =>
             {
                 // Do NOT add quotes around the path. This makes it not work.
-                FileOperations.ExecuteFile("rundll32.exe", "shell32.dll, OpenAs_RunDLL " + FullPath);
+                FileOperations.ExecuteFile("rundll32.exe", "shell32.dll, OpenAs_RunDLL " + FullPath, quoteArgs: false);
             });
 
             MenuOpenInExplorerCommand = DelegateCommand.Create(() =>
@@ -274,7 +274,7 @@ namespace Ranger2
             MenuCommandPropmtCommand = DelegateCommand.Create(() =>
             {
                 string directory = Directory.Exists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
-                FileOperations.ExecuteFile("cmd.exe", null, directory);
+                FileOperations.ExecuteFile("cmd.exe", null, false, directory);
             });
 
             MenuEditCommand = DelegateCommand.Create(() =>

@@ -6,7 +6,7 @@
 
     <x:Array x:Key="FileContextMenuItems" 
              Type="Control" 
-             x:Shared="False">
+             x:Shared="True">
         <MenuItem Header="Open" Command="{Binding MenuOpenCommand}" />
         <MenuItem Header="Open With..." Command="{Binding MenuOpenWithCommand}" />
         <MenuItem Header="Open in Explorer" Command="{Binding MenuOpenInExplorerCommand}" />
@@ -92,7 +92,5 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
-
 
 </ResourceDictionary>

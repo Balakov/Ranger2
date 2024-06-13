@@ -194,12 +194,12 @@ namespace Ranger2
             return result.ToString();
         }
 
-        public static void ExecuteFile(string path, string args = null, string cwd = null)
+        public static void ExecuteFile(string path, string args = null, bool quoteArgs=true, string cwd = null)
         {
             System.Diagnostics.ProcessStartInfo si = new System.Diagnostics.ProcessStartInfo()
             {
                 FileName = path,
-                Arguments = $"\"{args}\"",
+                Arguments = (!string.IsNullOrWhiteSpace(args) && quoteArgs) ? $"\"{args}\"" : args,
                 WorkingDirectory = !string.IsNullOrEmpty(cwd) ? cwd : Path.GetDirectoryName(path),
                 UseShellExecute = true
             };
