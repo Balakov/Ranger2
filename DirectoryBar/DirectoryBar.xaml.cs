@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Ranger2
@@ -76,7 +77,16 @@ namespace Ranger2
             if (e.Key == System.Windows.Input.Key.Enter &&
                 !string.IsNullOrEmpty(TextBoxInstance.Text))
             {
-                DirectoryChangeRequester.SetDirectory(TextBoxInstance.Text);
+                string path = TextBoxInstance.Text;
+                string selectedFile = null;
+
+                if (File.Exists(path))
+                {
+                    selectedFile = Path.GetFileName(path);
+                    path = Path.GetDirectoryName(path);
+                }
+
+                DirectoryChangeRequester.SetDirectory(path);
             }
         }
     }
