@@ -22,7 +22,6 @@
     <Grid>
         <ListView x:Name="ListViewInstance"
                   SelectionMode="Extended"
-                  local:FocusExtension.IsFocused="{Binding IsFocused}"
                   ItemsSource="{Binding Files}"
                   ItemTemplate="{StaticResource DCCFileSystemObjectTemplate}"
                   Style="{StaticResource ListView.Small}"
@@ -52,7 +51,7 @@
                     <GridViewColumn Header="Size" Width="100" local:GridViewSort.PropertyName="SizeSortValue">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding SizeString}" HorizontalAlignment="Left" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}" />
+                                <TextBlock Text="{Binding SizeString}" HorizontalAlignment="Right" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -78,13 +77,14 @@
               Visibility="{Binding ShowLoadingUI,Converter={StaticResource BoolToVisibilityConverter}}"
               Margin="0,0,0,150"/>
 
-        <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+        <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed" Focusable="False">
             <Border x:Name="DragSelectionBorder"
                     BorderBrush="{DynamicResource PrimaryBrush}"
                     BorderThickness="1"
                     Background="LightBlue"
                     CornerRadius="1"
-                    Opacity="0.5" />
+                    Opacity="0.5" 
+                    Focusable="False"/>
         </Canvas>
     </Grid> 
 </UserControl>

@@ -136,12 +136,6 @@ namespace Ranger2
 
         public void OnSwitchFocus(bool hasFocus)
         {
-            if (hasFocus)
-            {
-                Keyboard.Focus(this);
-                Focus();
-            }
-
             if (DataContext is ViewModel panelViewModel)
             {
                 panelViewModel.IsCurrentPanel = hasFocus;
@@ -163,11 +157,19 @@ namespace Ranger2
             SetListingType(DirectoryListingType.Fonts);
         }
 
-        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => m_context.PanelLayout.SwitchFocus(this);
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_context.PanelLayout.SwitchFocus(this);
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
+        }
 
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            (DataContext as ViewModel)?.OnCommonKeyDown(e);
+            (DataContext as ViewModel)?.OnCommonKeyUp(e);
         }
 
         public void SetPanelVisibility(bool visible)

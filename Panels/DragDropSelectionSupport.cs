@@ -128,6 +128,8 @@ namespace Ranger2
 
                             if (!viewModel.IsSelected)
                             {
+                                Keyboard.Focus(listBox);
+                                listBox.Focus();
                                 listBox.UnselectAll();
                                 viewModel.IsSelected = true;
                             }
@@ -199,6 +201,8 @@ namespace Ranger2
                             {
                                 if (viewModel.IsSelected)
                                 {
+                                    Keyboard.Focus(listBox);
+                                    listBox.Focus();
                                     listBox.UnselectAll();
                                     viewModel.IsSelected = true;
                                 }

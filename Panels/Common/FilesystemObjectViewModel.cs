@@ -223,7 +223,7 @@ namespace Ranger2
             }
             else
             {
-                SizeString = string.Format("{0:N0}", info.Size);
+                SizeString = NumberFormatter.FormatBytes(info.Size);
             }
 
             if (info.LastWriteTime != Sentinels.InvalidDate)

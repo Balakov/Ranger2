@@ -70,7 +70,6 @@
                  ItemContainerStyle="{StaticResource CentredListBoxItem}" 
                  ItemTemplateSelector="{StaticResource ImagePanelTemplateSelector}"
                  SelectionMode="Extended"
-                 local:FocusExtension.IsFocused="{Binding IsFocused}"
                  AllowDrop="True"
                  DragOver="ListBox_DragOver"
                  Drop="ListBox_Drop"

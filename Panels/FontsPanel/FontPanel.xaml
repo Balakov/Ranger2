@@ -43,7 +43,6 @@
             <ListView Grid.Row="1" 
                       x:Name="ListViewInstance"
                       SelectionMode="Extended"
-                      local:FocusExtension.IsFocused="{Binding IsFocused}"
                       ItemsSource="{Binding FilteredFiles}"
                       ItemTemplateSelector="{StaticResource FontPanelTemplateSelector}"
                       Style="{StaticResource ListView.Small}"

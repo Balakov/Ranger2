@@ -20,17 +20,28 @@ namespace Ranger2
         public abstract partial class ViewModel : Utility.UndoableViewModelBase,
                                                   KeySearch.IVisualSearchProvider
         {
+            private enum KeyNavigationDirection { Down, Up };
+
             private string m_currentDirectory;
+            private KeySearch m_keySearch;
+            private PathHistory m_pathHistory;
+            private KeyNavigationDirection m_lastKeyNavigationDirection = KeyNavigationDirection.Down;
+
+            private UIElement m_dragDropTarget;
+            public void SetDragDropTarget(UIElement element) => m_dragDropTarget = element;
+
+            private IScrollIntoViewProvider m_scrollIntoViewProvider;
+            public void SetScrollIntoViewProvider(IScrollIntoViewProvider scrollIntoViewProvider) => m_scrollIntoViewProvider = scrollIntoViewProvider;
 
             protected PanelContext m_context;
+            protected DirectoryScanner m_directoryScanner = new DirectoryScanner();
             protected UserSettings.FilePanelSettings m_settings;
             protected ViewFilter.ViewMask m_viewMask = ViewFilter.ViewMask.ShowHidden | ViewFilter.ViewMask.ShowSystem;
-            protected DirectoryScanner m_directoryScanner = new DirectoryScanner();
-            protected PathHistory m_pathHistory;
             protected IDirectoryWatcher m_directoryWatcher;
             protected bool m_isLoading;
 
             protected ObservableCollection<FileSystemObjectViewModel> m_files { get; } = new();
+
             public IEnumerable<FileSystemObjectViewModel> Files => m_files;
 
             public bool ShowLoadingUI => m_isLoading;
@@ -45,17 +56,7 @@ namespace Ranger2
             public BreadcrumbsViewModel Breadcrumbs { get; } = new();
             public ICommand OnBreadcrumbClickedCommand { get; }
             public DriveInfoStatusBar m_statusBar = new DriveInfoStatusBar();
-
-            private UIElement m_dragDropTarget;
-            public void SetDragDropTarget(UIElement element) => m_dragDropTarget = element;
-
-            private bool m_isFocused;
-            public bool IsFocused
-            {
-                get => m_isFocused;
-                set => OnPropertyChanged(ref m_isFocused, value);
-            }
-
+            
             private string m_statusBarDriveSpaceString;
             public string StatusBarDriveSpaceString
             {
@@ -84,7 +85,6 @@ namespace Ranger2
                         {
                             dirChange.OnDirectoryChanged += OnDirectoryChangedInternal;
                             m_pathHistory.EnablePathChangeCapture();
-                            IsFocused = true;
                         }
                         else
                         {
@@ -102,15 +102,9 @@ namespace Ranger2
 
             // Derived class overrides
             public abstract DirectoryListingType ListingType { get; }
-
-            private IScrollIntoViewProvider m_scrollIntoViewProvider;
-            public void SetScrollIntoViewProvider(IScrollIntoViewProvider scrollIntoViewProvider) => m_scrollIntoViewProvider = scrollIntoViewProvider;
-
             protected abstract void OnDirectoryChanged(string path);
             protected abstract void OnActivateItem(FileSystemObjectViewModel viewModel);
             protected abstract void OnItemAdded(string path);
-
-            protected KeySearch m_keySearch;
 
             protected ViewModel(PanelContext context,
                                 UserSettings.FilePanelSettings settings,

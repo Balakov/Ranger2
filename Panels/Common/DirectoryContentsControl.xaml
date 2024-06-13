@@ -10,7 +10,9 @@
              mc:Ignorable="d"
              KeyUp="OnKeyUp"
              Focusable="True"
+             FocusManager.IsFocusScope="True"
              PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown"
+             PreviewKeyDown="OnPreviewKeyDown"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <local:DirectoryContentsTemplateSelector x:Key="DirectoryContentsTemplateSelector" />
