@@ -1,4 +1,5 @@
-﻿Drive insertion/removal events.
-Keep selected file when going back/forward
+﻿Keep selected file when going back/forward
 Select directory in tree when syncing directory.
 Right-click on tree to delete directory
+Image viewer default zoom level
+Image viewer switch to nearest neighbour

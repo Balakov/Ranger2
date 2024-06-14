@@ -1,6 +1,7 @@
 ﻿using HandyControl.Tools.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -43,20 +44,7 @@ namespace Ranger2
                 var root = new DrivesTreeDirectoryViewModel("Computer", null, this);
                 Directories.Add(root);
 
-                DrivesTreeDirectoryViewModel firstReadyDrive = null;
-
-                foreach (var drive in DriveInfo.GetDrives())
-                {
-                    if (drive.IsReady)
-                    {
-                        var driveViewModel = new DrivesTreeDirectoryViewModel($"{drive.Name} ({drive.VolumeLabel})", drive.RootDirectory.FullName, this);
-                        m_iconCache.QueueIconLoad(drive.RootDirectory.FullName, IconCache.IconType.Drive, driveViewModel);
-
-                        root.Directories.Add(driveViewModel);
-
-                        firstReadyDrive = firstReadyDrive ?? driveViewModel;
-                    }
-                }
+                DrivesTreeDirectoryViewModel firstReadyDrive = OnDrivesChanged();
 
                 root.IsExpanded = true;
 
@@ -64,6 +52,52 @@ namespace Ranger2
                 {
                     firstReadyDrive.IsExpanded = true;
                 }
+            }
+
+            public DrivesTreeDirectoryViewModel OnDrivesChanged()
+            {
+                DrivesTreeDirectoryViewModel firstReadyDrive = null;
+
+                Dictionary<string, DrivesTreeDirectoryViewModel> existingDrives = new();
+
+                var rootDirectories = Directories.FirstOrDefault()?.Directories;
+                if (rootDirectories != null)
+                {
+                    foreach (var drive in rootDirectories)
+                    {
+                        existingDrives.Add(drive.Path, drive);
+                    }
+                }
+
+                foreach (var drive in DriveInfo.GetDrives())
+                {
+                    if (drive.IsReady && !App.UserSettings.IgnoredDrives.Contains(drive.VolumeLabel))
+                    {
+                        string driveRootDirectory = drive.RootDirectory.FullName;
+
+                        // Add new drives                        
+                        if (!existingDrives.ContainsKey(driveRootDirectory))
+                        {
+                            var driveViewModel = new DrivesTreeDirectoryViewModel($"{drive.Name} ({drive.VolumeLabel})", drive.RootDirectory.FullName, this);
+                            m_iconCache.QueueIconLoad(drive.RootDirectory.FullName, IconCache.IconType.Drive, driveViewModel);
+
+                            rootDirectories.Add(driveViewModel);
+
+                            firstReadyDrive = firstReadyDrive ?? driveViewModel;
+                        }
+                        else
+                        {
+                            existingDrives.Remove(driveRootDirectory);
+                        }
+                    }
+                }
+
+                foreach (var removedDrivePair in existingDrives)
+                {
+                    rootDirectories.Remove(removedDrivePair.Value);
+                }
+
+                return firstReadyDrive;
             }
 
             private void CollapseTree(IEnumerable<DrivesTreeDirectoryViewModel> nodes, int startLevel, int currentLevel = 0)

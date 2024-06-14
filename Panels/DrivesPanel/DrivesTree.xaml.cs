@@ -22,7 +22,7 @@ namespace Ranger2
             m_driveWatcher.Query = query;
             m_driveWatcher.Start();
 
-            Unloaded += (s, e) =>
+            Dispatcher.ShutdownStarted += (s, e) =>
             {
                 m_driveWatcher.Stop();
             };
@@ -36,7 +36,10 @@ namespace Ranger2
             }
             else
             {
-                // Update drives
+                if (DataContext is ViewModel viewModel)
+                {
+                    viewModel.OnDrivesChanged();
+                }
             }
         }
 

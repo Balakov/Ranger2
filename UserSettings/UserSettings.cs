@@ -54,6 +54,8 @@ namespace Ranger2
 
         public int ActiveBookmarkGroup { get; set; }
         public List<Bookmark> Bookmarks { get; set; } = new();
+        
+        public List<string> IgnoredDrives { get; set; } = new();
 
         //
         // Non-serialised
