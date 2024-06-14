@@ -15,7 +15,7 @@ namespace Ranger2
 
         public class ScanResult
         {
-            public struct Filename
+            public class Filename
             {
                 public readonly string Path;
                 public readonly string Name;
@@ -168,6 +168,7 @@ namespace Ranger2
                         }
                     }
 
+                    directories.Sort((a, b) => string.CompareOrdinal(a, b));
                     files.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
 
                     e.Result = new ScanResult(directory, files, directories, pathToSelect);

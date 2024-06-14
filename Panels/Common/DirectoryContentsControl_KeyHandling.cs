@@ -44,10 +44,6 @@ namespace Ranger2
                 {
                     m_context.DirectoryChangeRequester.SetDirectoryToParent();
                 }
-                else if (e.Key == Key.Oem8)
-                {
-                    m_context.PanelLayout.CycleFocus(KeyboardUtilities.IsShiftDown ? PanelCycleDirection.Left : PanelCycleDirection.Right);
-                }
                 else if (e.Key == Key.F5)
                 {
                     OnDirectoryChanged(m_currentDirectory, null);

@@ -6,13 +6,13 @@
            xmlns:hc="https://handyorg.github.io/handycontrol"
            xmlns:local="clr-namespace:Ranger2"
            xmlns:converters="clr-namespace:Ranger2.Converters"
-           xmlns:behaviours="clr-namespace:Ranger2.Behaviours"
            mc:Ignorable="d"
            WindowStartupLocation="CenterOwner"
            Title="{Binding Title}" 
            Height="1024" 
            Width="1024"
-           behaviours:FocusOnVisibleBehavior.Focus="True"
+           Focusable="True"
+           FocusManager.IsFocusScope="True"
            KeyDown="Window_KeyDown">
     <hc:Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

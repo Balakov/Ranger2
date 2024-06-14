@@ -24,7 +24,7 @@ namespace Ranger2
             };
         }
 
-        private void ListBoxItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is ListBoxItem item &&
                 item.DataContext is FileSystemObjectViewModel itemViewModel)

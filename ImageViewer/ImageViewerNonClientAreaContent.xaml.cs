@@ -38,19 +38,12 @@ namespace Ranger2
 
                 FullscreenCommand = DelegateCommand.Create(() =>
                 {
-                    imageViewModel?.RequestFullScreen(true);
+                    imageViewModel.RequestFullScreen(true);
                 });
 
                 FitToViewCommand = DelegateCommand.Create(() =>
                 {
-                    if (imageViewModel?.ImageSource != null)
-                    {
-                        var image = imageViewModel.ImageSource;
-                        zoomBorder?.ScaleToFit(imageViewModel.ViewAreaWidth, 
-                                               imageViewModel.ViewAreaHeight, 
-                                               image.Width, 
-                                               image.Height);
-                    }
+                    imageViewModel.ScaleToFit();
                 });
 
                 imageViewModel.ScalingMode = App.UserSettings.ImageViewerScalingMode ?? BitmapScalingMode.HighQuality;

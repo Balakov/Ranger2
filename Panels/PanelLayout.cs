@@ -9,19 +9,12 @@ namespace Ranger2
         Right
     }
 
-    public enum PanelCycleDirection
-    {
-        Left,
-        Right
-    }
-
     public delegate void OnSwitchPanelFocusDelegate(DirectoryContentsControl activePanel);
 
     public interface IPanelLayout
     {
         void SetActivePanelCount(int panelCount);
         void SwitchFocus(DirectoryContentsControl activePanel);
-        void CycleFocus(PanelCycleDirection direction);
         void DuplicateCurrentContent(DuplicateContentDirection direction);
         DirectoryContentsControl CurrentPanel { get; }
         event OnSwitchPanelFocusDelegate OnSwitchPanelFocus;
@@ -89,26 +82,6 @@ namespace Ranger2
                 {
                     OnSwitchPanelFocus?.Invoke(panel);
                 }
-            }
-        }
-
-        public void CycleFocus(PanelCycleDirection direction)
-        {
-            int currentPanelIndex = m_filePanels.FindIndex(x => x.IsCurrentPanel);
-            if (currentPanelIndex != -1)
-            {
-                int newIndex;
-
-                if (direction == PanelCycleDirection.Right)
-                {
-                    newIndex = (currentPanelIndex + 1) % App.UserSettings.ActivePanelCount;
-                }
-                else
-                {
-                    newIndex = currentPanelIndex == 0 ? App.UserSettings.ActivePanelCount - 1 : currentPanelIndex - 1;
-                }
-                
-                SwitchFocus(m_filePanels[newIndex]);
             }
         }
 

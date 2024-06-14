@@ -8,7 +8,8 @@ namespace Ranger2
     {
         public class ViewModel : DirectoryContentsControl.ViewModel
         {
-            public class ImageViewModel : FileSystemObjectViewModel, ImageCache.IImageLoadedNotification
+            public class ImageViewModel : FileSystemObjectViewModel, 
+                                          ImageCache.IImageLoadedNotification
             {
                 private ImageSource m_imageSource;
                 public ImageSource ImageSource

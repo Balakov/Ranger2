@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -91,8 +92,11 @@ namespace Ranger2
             double newHeight = imageHeight * newScale;
 
             var tt = GetTranslateTransform(child);
-            tt.X = -((newWidth - imageWidth) / 2);
-            tt.Y = -((newHeight - imageHeight) / 2);
+            double offsetX = -((newWidth - imageWidth) / 2);
+            double offsetY = -((newHeight - imageHeight) / 2);
+
+            tt.X = offsetX < 0 ? offsetX : 0;
+            tt.Y = offsetY < 0 ? offsetY : 0;
 
             OnImageViewerZoomChanged?.Invoke((int)(st.ScaleX * 100));
         }
