@@ -1,2 +1,2 @@
 ﻿Bring into view of a directory when going up a directory ?
-Image viewer: Pan when scaling down
+Focus for image viewer when creating new window.

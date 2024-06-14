@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -236,13 +235,6 @@ namespace Ranger2
                 Activate();
                 Focus();
             }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
-        }
-
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-            //Focus();
-            //Keyboard.Focus(this);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)

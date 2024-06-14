@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -57,8 +56,6 @@ namespace Ranger2
                 this.MouseLeftButtonDown += child_MouseLeftButtonDown;
                 this.MouseLeftButtonUp += child_MouseLeftButtonUp;
                 this.MouseMove += child_MouseMove;
-                this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
-                  child_PreviewMouseRightButtonDown);
             }
         }
 
@@ -83,20 +80,34 @@ namespace Ranger2
         public void ScaleToFit(double viewWidth, double viewHeight, double imageWidth, double imageHeight)
         {
             var st = GetScaleTransform(child);
-            double newScale = (imageHeight > imageWidth) ? viewHeight / imageHeight
-                                                         : viewWidth / imageWidth;
-
-            st.ScaleX = st.ScaleY = newScale;
-
-            double newWidth = imageWidth * newScale;
-            double newHeight = imageHeight * newScale;
-
             var tt = GetTranslateTransform(child);
-            double offsetX = -((newWidth - imageWidth) / 2);
-            double offsetY = -((newHeight - imageHeight) / 2);
 
-            tt.X = offsetX < 0 ? offsetX : 0;
-            tt.Y = offsetY < 0 ? offsetY : 0;
+            double zoom = (imageHeight > imageWidth) ? viewHeight / imageHeight
+                                                     : viewWidth / imageWidth;
+            st.ScaleX = zoom;
+            st.ScaleY = zoom;
+
+            if (imageWidth > viewWidth)
+            {
+                double spareX = viewWidth - (imageWidth * zoom);
+                tt.X = (spareX / 2);
+            }
+            else
+            {
+                double pixelSizeIncreaseX = (imageWidth * zoom) - imageWidth;
+                tt.X = -(pixelSizeIncreaseX / 2);
+            }
+
+            if(imageHeight > viewHeight)
+            {
+                double spareY = viewHeight - (imageHeight * zoom);
+                tt.Y = (spareY / 2);
+            }
+            else
+            {
+                double pixelSizeIncreaseY = (imageHeight * zoom) - imageHeight;
+                tt.Y = -(pixelSizeIncreaseY / 2);
+            }
 
             OnImageViewerZoomChanged?.Invoke((int)(st.ScaleX * 100));
         }
@@ -111,10 +122,11 @@ namespace Ranger2
                 var tt = GetTranslateTransform(child);
 
                 double zoom = e.Delta > 0 ? .2 : -.2;
-                if (!(e.Delta > 0) && (st.ScaleX < .4 || st.ScaleY < .4))
+                if (!(e.Delta > 0) && (st.ScaleX < .1 || st.ScaleY < .1))
                     return;
 
                 Point relative = e.GetPosition(child);
+
                 double absoluteX;
                 double absoluteY;
 
@@ -151,11 +163,6 @@ namespace Ranger2
                 child.ReleaseMouseCapture();
                 this.Cursor = Cursors.Arrow;
             }
-        }
-
-        void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.Reset();
         }
 
         private void child_MouseMove(object sender, MouseEventArgs e)
