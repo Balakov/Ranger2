@@ -35,7 +35,7 @@ namespace Ranger2
             m_directoryChangeRequestor.OnDirectoryChanged -= OnDirectoryChanged;
         }
 
-        private void OnDirectoryChanged(string path, string previousPath)
+        private void OnDirectoryChanged(string path, string previousPath, string pathToSelect)
         {
             SetPreviouslySelectedDirectoryForPath(previousPath, path);
             PushPath(path);
@@ -67,7 +67,7 @@ namespace Ranger2
             }
 
             m_pathPushEnabled = false;
-            m_directoryChangeRequestor.SetDirectory(m_paths[m_currentIndex]);
+            m_directoryChangeRequestor.SetDirectory(m_paths[m_currentIndex], GetPreviouslySelectedDirectoryForPath(m_paths[m_currentIndex]));
             m_pathPushEnabled = true;
         }
 
@@ -82,7 +82,7 @@ namespace Ranger2
             }
 
             m_pathPushEnabled = false;
-            m_directoryChangeRequestor.SetDirectory(m_paths[m_currentIndex]);
+            m_directoryChangeRequestor.SetDirectory(m_paths[m_currentIndex], GetPreviouslySelectedDirectoryForPath(m_paths[m_currentIndex]));
             m_pathPushEnabled = true;
         }
 

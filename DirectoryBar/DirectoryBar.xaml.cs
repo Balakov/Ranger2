@@ -64,10 +64,10 @@ namespace Ranger2
 
         private void OnActivePanelChanged(DirectoryContentsControl panel)
         {
-            OnDirectoryChanged(panel.CurrentPath, null);
+            OnDirectoryChanged(panel.CurrentPath, null, null);
         }
 
-        private void OnDirectoryChanged(string path, string previousPath)
+        private void OnDirectoryChanged(string path, string previousPath, string pathToSelect)
         {
             TextBoxInstance.Text = path;
         }
@@ -86,7 +86,7 @@ namespace Ranger2
                     path = Path.GetDirectoryName(path);
                 }
 
-                DirectoryChangeRequester.SetDirectory(path);
+                DirectoryChangeRequester.SetDirectory(path, selectedFile);
             }
         }
     }

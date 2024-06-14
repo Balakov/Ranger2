@@ -42,7 +42,6 @@
                         </Setter.Value>
                     </Setter>
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
-                    <EventSetter Event="KeyDown" Handler="ListViewItem_KeyDown" />
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.View>

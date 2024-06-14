@@ -15,6 +15,7 @@ namespace Ranger2
         public interface IScrollIntoViewProvider
         {
             void ScrollIntoView(FileSystemObjectViewModel item);
+            void GrabFocus();
         }
 
         public abstract partial class ViewModel : Utility.UndoableViewModelBase,
@@ -24,7 +25,6 @@ namespace Ranger2
 
             private string m_currentDirectory;
             private KeySearch m_keySearch;
-            private PathHistory m_pathHistory;
             private KeyNavigationDirection m_lastKeyNavigationDirection = KeyNavigationDirection.Down;
 
             private UIElement m_dragDropTarget;
@@ -38,6 +38,7 @@ namespace Ranger2
             protected UserSettings.FilePanelSettings m_settings;
             protected ViewFilter.ViewMask m_viewMask = ViewFilter.ViewMask.ShowHidden | ViewFilter.ViewMask.ShowSystem;
             protected IDirectoryWatcher m_directoryWatcher;
+            protected PathHistory m_pathHistory;
             protected bool m_isLoading;
 
             protected ObservableCollection<FileSystemObjectViewModel> m_files { get; } = new();
@@ -102,8 +103,8 @@ namespace Ranger2
 
             // Derived class overrides
             public abstract DirectoryListingType ListingType { get; }
-            protected abstract void OnDirectoryChanged(string path);
-            protected abstract void OnActivateItem(FileSystemObjectViewModel viewModel);
+            protected abstract void OnDirectoryChanged(string path, string pathToSelect);
+            protected abstract void OnActivateSelectedItems();
             protected abstract void OnItemAdded(string path);
 
             protected ViewModel(PanelContext context,
@@ -118,13 +119,14 @@ namespace Ranger2
 
                 if (!string.IsNullOrEmpty(settings.Path))
                 {
-                    OnDirectoryChangedInternal(settings.Path, null);
+                    OnDirectoryChangedInternal(settings.Path, null, m_pathHistory.GetPreviouslySelectedDirectoryForPath(settings.Path));
                     m_pathHistory.PushPath(settings.Path);
                 }
 
                 OnBreadcrumbClickedCommand = DelegateCommand.Create((o) =>
                 {
-                    m_context.DirectoryChangeRequester.SetDirectory(o as string);
+                    string path = o as string;
+                    m_context.DirectoryChangeRequester.SetDirectory(path, m_pathHistory.GetPreviouslySelectedDirectoryForPath(path));
                 });
 
                 m_keySearch = new(this);
@@ -144,7 +146,7 @@ namespace Ranger2
                 m_statusBar.UpdateStatus(driveSpaceChanged, this);
             }
 
-            private void OnDirectoryChangedInternal(string path, string previousPath)
+            private void OnDirectoryChangedInternal(string path, string previousPath, string pathToSelect)
             {
                 m_currentDirectory = path;
                 m_settings.Path = path;
@@ -152,7 +154,21 @@ namespace Ranger2
                 Breadcrumbs.SetPath(path);
                 UpdateStatusBar(true);
 
-                OnDirectoryChanged(path);
+                OnDirectoryChanged(path, pathToSelect);
+            }
+
+            protected void SetSelectedFilename(string path)
+            {
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var fileToSelect = m_files.FirstOrDefault(x => x.FullPath == path);
+                    if (fileToSelect != null)
+                    {
+                        fileToSelect.IsSelected = true;
+                        m_scrollIntoViewProvider.ScrollIntoView(fileToSelect);
+                        m_scrollIntoViewProvider.GrabFocus();
+                    }
+                }
             }
 
             private bool TryFindFile(string path, out FileSystemObjectViewModel fileViewModel)
@@ -163,20 +179,12 @@ namespace Ranger2
 
             public void RefreshDirectory()
             {
-                OnDirectoryChanged(m_currentDirectory);
+                OnDirectoryChanged(m_currentDirectory, null);
             }
 
             public void OnCommonMouseDoubleClick(FileSystemObjectViewModel viewModel)
             {
-                OnActivateItem(viewModel);
-            }
-
-            public void OnCommonItemKeyDown(KeyEventArgs e, FileSystemObjectViewModel viewModel)
-            {
-                if (e.Key == Key.Enter)
-                {
-                    OnActivateItem(viewModel);
-                }
+                OnActivateSelectedItems();
             }
 
             private bool TryGetSelectedFiles(out IEnumerable<FileSystemObjectViewModel> viewModels)

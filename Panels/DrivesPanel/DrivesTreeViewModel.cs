@@ -113,7 +113,7 @@ namespace Ranger2
                 }
             }
 
-            public void SetDirectory(string path)
+            public void SetDirectory(string path, string pathToSelect = null)
             {
                 if (string.IsNullOrEmpty(path))
                     return;
@@ -162,7 +162,7 @@ namespace Ranger2
                     }
                 }
 
-                OnDirectoryChanged?.Invoke(path, m_panelLayout.CurrentPanel?.CurrentPath);
+                OnDirectoryChanged?.Invoke(path, m_panelLayout.CurrentPanel?.CurrentPath, pathToSelect);
             }
 
             private void UnSelectAll(DrivesTreeDirectoryViewModel root)

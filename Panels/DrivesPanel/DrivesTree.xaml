@@ -6,7 +6,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             Focusable="True"
+             FocusManager.IsFocusScope="True">
     <UserControl.Resources>
         <Style x:Key="TreeViewItemStyle" TargetType="TreeViewItem">
         </Style>

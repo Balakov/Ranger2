@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Ranger2
 {
@@ -32,15 +33,6 @@ namespace Ranger2
             }
         }
 
-        private void ListBoxItem_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (sender is ListViewItem listViewItem &&
-                listViewItem.DataContext is FileSystemObjectViewModel viewModel)
-            {
-                (DataContext as ViewModel).OnCommonItemKeyDown(e, viewModel);
-            }
-        }
-
         private void ListBox_Drop(object sender, DragEventArgs e)
         {
             if (DataContext is DirectoryContentsControl.ViewModel viewModel)
@@ -52,6 +44,12 @@ namespace Ranger2
         public void ScrollIntoView(FileSystemObjectViewModel item)
         {
             ListBoxInstance.ScrollIntoView(item);
+        }
+
+        public void GrabFocus()
+        {
+            ListBoxInstance.Focus();
+            Keyboard.Focus(ListBoxInstance);
         }
 
         private void ListBox_Selected(object sender, SelectionChangedEventArgs e)

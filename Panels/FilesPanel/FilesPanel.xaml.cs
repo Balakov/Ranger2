@@ -54,15 +54,6 @@ namespace Ranger2
             }
         }
 
-        private void ListViewItem_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (sender is ListViewItem listViewItem &&
-                listViewItem.DataContext is FileSystemObjectViewModel viewModel)
-            {
-                (DataContext as ViewModel).OnCommonItemKeyDown(e, viewModel);
-            }
-        }
-
         private void ListView_Drop(object sender, DragEventArgs e)
         {
             if (DataContext is DirectoryContentsControl.ViewModel viewModel)
@@ -84,6 +75,12 @@ namespace Ranger2
         public void ScrollIntoView(FileSystemObjectViewModel item)
         {
             ListViewInstance.ScrollIntoView(item);
+        }
+
+        public void GrabFocus()
+        {
+            ListViewInstance.Focus();
+            Keyboard.Focus(ListViewInstance);
         }
 
         private void ListView_Selected(object sender, SelectionChangedEventArgs e)

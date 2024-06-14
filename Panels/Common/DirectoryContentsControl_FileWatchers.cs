@@ -77,7 +77,7 @@ namespace Ranger2
                     //break;
                     case WatcherChangeTypes.All:
                         // Rescan the entire directory
-                        OnDirectoryChanged(m_currentDirectory);
+                        OnDirectoryChanged(m_currentDirectory, null);
                         break;
                 }
             }

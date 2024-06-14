@@ -180,7 +180,7 @@ namespace Ranger2
         public void SetContentFromPanel(DirectoryContentsControl otherPanel)
         {
             m_context.PanelLayout.SwitchFocus(this);
-            m_context.DirectoryChangeRequester.SetDirectory(otherPanel.m_settings.Path);
+            m_context.DirectoryChangeRequester.SetDirectory(otherPanel.m_settings.Path, null);
             SetListingType(otherPanel.m_settings.ListingType.Value);
         }
 

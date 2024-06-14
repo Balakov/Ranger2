@@ -382,7 +382,7 @@ namespace Ranger2
 
         public override void OnActivate()
         {
-            m_directoryChangeRequester.SetDirectory(FullPath);
+            m_directoryChangeRequester.SetDirectory(FullPath, null);
         }
 
         public override bool CanRename => true;

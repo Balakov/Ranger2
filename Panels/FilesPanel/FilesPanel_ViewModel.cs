@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace Ranger2
 {
@@ -49,18 +50,23 @@ namespace Ranger2
                 m_directoryScanner.OnDirectoryScanComplete += OnDirectoryScanComplete;
             }
 
-            protected override void OnActivateItem(FileSystemObjectViewModel viewModel)
+            protected override void OnActivateSelectedItems()
             {
-                viewModel.OnActivate();
+                m_files.FirstOrDefault(x => x.IsSelected)?.OnActivate();
             }
 
-            protected override void OnDirectoryChanged(string path)
+            protected override void OnDirectoryChanged(string path, string pathToSelect)
             {
                 m_files.Clear();
                 m_isLoading = true;
                 UpdateUIVisibility();
 
-                m_directoryScanner.ScanDirectory(path);
+                if (pathToSelect == null)
+                {
+                    pathToSelect = m_pathHistory.GetPreviouslySelectedDirectoryForPath(path);
+                }
+
+                m_directoryScanner.ScanDirectory(path, pathToSelect);
             }
 
             protected void OnDirectoryScanComplete(DirectoryScanner.ScanResult scanResult)
@@ -85,6 +91,8 @@ namespace Ranger2
                         {
                             OnItemAdded(file.Path);
                         }
+
+                        SetSelectedFilename(scanResult.PathToSelect);
                     }
                 }
                 catch (Exception e)

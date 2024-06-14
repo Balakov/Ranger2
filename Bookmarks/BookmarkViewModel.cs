@@ -110,8 +110,8 @@ namespace Ranger2
                 }
                 else
                 {
-                    string path = m_isFile ? System.IO.Path.GetDirectoryName(m_bookmark.Path) : m_bookmark.Path;
-                    m_context.DirectoryChangeRequester.SetDirectory(path);
+                    string directory = m_isFile ? System.IO.Path.GetDirectoryName(m_bookmark.Path) : m_bookmark.Path;
+                    m_context.DirectoryChangeRequester.SetDirectory(directory, m_bookmark.Path);
                 }
             }
 

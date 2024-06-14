@@ -30,15 +30,17 @@ namespace Ranger2
             public readonly string ScannedPath;
             public readonly IEnumerable<Filename> Files;
             public readonly IEnumerable<string> Directories;
+            public readonly string PathToSelect;
 
-            public ScanResult(string scannedPath, IEnumerable<Filename> files, IEnumerable<string> directories)
+            public ScanResult(string scannedPath, IEnumerable<Filename> files, IEnumerable<string> directories, string pathToSelect)
             {
                 ScannedPath = scannedPath?.TrimEnd('\\');
                 Files = files;
                 Directories = directories;
+                PathToSelect = pathToSelect;
             }
 
-            public static ScanResult Empty() => new ScanResult(null, [], []);
+            public static ScanResult Empty() => new ScanResult(null, [], [], null);
 
             public bool MatchesPath(string currentPath)
             {
@@ -52,7 +54,7 @@ namespace Ranger2
             }
         }
 
-        public virtual void ScanDirectory(string directory, IEnumerable<string> allowedExtensions = null)
+        public virtual void ScanDirectory(string directory, string pathToSelect, IEnumerable<string> allowedExtensions = null)
         {
             if (string.IsNullOrEmpty(directory))
             {
@@ -168,7 +170,7 @@ namespace Ranger2
 
                     files.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
 
-                    e.Result = new ScanResult(directory, files, directories);
+                    e.Result = new ScanResult(directory, files, directories, pathToSelect);
                 }
                 catch (Exception)
                 {

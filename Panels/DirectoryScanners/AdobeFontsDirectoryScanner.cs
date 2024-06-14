@@ -22,7 +22,7 @@ namespace Ranger2
             return directory == m_adobeLiveTypePath;
         }
 
-        public override void ScanDirectory(string directory, IEnumerable<string> allowedExtensions = null)
+        public override void ScanDirectory(string directory, string pathToSelect, IEnumerable<string> allowedExtensions = null)
         {
             BackgroundWorker backgroundThread = new BackgroundWorker();
 
@@ -81,7 +81,7 @@ namespace Ranger2
                     fontFiles.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
                 }
 
-                e.Result = new ScanResult(directory, fontFiles, []);
+                e.Result = new ScanResult(directory, fontFiles, [], pathToSelect);
             };
 
             backgroundThread.RunWorkerCompleted += new RunWorkerCompletedEventHandler((s, e) =>

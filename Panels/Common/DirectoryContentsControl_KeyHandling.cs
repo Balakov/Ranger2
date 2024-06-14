@@ -36,6 +36,10 @@ namespace Ranger2
                         HandlePaste();
                     }
                 }
+                else if (e.Key == Key.Enter)
+                {
+                    OnActivateSelectedItems();
+                }
                 else if (e.Key == Key.Back)
                 {
                     m_context.DirectoryChangeRequester.SetDirectoryToParent();
@@ -46,7 +50,7 @@ namespace Ranger2
                 }
                 else if (e.Key == Key.F5)
                 {
-                    OnDirectoryChanged(m_currentDirectory);
+                    OnDirectoryChanged(m_currentDirectory, null);
                 }
                 else if (e.Key == Key.F2)
                 {

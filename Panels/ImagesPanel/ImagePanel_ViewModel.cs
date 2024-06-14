@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Ranger2
@@ -95,8 +96,10 @@ namespace Ranger2
                 window.Show();
             }
 
-            protected override void OnActivateItem(FileSystemObjectViewModel viewModel)
+            protected override void OnActivateSelectedItems()
             {
+                var viewModel = m_files.FirstOrDefault(x => x.IsSelected);
+
                 if (viewModel is ImageViewModel imageViewModel)
                 {
                     ViewImage(imageViewModel);
@@ -107,12 +110,12 @@ namespace Ranger2
                 }
             }
 
-            protected override void OnDirectoryChanged(string path)
+            protected override void OnDirectoryChanged(string path, string pathToSelect)
             {
                 m_files.Clear();
                 m_isLoading = true;
                 UpdateUIVisibility();
-                m_directoryScanner.ScanDirectory(path);
+                m_directoryScanner.ScanDirectory(path, pathToSelect);
             }
 
             private void OnDirectoryScanComplete(DirectoryScanner.ScanResult scanResult)
@@ -135,6 +138,8 @@ namespace Ranger2
                 {
                     OnItemAddedInternal(file.Path, fromChangeEvent: false);
                 }
+
+                SetSelectedFilename(scanResult.PathToSelect);
 
                 m_isLoading = false;
                 UpdateUIVisibility();

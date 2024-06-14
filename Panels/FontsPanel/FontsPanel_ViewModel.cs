@@ -103,12 +103,12 @@ namespace Ranger2
                 m_adobeDirectorScanner.OnDirectoryScanComplete += OnDirectoryScanComplete;
             }
 
-            protected override void OnActivateItem(FileSystemObjectViewModel viewModel)
+            protected override void OnActivateSelectedItems()
             {
-                viewModel.OnActivate();
+                m_files.FirstOrDefault(x => x.IsSelected)?.OnActivate();
             }
 
-            protected override void OnDirectoryChanged(string path)
+            protected override void OnDirectoryChanged(string path, string pathToSelect)
             {
                 m_files.Clear();
                 m_isLoading = true;
@@ -116,11 +116,11 @@ namespace Ranger2
 
                 if (m_adobeDirectorScanner.IsAdobeFontsDirectory(path))
                 {
-                    m_adobeDirectorScanner.ScanDirectory(path);
+                    m_adobeDirectorScanner.ScanDirectory(path, pathToSelect);
                 }
                 else
                 {
-                    m_directoryScanner.ScanDirectory(path, s_allowedExtensions);
+                    m_directoryScanner.ScanDirectory(path, pathToSelect, s_allowedExtensions);
                 }
             }
 
@@ -147,6 +147,8 @@ namespace Ranger2
                         {
                             AddItemInternal(file.Path, file.Name, isAdobeFontsDirectory);
                         }
+
+                        SetSelectedFilename(scanResult.PathToSelect);
                     }
                 }
                 catch (Exception e)
