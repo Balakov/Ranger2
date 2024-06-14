@@ -51,6 +51,13 @@ namespace Ranger2
                 set => OnPropertyChanged(ref m_stretch, value);
             }
 
+            private BitmapScalingMode m_scalingMode = BitmapScalingMode.HighQuality;
+            public BitmapScalingMode ScalingMode
+            {
+                get => m_scalingMode;
+                set => OnPropertyChanged(ref m_scalingMode, value);
+            }
+
             public ViewModel(string filename)
             {
                 m_filename = filename;
@@ -60,7 +67,6 @@ namespace Ranger2
             {
                 ImageSource = image;
                 IsLoading = false;
-
                 SetTitle();
             }
 

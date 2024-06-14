@@ -18,7 +18,7 @@ namespace Ranger2
             void GrabFocus();
         }
 
-        public abstract partial class ViewModel : Utility.UndoableViewModelBase,
+        public abstract partial class ViewModel : Utility.ViewModelBase,
                                                   KeySearch.IVisualSearchProvider
         {
             private enum KeyNavigationDirection { Down, Up };
@@ -148,13 +148,16 @@ namespace Ranger2
 
             private void OnDirectoryChangedInternal(string path, string previousPath, string pathToSelect)
             {
-                m_currentDirectory = path;
-                m_settings.Path = path;
+                if (m_currentDirectory != path)
+                {
+                    m_currentDirectory = path;
+                    m_settings.Path = path;
 
-                Breadcrumbs.SetPath(path);
-                UpdateStatusBar(true);
+                    Breadcrumbs.SetPath(path);
+                    UpdateStatusBar(true);
 
-                OnDirectoryChanged(path, pathToSelect);
+                    OnDirectoryChanged(path, pathToSelect);
+                }
             }
 
             protected void SetSelectedFilename(string path)

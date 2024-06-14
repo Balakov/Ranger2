@@ -8,11 +8,26 @@
         <ColumnDefinition />
         <ColumnDefinition Width="Auto"/>
     </Grid.ColumnDefinitions>
-    
-    <Button Grid.Column="1" 
-            Command="{Binding ResetZoomCommand}"
-            Background="Transparent"
-            BorderBrush="Transparent">
-        <bi:BootstrapIcon Icon="ArrowRepeat" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
-    </Button>
+
+    <hc:UniformSpacingPanel Orientation="Horizontal" Spacing="1" Grid.Column="1">
+        <Button Command="{Binding ResetZoomCommand}"
+                Background="Transparent"
+                BorderBrush="Transparent">
+            <bi:BootstrapIcon Icon="ArrowRepeat" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+        </Button>
+
+        <Button Command="{Binding SetSmoothScalingCommand}"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                ToolTip="Smooth Scaling">
+            <bi:BootstrapIcon Icon="Circle" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+        </Button>
+
+        <Button Command="{Binding SetNearestNeighbourScalingCommand}"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                ToolTip="Nearest Neighbour Scaling">
+            <bi:BootstrapIcon Icon="Square" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+        </Button>
+    </hc:UniformSpacingPanel>
 </Grid>

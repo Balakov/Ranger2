@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Ranger2
@@ -56,6 +57,8 @@ namespace Ranger2
         public List<Bookmark> Bookmarks { get; set; } = new();
         
         public List<string> IgnoredDrives { get; set; } = new();
+
+        public BitmapScalingMode? ImageViewerScalingMode { get; set; }
 
         //
         // Non-serialised

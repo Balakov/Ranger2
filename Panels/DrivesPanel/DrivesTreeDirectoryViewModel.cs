@@ -6,9 +6,9 @@ using System.Windows.Media;
 
 namespace Ranger2
 {
-    public sealed partial class DrivesTree
+    public partial class DrivesTree
     {
-        private partial class ViewModel
+        public partial class ViewModel
         {
             public class DrivesTreeDirectoryViewModel : Utility.ViewModelBase, IconCache.IIconLoadedNotification
             {
@@ -40,7 +40,7 @@ namespace Ranger2
                     {
                         if (OnPropertyChanged(ref m_isExpanded, value) && 
                             value == true && 
-                            m_parentViewModel.ShouldEnableEventHandlers)
+                            m_parentViewModel.ShouldEnableExpandEvent)
                         {
                             OnExpand();
                         }
@@ -54,7 +54,7 @@ namespace Ranger2
                     set
                     {
                         if (OnPropertyChanged(ref m_isSelected, value) && 
-                            m_parentViewModel.ShouldEnableEventHandlers)
+                            m_parentViewModel.ShouldEnableSelectEvent)
                         {
                             OnSelect();
                         }

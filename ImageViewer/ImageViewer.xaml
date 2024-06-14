@@ -21,7 +21,7 @@
     
     <Grid>
         <local:ZoomBorder Background="#444" x:Name="ZoomBorderInstance" ClipToBounds="False">
-            <Image Source="{Binding ImageSource}" Stretch="{Binding Stretch}" RenderOptions.BitmapScalingMode="HighQuality" ClipToBounds="False" x:Name="ImageInstance" />
+            <Image Source="{Binding ImageSource}" Stretch="{Binding Stretch}" RenderOptions.BitmapScalingMode="{Binding ScalingMode}" ClipToBounds="False" x:Name="ImageInstance" />
         </local:ZoomBorder>
         <hc:CircleProgressBar IsIndeterminate="True" Width="40" Height="40" ArcThickness="6" Background="Transparent" Foreground="#fff" 
                               Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}"/>

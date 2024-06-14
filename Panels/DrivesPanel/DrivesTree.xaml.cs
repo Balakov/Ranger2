@@ -4,9 +4,9 @@ using System.Windows.Controls;
 
 namespace Ranger2
 {
-    public sealed partial class DrivesTree : UserControl
+    public partial class DrivesTree : UserControl
     {
-        private bool m_suppressRequestBringIntoView;
+        private Utility.EventHandlerSuppressor m_requestBringIntoViewSuppressor = new();
         private IPanelLayout m_layoutLayout;
         private readonly ManagementEventWatcher m_driveWatcher = new ManagementEventWatcher();
 
@@ -57,7 +57,7 @@ namespace Ranger2
         private void TreeViewItem_RequestBringIntoView(object sender, System.Windows.RequestBringIntoViewEventArgs e)
         {
             // Ignore re-entrant calls
-            if (m_suppressRequestBringIntoView)
+            if (!m_requestBringIntoViewSuppressor.ShouldEnableEventHandlers)
                 return;
 
             // Cancel the current scroll attempt
@@ -66,7 +66,7 @@ namespace Ranger2
             // Call BringIntoView using a rectangle that extends into "negative space" to the left of our
             // actual control. This allows the vertical scrolling behaviour to operate without adversely
             // affecting the current horizontal scroll position.
-            m_suppressRequestBringIntoView = true;
+            m_requestBringIntoViewSuppressor.DisableEventHandlers();
 
             TreeViewItem tvi = sender as TreeViewItem;
             if (tvi != null)
@@ -76,7 +76,7 @@ namespace Ranger2
                 tvi.BringIntoView(newTargetRect);
             }
 
-            m_suppressRequestBringIntoView = false;
+            m_requestBringIntoViewSuppressor.EnableEventHandlers();
         }
 
         // Correctly handle programmatically selected items

@@ -74,7 +74,7 @@ namespace Ranger2
             public BookmarkViewModel(UserSettings.Bookmark bookmark, BookmarkContext context, ViewModel parentViewModel)
             {
                 m_bookmark = bookmark;
-                m_isFile = File.Exists(m_bookmark.Path);
+                m_isFile = IsFile(bookmark.Path);
                 m_context = context;
                 m_parentViewModel = parentViewModel;
 
@@ -84,6 +84,11 @@ namespace Ranger2
                 DeleteBookmarkCommand = DelegateCommand.Create(Delete);
                 EditBookmarkCommand = DelegateCommand.Create(EditBookmark);
                 OrganiseBookmarksCommand = DelegateCommand.Create(() => m_parentViewModel.OrganiseBookmarks());
+            }
+
+            private bool IsFile(string path)
+            {
+                return path.StartsWith("\\\\") ? false : File.Exists(m_bookmark.Path);
             }
 
             public static void SetupDynamicProperties()
@@ -125,7 +130,7 @@ namespace Ranger2
                 var dialog = new EditBookmarkDialog(m_bookmark);
                 if(dialog.ShowDialog() == true)
                 {
-                    m_isFile = File.Exists(dialog.RenamedBookmarkPath);
+                    m_isFile = IsFile(dialog.RenamedBookmarkPath);
                     Name = dialog.RenamedBookmark;
                     Path = dialog.RenamedBookmarkPath;
                 }

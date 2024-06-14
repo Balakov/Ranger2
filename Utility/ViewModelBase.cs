@@ -25,13 +25,4 @@ namespace Ranger2.Utility
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(viewModelPropertyName));
         }
     }
-
-    public class UndoableViewModelBase : ViewModelBase
-    {
-        private int m_shouldDisableEventHandlersRefCount = 0;
-        public bool ShouldEnableEventHandlers => m_shouldDisableEventHandlersRefCount == 0;
-
-        public virtual void DisableEventHandlers() => m_shouldDisableEventHandlersRefCount++;
-        public virtual void EnableEventHandlers() => m_shouldDisableEventHandlersRefCount--;
-    }
 }

@@ -1,17 +1,22 @@
 ﻿using HandyControl.Tools.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Ranger2
 {
-    public sealed partial class DrivesTree
+    public partial class DrivesTree
     {
-        private partial class ViewModel : Utility.UndoableViewModelBase, IDirectoryChangeRequest
+        public partial class ViewModel : Utility.ViewModelBase, IDirectoryChangeRequest
         {
+            private Utility.EventHandlerSuppressor m_expandEventSuppressor = new();
+            public bool ShouldEnableExpandEvent => m_expandEventSuppressor.ShouldEnableEventHandlers;
+
+            private Utility.EventHandlerSuppressor m_setDirectoryEventSuppressor = new();
+            public bool ShouldEnableSelectEvent => m_expandEventSuppressor.ShouldEnableEventHandlers;
+            
             private IconCache m_iconCache;
             private IPanelLayout m_panelLayout;
 
@@ -29,11 +34,18 @@ namespace Ranger2
                 m_iconCache = iconCache;
                 m_panelLayout = panelLayout;
 
+                m_panelLayout.OnSwitchPanelFocus += (panel) =>
+                {
+                    m_setDirectoryEventSuppressor.DisableEventHandlers();
+                    SetDirectory(panel.CurrentPath);
+                    m_setDirectoryEventSuppressor.EnableEventHandlers();
+                };
+
                 CollapseTreeCommand = DelegateCommand.Create(() =>
                 {
-                    DisableEventHandlers();
+                    m_expandEventSuppressor.DisableEventHandlers();
                     CollapseTree(Directories, startLevel: 2);
-                    EnableEventHandlers();
+                    m_expandEventSuppressor.EnableEventHandlers();
                 });
 
                 // Called from View
@@ -146,10 +158,10 @@ namespace Ranger2
                             if (i == pathSplit.Length - 1)
                             {
                                 // Don't expand the leaf directory automatically, just select it.
-                                DisableEventHandlers();
+                                m_expandEventSuppressor.DisableEventHandlers();
                                 UnSelectAll(Directories.First());
                                 childDirectory.IsSelected = true;
-                                EnableEventHandlers();
+                                m_expandEventSuppressor.EnableEventHandlers();
                             }
                             else
                             {
@@ -162,7 +174,10 @@ namespace Ranger2
                     }
                 }
 
-                OnDirectoryChanged?.Invoke(path, m_panelLayout.CurrentPanel?.CurrentPath, pathToSelect);
+                if (m_setDirectoryEventSuppressor.ShouldEnableEventHandlers)
+                {
+                    OnDirectoryChanged?.Invoke(path, m_panelLayout.CurrentPanel?.CurrentPath, pathToSelect);
+                }
             }
 
             private void UnSelectAll(DrivesTreeDirectoryViewModel root)

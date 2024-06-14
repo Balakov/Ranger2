@@ -28,9 +28,9 @@ namespace Ranger2
         }
 
         public static readonly DependencyProperty PanelLayoutProperty = DependencyProperty.Register(nameof(PanelLayout),
-                                                                                                           typeof(IPanelLayout),
-                                                                                                           typeof(DirectoryBar),
-                                                                                                           new PropertyMetadata(null, OnDependencyPropertyChange));
+                                                                                                    typeof(IPanelLayout),
+                                                                                                    typeof(DirectoryBar),
+                                                                                                    new PropertyMetadata(null, OnDependencyPropertyChange));
 
         //
 

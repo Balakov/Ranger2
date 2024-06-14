@@ -26,16 +26,12 @@ namespace Ranger2
                         choosenMatch = matches[searchIndex % matches.Count];
                     }
 
-                    DisableEventHandlers();
-
                     foreach (var file in Files)
                     {
                         file.IsSelected = file == choosenMatch;
                     }
 
                     m_scrollIntoViewProvider?.ScrollIntoView(choosenMatch);
-                    
-                    EnableEventHandlers();
                 }
 
                 return false;
