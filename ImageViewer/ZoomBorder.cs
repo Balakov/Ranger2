@@ -65,18 +65,36 @@ namespace Ranger2
         {
             if (child != null)
             {
-                // reset zoom
+                // Reset zoom
                 var st = GetScaleTransform(child);
                 st.ScaleX = 1.0;
                 st.ScaleY = 1.0;
 
-                // reset pan
+                // Reset pan
                 var tt = GetTranslateTransform(child);
                 tt.X = 0.0;
                 tt.Y = 0.0;
 
                 OnImageViewerZoomChanged?.Invoke((int)(st.ScaleX * 100));
             }
+        }
+
+        public void ScaleToFit(double viewWidth, double viewHeight, double imageWidth, double imageHeight)
+        {
+            var st = GetScaleTransform(child);
+            double newScale = (imageHeight > imageWidth) ? viewHeight / imageHeight
+                                                         : viewWidth / imageWidth;
+
+            st.ScaleX = st.ScaleY = newScale;
+
+            double newWidth = imageWidth * newScale;
+            double newHeight = imageHeight * newScale;
+
+            var tt = GetTranslateTransform(child);
+            tt.X = -((newWidth - imageWidth) / 2);
+            tt.Y = -((newHeight - imageHeight) / 2);
+
+            OnImageViewerZoomChanged?.Invoke((int)(st.ScaleX * 100));
         }
 
         #region Child Events

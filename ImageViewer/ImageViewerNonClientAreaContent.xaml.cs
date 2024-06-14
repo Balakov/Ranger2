@@ -11,6 +11,8 @@ namespace Ranger2
             public ICommand ResetZoomCommand { get; set; }
             public ICommand SetSmoothScalingCommand { get; set; }
             public ICommand SetNearestNeighbourScalingCommand { get; set; }
+            public ICommand FullscreenCommand { get; set; }
+            public ICommand FitToViewCommand { get; set; }
 
             public ViewModel(ZoomBorder zoomBorder, ImageViewer.ViewModel imageViewModel)
             {
@@ -32,6 +34,23 @@ namespace Ranger2
                     zoomBorder?.Reset();
                     imageViewModel.ScalingMode = BitmapScalingMode.NearestNeighbor;
                     App.UserSettings.ImageViewerScalingMode = imageViewModel.ScalingMode;
+                });
+
+                FullscreenCommand = DelegateCommand.Create(() =>
+                {
+                    imageViewModel?.RequestFullScreen(true);
+                });
+
+                FitToViewCommand = DelegateCommand.Create(() =>
+                {
+                    if (imageViewModel?.ImageSource != null)
+                    {
+                        var image = imageViewModel.ImageSource;
+                        zoomBorder?.ScaleToFit(imageViewModel.ViewAreaWidth, 
+                                               imageViewModel.ViewAreaHeight, 
+                                               image.Width, 
+                                               image.Height);
+                    }
                 });
 
                 imageViewModel.ScalingMode = App.UserSettings.ImageViewerScalingMode ?? BitmapScalingMode.HighQuality;

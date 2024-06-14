@@ -1,14 +1,23 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Ranger2
 {
-    public partial class ImageViewer
+    public interface IImageViewerFullScreenRequestProcessor
     {
-        public class ViewModel : Utility.ViewModelBase, ImageCache.IImageLoadedNotification
+        void RequestFullscreen(bool enabled);
+    }
+
+    public partial class ImageViewer : ImageCache.IImageLoadedNotification,
+                                       IImageViewerFullScreenRequestProcessor
+    {
+        public class ViewModel : Utility.ViewModelBase
         {
             private const string c_titlePrefix = "Ranger 2 - Image Viewer";
             private string m_filename;
+            private FrameworkElement m_containerElement;
+            private IImageViewerFullScreenRequestProcessor m_fullscreenRequest;
 
             private string m_title = c_titlePrefix;
             public string Title
@@ -44,7 +53,7 @@ namespace Ranger2
                 set => OnPropertyChanged(ref m_imageSource, value);
             }
 
-            private Stretch m_stretch = Stretch.Uniform;
+            private Stretch m_stretch = Stretch.None;
             public Stretch Stretch
             {
                 get => m_stretch;
@@ -58,16 +67,28 @@ namespace Ranger2
                 set => OnPropertyChanged(ref m_scalingMode, value);
             }
 
-            public ViewModel(string filename)
+            public double ViewAreaWidth => m_containerElement.ActualWidth;
+            public double ViewAreaHeight => m_containerElement.ActualHeight;
+
+            public ViewModel(string filename, 
+                             FrameworkElement containerElement, 
+                             IImageViewerFullScreenRequestProcessor fullscreenRequest)
             {
                 m_filename = filename;
+                m_containerElement = containerElement;
+                m_fullscreenRequest = fullscreenRequest;
             }
 
-            public void ImageLoaded(ImageSource image)
+            public void ImageLoaded(ImageSource image, ZoomBorder zoomBorder)
             {
                 ImageSource = image;
                 IsLoading = false;
-                SetTitle();
+                
+                if (image != null)
+                {
+                    SetTitle();
+                    zoomBorder.ScaleToFit(ViewAreaWidth, ViewAreaHeight, image.Width, image.Height);
+                }
             }
 
             private void SetTitle()
@@ -85,6 +106,8 @@ namespace Ranger2
 
                 Title = title;
             }
+
+            public void RequestFullScreen(bool enabled) => m_fullscreenRequest.RequestFullscreen(enabled);
         }
 
         public ImageViewer(ImageCache imageCache, string path)
@@ -92,7 +115,7 @@ namespace Ranger2
             InitializeComponent();
             Owner = Application.Current.MainWindow;
 
-            var viewModel = new ViewModel(System.IO.Path.GetFileName(path));
+            var viewModel = new ViewModel(System.IO.Path.GetFileName(path), GridInstance, this);
 
             NonClientAreaContent = new ImageViewerNonClientAreaContent(ZoomBorderInstance, viewModel);
             DataContext = viewModel;
@@ -105,15 +128,41 @@ namespace Ranger2
                 }   
             };
 
-            imageCache.QueueImageLoad(path, viewModel);
+            imageCache.QueueImageLoad(path, this);
         }
 
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Escape)
+            if (e.Key == Key.F12)
             {
-                Close();
+                RequestFullscreen(!IsFullScreen);
             }
+            else if (e.Key == Key.Escape)
+            {
+                if (IsFullScreen)
+                {
+                    RequestFullscreen(false);
+                }
+                else
+                {
+                    Close();
+                }
+            }
+        }
+
+        public void ImageLoaded(ImageSource image)
+        {
+            if (DataContext is ViewModel viewModel)
+            {
+                viewModel.ImageLoaded(image, ZoomBorderInstance);
+            }
+        }
+
+        public void RequestFullscreen(bool enabled)
+        {
+            IsFullScreen = enabled;
+            Focus();
+            Keyboard.Focus(this);
         }
     }
 }

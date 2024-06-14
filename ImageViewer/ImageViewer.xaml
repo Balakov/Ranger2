@@ -18,11 +18,13 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" Invert="True" />
     </hc:Window.Resources>
-    
-    <Grid>
-        <local:ZoomBorder Background="#444" x:Name="ZoomBorderInstance" ClipToBounds="False">
-            <Image Source="{Binding ImageSource}" Stretch="{Binding Stretch}" RenderOptions.BitmapScalingMode="{Binding ScalingMode}" ClipToBounds="False" x:Name="ImageInstance" />
-        </local:ZoomBorder>
+
+    <Grid Background="#444" x:Name="GridInstance">
+        <Viewbox Stretch="None">
+            <local:ZoomBorder x:Name="ZoomBorderInstance" ClipToBounds="False">
+                <Image Source="{Binding ImageSource}" Stretch="{Binding Stretch}" RenderOptions.BitmapScalingMode="{Binding ScalingMode}" ClipToBounds="False" x:Name="ImageInstance" />
+            </local:ZoomBorder>
+        </Viewbox>
         <hc:CircleProgressBar IsIndeterminate="True" Width="40" Height="40" ArcThickness="6" Background="Transparent" Foreground="#fff" 
                               Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}"/>
     </Grid>
