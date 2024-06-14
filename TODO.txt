@@ -1,3 +1,1 @@
 ﻿Image viewer default zoom level
-Image selection border
-Region drag selects as it drags

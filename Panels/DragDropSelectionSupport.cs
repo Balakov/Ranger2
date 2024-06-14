@@ -229,7 +229,7 @@ namespace Ranger2
                 if (m_dragSelectionActive)
                 {
                     Point mousePositionLocal = e.GetPosition(m_listBox);
-                    UpdateDragSelectionRect(m_dragStartPositionLocal, mousePositionLocal);
+                    UpdateDragSelectionRect(m_dragStartPositionLocal, mousePositionLocal, listBox);
                     e.Handled = true;
                 }
                 else
@@ -251,7 +251,7 @@ namespace Ranger2
                             }
 
                             Point mousePositionLocal = e.GetPosition(m_listBox);
-                            InitDragSelectionRect(m_dragStartPositionLocal, mousePositionLocal);
+                            InitDragSelectionRect(m_dragStartPositionLocal, mousePositionLocal, listBox);
                         }
                         else
                         {
@@ -276,13 +276,13 @@ namespace Ranger2
             }
         }
 
-        private void InitDragSelectionRect(Point pt1, Point pt2)
+        private void InitDragSelectionRect(Point pt1, Point pt2, ListBox listBox)
         {
-            UpdateDragSelectionRect(pt1, pt2);
+            UpdateDragSelectionRect(pt1, pt2, listBox);
             m_dragSelectionCanvas.Visibility = Visibility.Visible;
         }
 
-        private void UpdateDragSelectionRect(Point pt1, Point pt2)
+        private void UpdateDragSelectionRect(Point pt1, Point pt2, ListBox listBox)
         {
             double x, y, width, height;
 
@@ -315,16 +315,11 @@ namespace Ranger2
             Canvas.SetTop(m_dragSelectionBorder, y);
             m_dragSelectionBorder.Width = width;
             m_dragSelectionBorder.Height = height;
-        }
-
-        private void ApplyDragSelectionRect(ListBox listBox)
-        {
+            
             if (listBox != null)
             {
-                double x = Canvas.GetLeft(m_dragSelectionBorder);
-                double y = Canvas.GetTop(m_dragSelectionBorder);
-                double width = m_dragSelectionBorder.Width;
-                double height = m_dragSelectionBorder.Height;
+                listBox.UnselectAll();
+
                 Rect dragRect = new Rect(x, y, width, height);
 
                 // Find and select all the list box items.
@@ -343,7 +338,10 @@ namespace Ranger2
                     }
                 }
             }
+        }
 
+        private void ApplyDragSelectionRect(ListBox listBox)
+        {
             m_dragSelectionCanvas.Visibility = Visibility.Collapsed;
         }
     }
