@@ -1,4 +1,3 @@
 ﻿Image viewer default zoom level
-Image viewer switch to nearest neighbour
-White selection text for listviews
-Image selectio border
+Image selection border
+Region drag selects as it drags

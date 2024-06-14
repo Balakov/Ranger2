@@ -21,6 +21,7 @@
 
             <Style x:Key="CentredListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">
                 <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Margin" Value="1" />
                 <Setter Property="IsSelected" Value="{Binding IsSelected,Mode=TwoWay}" />
                 <Setter Property="ContextMenu">
                     <Setter.Value>
@@ -28,6 +29,19 @@
                     </Setter.Value>
                 </Setter>
                 <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
+                <Style.Triggers>
+                    <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border CornerRadius="6" x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <DataTemplate x:Key="ImageTemplate">

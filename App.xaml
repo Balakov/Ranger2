@@ -13,7 +13,7 @@
                             <SolidColorBrush x:Key="PrimaryBrush" Color="#39f" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Dark" hc:ThemeDictionary.Key="Dark">
-                            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#CCCCCC" />
+                            <SolidColorBrush x:Key="PrimaryTextBrush" Color="#dddddd" />
                             <SolidColorBrush x:Key="PrimaryBrush" Color="#26c" />
                             <SolidColorBrush x:Key="DangerBrush" Color="#AE1D26" />
                             <SolidColorBrush x:Key="SuccessBrush" Color="#409040" />

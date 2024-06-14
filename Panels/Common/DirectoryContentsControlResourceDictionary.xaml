@@ -31,7 +31,17 @@
         <Border Padding="5,0">
             <StackPanel Orientation="Horizontal" Opacity="{Binding IsGreyedOut,Converter={StaticResource GreyedOutConverter}}">
                 <Image Source="{Binding Icon}" Height="18" Margin="0,0,5,0" />
-                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" Style="{StaticResource TextBlockDefault}" />
+                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockDefault}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
         </Border>
     </DataTemplate>
