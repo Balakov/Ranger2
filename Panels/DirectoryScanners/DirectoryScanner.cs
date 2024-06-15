@@ -168,8 +168,8 @@ namespace Ranger2
                         }
                     }
 
-                    directories.Sort((a, b) => string.CompareOrdinal(a, b));
-                    files.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+                    directories.Sort((a, b) => string.Compare(a, b, StringComparison.InvariantCultureIgnoreCase));
+                    files.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
 
                     e.Result = new ScanResult(directory, files, directories, pathToSelect);
                 }

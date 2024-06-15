@@ -78,7 +78,7 @@ namespace Ranger2
                         }
                     }
 
-                    fontFiles.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+                    fontFiles.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 e.Result = new ScanResult(directory, fontFiles, [], pathToSelect);
