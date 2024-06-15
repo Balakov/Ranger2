@@ -30,6 +30,7 @@ namespace Ranger2
                 item.DataContext is FileSystemObjectViewModel itemViewModel)
             {
                 (DataContext as ViewModel).OnCommonMouseDoubleClick(itemViewModel);
+                e.Handled = true;
             }
         }
 

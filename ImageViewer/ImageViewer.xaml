@@ -11,8 +11,7 @@
            Title="{Binding Title}" 
            Height="1024" 
            Width="1024"
-           Focusable="True"
-           FocusManager.IsFocusScope="True"
+           ShowInTaskbar="False"
            KeyDown="Window_KeyDown">
     <hc:Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

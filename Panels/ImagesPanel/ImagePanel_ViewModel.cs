@@ -95,6 +95,7 @@ namespace Ranger2
             {
                 var window = new ImageViewer(m_context.ImageCache, imageViewModel.FullPath);
                 window.Show();
+                window.Activate();
             }
 
             protected override void OnActivateSelectedItems()

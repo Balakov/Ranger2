@@ -228,13 +228,6 @@ namespace Ranger2
             DataContext = m_viewModel;
 
             NonClientAreaContent = new ImageViewerNonClientAreaContent(ZoomBorderInstance, m_viewModel);
-
-            // Ensure the window is activated using the dispatcher
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Activate();
-                Focus();
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
