@@ -89,7 +89,8 @@ namespace Ranger2
 
             public void OnCommonPreviewKeyDown(KeyEventArgs e)
             {
-                bool isNavigationKey = (e.Key == Key.Down || 
+                bool isNavigationKey = !KeyboardUtilities.AnyModifiersDown && 
+                                       (e.Key == Key.Down || 
                                         e.Key == Key.Up || 
                                         e.Key == Key.Left || 
                                         e.Key == Key.Right);
