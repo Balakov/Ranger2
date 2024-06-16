@@ -1,4 +1,4 @@
-﻿using System;
+﻿using HandyControl.Tools.Command;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace Ranger2
         public class ViewModel : Utility.ViewModelBase,
                                  ImageCache.IImageLoadedNotification
         {
-            private const string c_titlePrefix = "Ranger 2 - Image Viewer";
+            private const string c_defaultTitle = "Ranger 2 - Image Viewer";
             private string m_path;
             private string m_filename;
             private FrameworkElement m_containerElement;
@@ -27,7 +27,7 @@ namespace Ranger2
             private ImageCache m_imageCache;
             private DirectoryScanner m_directoryScanner = new();
 
-            private string m_title = c_titlePrefix;
+            private string m_title = c_defaultTitle;
             public string Title
             {
                 get => m_title;
@@ -78,6 +78,12 @@ namespace Ranger2
             public double ViewAreaWidth => m_containerElement.ActualWidth;
             public double ViewAreaHeight => m_containerElement.ActualHeight;
 
+            public ICommand ResetZoomCommand { get; set; }
+            public ICommand SetSmoothScalingCommand { get; set; }
+            public ICommand SetNearestNeighbourScalingCommand { get; set; }
+            public ICommand FullscreenCommand { get; set; }
+            public ICommand FitToViewCommand { get; set; }
+
             public ViewModel(string path, 
                              FrameworkElement containerElement, 
                              IImageViewerFullScreenRequestProcessor fullscreenRequest,
@@ -90,6 +96,38 @@ namespace Ranger2
                 m_imageCache = imageCache;
                 
                 m_zoomBorder.OnImageViewerZoomChanged += (zoomLevel) => ZoomLevel = zoomLevel;
+
+
+                ResetZoomCommand = DelegateCommand.Create(() =>
+                {
+                    zoomBorder?.Reset();
+                });
+
+                SetSmoothScalingCommand = DelegateCommand.Create(() =>
+                {
+                    zoomBorder?.Reset();
+                    ScalingMode = BitmapScalingMode.HighQuality;
+                    App.UserSettings.ImageViewerScalingMode = ScalingMode;
+                });
+
+                SetNearestNeighbourScalingCommand = DelegateCommand.Create(() =>
+                {
+                    zoomBorder?.Reset();
+                    ScalingMode = BitmapScalingMode.NearestNeighbor;
+                    App.UserSettings.ImageViewerScalingMode = ScalingMode;
+                });
+
+                FullscreenCommand = DelegateCommand.Create(() =>
+                {
+                    RequestFullScreen(true);
+                });
+
+                FitToViewCommand = DelegateCommand.Create(() =>
+                {
+                    ScaleToFit();
+                });
+
+                ScalingMode = App.UserSettings.ImageViewerScalingMode ?? BitmapScalingMode.HighQuality;
 
                 LoadImage(path);
             }
@@ -118,7 +156,7 @@ namespace Ranger2
 
             private void SetTitle()
             {
-                string title = Title = $"{c_titlePrefix} - {m_filename} - ";
+                string title = Title = $"{m_filename} - ";
 
                 if (m_isLoading)
                 {
@@ -246,7 +284,7 @@ namespace Ranger2
             }
             else if (e.Key == Key.Escape)
             {
-                if (IsFullScreen)
+                if (IsInFullScreen)
                 {
                     RequestFullscreen(false);
                 }
@@ -257,14 +295,24 @@ namespace Ranger2
             }
         }
 
+        public bool IsInFullScreen => WindowStyle == WindowStyle.None;
+
         public void RequestFullscreen(bool enabled)
         {
-            IsFullScreen = enabled;
-
             if (!enabled)
             {
-                m_viewModel.ScaleToFit();
+                IsFullScreen = false;
+                WindowState = WindowState.Normal;
+                //WindowStyle = WindowStyle.SingleBorderWindow;
             }
+            else
+            {
+                //WindowStyle = WindowStyle.None;
+                WindowState = WindowState.Maximized;
+                IsFullScreen = true;
+            }
+                
+            m_viewModel.ScaleToFit();
         }
     }
 }

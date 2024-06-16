@@ -28,6 +28,7 @@ namespace Ranger2
                     try
                     {
                         File.WriteAllText(dialog.RenamedFile, string.Empty);
+                        m_pendingSelelectedPath = dialog.RenamedFile;
                     }
                     catch { }
                 }
@@ -55,6 +56,7 @@ namespace Ranger2
                     try
                     {
                         Directory.CreateDirectory(dialog.RenamedFile);
+                        m_pendingSelelectedPath = dialog.RenamedFile;
                     }
                     catch { }
                 }
@@ -63,15 +65,8 @@ namespace Ranger2
             public void AddNewShortcut(string path, string sourcePath)
             {
                 vbAccelerator.Components.Shell.ShellLink link = new();
-
                 link.ShortCutFile = path;
                 link.Target = sourcePath;
-                //link.Arguments = txtArguments.Text;
-                //link.Description = txtDescription.Text;
-                //link.IconPath = txtIconFile.Text;
-                //link.IconIndex = (txtIconIndex.Text.Length > 0 ? System.Int32.Parse(txtIconIndex.Text) : 0);
-
-                // save the link:
                 link.Save();
             }
 

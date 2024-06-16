@@ -14,17 +14,19 @@ namespace Ranger2
             public static void OnCommonDrop(DragEventArgs e, string currentDirectory, UIElement dropTarget)
             {
                 var effect = GetDesiredDragDropOperation(e, currentDirectory, dropTarget);
-
-                DroppedFiles droppedData = PathsFromDragDropSource(e.Data, effect);
-
-                if (droppedData.Files != null && 
-                    droppedData.Files.Count() > 0)
+                if (effect != DragDropEffects.None)
                 {
-                    // Copy the files to the current directory unless we dragged onto a specific directory
-                    FileSystemObjectViewModel dropItem = (dropTarget.InputHitTest(e.GetPosition(dropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
-                        
-                    string destinationPath = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : currentDirectory;
-                    OnDropOrPaste(droppedData.Files, destinationPath, droppedData.FileOp, FileOperations.PasteOverSelfType.NotAllowed);
+                    DroppedFiles droppedData = PathsFromDragDropSource(e.Data, effect);
+
+                    if (droppedData.Files != null &&
+                        droppedData.Files.Count() > 0)
+                    {
+                        // Copy the files to the current directory unless we dragged onto a specific directory
+                        FileSystemObjectViewModel dropItem = (dropTarget.InputHitTest(e.GetPosition(dropTarget)) as FrameworkElement)?.DataContext as FileSystemObjectViewModel;
+
+                        string destinationPath = (dropItem is DirectoryViewModel dirViewModel) ? dirViewModel.FullPath : currentDirectory;
+                        OnDropOrPaste(droppedData.Files, destinationPath, droppedData.FileOp, FileOperations.PasteOverSelfType.NotAllowed);
+                    }
                 }
             }
 

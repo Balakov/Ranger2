@@ -147,12 +147,12 @@ namespace Ranger2
                 UpdateUIVisibility();
             }
 
-            protected override void OnItemAdded(string path)
+            protected override FileSystemObjectViewModel OnItemAdded(string path)
             {
-                OnItemAddedInternal(path, fromChangeEvent: true);
+                return OnItemAddedInternal(path, fromChangeEvent: true);
             }
 
-            private void OnItemAddedInternal(string path, bool fromChangeEvent)
+            private FileSystemObjectViewModel OnItemAddedInternal(string path, bool fromChangeEvent)
             {
                 if (m_context.ImageCache.CanDecode(path))
                 {
@@ -162,8 +162,11 @@ namespace Ranger2
                     {
                         var viewModel = new ImageViewModel(info, w, h, m_context.ImageCache, fromChangeEvent, this);
                         m_files.Add(viewModel);
+                        return viewModel;
                     }
                 }
+
+                return null;
             }
         }
     }

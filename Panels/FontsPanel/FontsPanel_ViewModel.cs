@@ -160,22 +160,24 @@ namespace Ranger2
                 UpdateUIVisibility();
             }
 
-            protected override void OnItemAdded(string path)
+            protected override FileSystemObjectViewModel OnItemAdded(string path)
             {
                 if (m_adobeDirectorScanner.IsAdobeFontsDirectory(m_settings.Path))
                 {
-                    // Don't bother watching changes to the adibe fonts directories as that's not actually
+                    // Don't bother watching changes to the adobe fonts directories as that's not actually
                     // where the fonts are stored.
-                    return;
+                    return null;
                 }
 
                 if (s_allowedExtensions.Contains(Path.GetExtension(path).ToLower()))
                 {
-                    AddItemInternal(path, alternateName: null, isAdobeFont: false);
+                    return AddItemInternal(path, alternateName: null, isAdobeFont: false);
                 }
+
+                return null;
             }
 
-            private void AddItemInternal(string path, string alternateName, bool isAdobeFont)
+            private FileSystemObjectViewModel AddItemInternal(string path, string alternateName, bool isAdobeFont)
             {
                 try
                 {
@@ -198,12 +200,15 @@ namespace Ranger2
                     {
                         var fontViewModel = new FontViewModel(leafName, info, m_context, isAdobeFont, this);
                         m_files.Add(fontViewModel);
+                        return fontViewModel;
                     }
                 }
                 catch
                 {
                     // Ignore files we don't have permission to read
                 }
+
+                return null;
             }
         }
     }

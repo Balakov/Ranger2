@@ -105,7 +105,7 @@ namespace Ranger2
                 UpdateUIVisibility();
             }
 
-            protected override void OnItemAdded(string path)
+            protected override FileSystemObjectViewModel OnItemAdded(string path)
             {
                 try
                 {
@@ -116,12 +116,15 @@ namespace Ranger2
                         //bool isShortcut = Path.GetExtension(fi.FullName).ToLower() == ".lnk";
                         var fileViewModel = new FileViewModel(null, info, m_context, this);
                         m_files.Add(fileViewModel);
+                        return fileViewModel;
                     }
                 }
                 catch
                 {
                     // Ignore files we don't have permission to read
                 }
+                    
+                return null;
             }
         }
         

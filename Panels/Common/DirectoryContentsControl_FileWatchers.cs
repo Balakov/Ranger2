@@ -11,21 +11,30 @@ namespace Ranger2
                 switch (changeType)
                 {
                     case WatcherChangeTypes.Created:
-                        if (Directory.Exists(path))
                         {
-                            var directoryViewModel = CreateDirectoryViewModel(path, m_viewMask);
-                            if (directoryViewModel != null)
+                            FileSystemObjectViewModel newItem = null;
+                            if (Directory.Exists(path))
                             {
-                                m_files.Add(directoryViewModel);
+                                newItem = CreateDirectoryViewModel(path, m_viewMask);
+                                if (newItem != null)
+                                {
+                                    m_files.Add(newItem);
+                                    UpdateUIVisibility();
+                                    UpdateStatusBar(driveSpaceChanged: true);
+                                }
+                            }
+                            else if (File.Exists(path))
+                            {
+                                newItem = OnItemAdded(path);
                                 UpdateUIVisibility();
                                 UpdateStatusBar(driveSpaceChanged: true);
                             }
-                        }
-                        else if (File.Exists(path))
-                        {
-                            OnItemAdded(path);
-                            UpdateUIVisibility();
-                            UpdateStatusBar(driveSpaceChanged: true);
+
+                            if (newItem != null && newItem.FullPath == m_pendingSelelectedPath)
+                            {
+                                newItem.IsSelected = true;
+                                m_pendingSelelectedPath = null;
+                            }
                         }
                         break;
                     case WatcherChangeTypes.Deleted:

@@ -10,5 +10,6 @@ namespace Ranger2
         public static bool IsAltDown => Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
         public static bool IsControlDown => Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
         public static bool IsShiftDown => Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+        public static bool AnyModifiersDown => IsAltDown || IsControlDown || IsShiftDown;
     }
 }

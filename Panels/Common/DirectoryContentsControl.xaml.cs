@@ -167,14 +167,19 @@ namespace Ranger2
             (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
         }
 
-        private void OnKeyUp(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            (DataContext as ViewModel)?.OnCommonKeyUp(e);
+            (DataContext as ViewModel)?.OnCommonKeyDown(e);
         }
 
         public void SetPanelVisibility(bool visible)
         {
             SetListingType(visible ? m_settings.ListingType.Value : DirectoryListingType.None);
+        }
+
+        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        {
+            m_context.PanelLayout.SwitchFocus(this);
         }
 
         public void SetContentFromPanel(DirectoryContentsControl otherPanel)

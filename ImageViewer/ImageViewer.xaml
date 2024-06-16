@@ -1,30 +1,31 @@
 ﻿<hc:Window x:Class="Ranger2.ImageViewer"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:hc="https://handyorg.github.io/handycontrol"
-           xmlns:local="clr-namespace:Ranger2"
-           xmlns:converters="clr-namespace:Ranger2.Converters"
-           mc:Ignorable="d"
-           WindowStartupLocation="CenterOwner"
-           Title="{Binding Title}" 
-           Height="1024" 
-           Width="1024"
-           ShowInTaskbar="False"
-           KeyDown="Window_KeyDown">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:local="clr-namespace:Ranger2"
+        xmlns:converters="clr-namespace:Ranger2.Converters"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}" 
+        Height="1024" 
+        Width="1024"
+        ShowInTaskbar="False"
+        KeyDown="Window_KeyDown">
     <hc:Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" Invert="True" />
     </hc:Window.Resources>
 
-    <Grid Background="#444" x:Name="GridInstance">
+    <Grid x:Name="GridInstance" Background="#353535">
         <Viewbox Stretch="None">
             <local:ZoomBorder x:Name="ZoomBorderInstance">
                 <Image Source="{Binding ImageSource}" Stretch="{Binding Stretch}" RenderOptions.BitmapScalingMode="{Binding ScalingMode}" x:Name="ImageInstance" />
             </local:ZoomBorder>
         </Viewbox>
         <hc:CircleProgressBar IsIndeterminate="True" Width="40" Height="40" ArcThickness="6" Background="Transparent" Foreground="#fff" 
-                              Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                Visibility="{Binding IsLoading,Converter={StaticResource BoolToVisibilityConverter}}"/>
     </Grid>
 </hc:Window>

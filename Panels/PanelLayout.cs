@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualBasic.Devices;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Ranger2
@@ -81,6 +82,8 @@ namespace Ranger2
                 if (isNewActivePanel)
                 {
                     OnSwitchPanelFocus?.Invoke(panel);
+                    panel.Focus();
+                    System.Windows.Input.Keyboard.Focus(panel);
                 }
             }
         }

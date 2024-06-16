@@ -82,8 +82,11 @@ namespace Ranger2
             var st = GetScaleTransform(child);
             var tt = GetTranslateTransform(child);
 
-            double zoom = (imageHeight > imageWidth) ? viewHeight / imageHeight
-                                                     : viewWidth / imageWidth;
+            double ratioX = viewWidth / imageWidth;
+            double ratioY = viewHeight / imageHeight;
+            // use whichever multiplier is smaller
+            double zoom = ratioX < ratioY ? ratioX : ratioY;
+
             st.ScaleX = zoom;
             st.ScaleY = zoom;
 

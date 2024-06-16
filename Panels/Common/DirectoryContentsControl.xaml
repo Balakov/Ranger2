@@ -8,7 +8,7 @@
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
              mc:Ignorable="d"
-             KeyUp="OnKeyUp"
+             KeyDown="OnKeyDown"
              Focusable="True"
              FocusManager.IsFocusScope="True"
              PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown"

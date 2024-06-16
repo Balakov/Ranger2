@@ -57,7 +57,10 @@ namespace Ranger2
             public BreadcrumbsViewModel Breadcrumbs { get; } = new();
             public ICommand OnBreadcrumbClickedCommand { get; }
             public DriveInfoStatusBar m_statusBar = new DriveInfoStatusBar();
-            
+
+            // Path to select after adding a new file or directory
+            private string m_pendingSelelectedPath = null;
+
             private string m_statusBarDriveSpaceString;
             public string StatusBarDriveSpaceString
             {
@@ -105,7 +108,7 @@ namespace Ranger2
             public abstract DirectoryListingType ListingType { get; }
             protected abstract void OnDirectoryChanged(string path, string pathToSelect);
             protected abstract void OnActivateSelectedItems();
-            protected abstract void OnItemAdded(string path);
+            protected abstract FileSystemObjectViewModel OnItemAdded(string path);
 
             protected ViewModel(PanelContext context,
                                 UserSettings.FilePanelSettings settings,

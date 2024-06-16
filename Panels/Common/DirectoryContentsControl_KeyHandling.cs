@@ -8,7 +8,7 @@ namespace Ranger2
     {
         public partial class ViewModel
         {
-            public void OnCommonKeyUp(KeyEventArgs e)
+            public void OnCommonKeyDown(KeyEventArgs e)
             {
                 if (KeyboardUtilities.IsControlDown)
                 {

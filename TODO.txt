@@ -1,2 +1,2 @@
 ﻿Bring into view of a directory when going up a directory ?
-Focus for image viewer when creating new window.
+Can't see iPhone when connected/Can't drag/drop iphone photos. - https://github.com/Bassman2/MediaDevices/blob/main/Demo/Demo%20Share/MediaDevicesAppShare/ViewModel/MainViewModel.cs
