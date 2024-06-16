@@ -105,16 +105,16 @@ namespace Ranger2
 
                 SetSmoothScalingCommand = DelegateCommand.Create(() =>
                 {
-                    zoomBorder?.Reset();
                     ScalingMode = BitmapScalingMode.HighQuality;
                     App.UserSettings.ImageViewerScalingMode = ScalingMode;
+                    ScaleToFit();
                 });
 
                 SetNearestNeighbourScalingCommand = DelegateCommand.Create(() =>
                 {
-                    zoomBorder?.Reset();
                     ScalingMode = BitmapScalingMode.NearestNeighbor;
                     App.UserSettings.ImageViewerScalingMode = ScalingMode;
+                    ScaleToFit();
                 });
 
                 FullscreenCommand = DelegateCommand.Create(() =>
