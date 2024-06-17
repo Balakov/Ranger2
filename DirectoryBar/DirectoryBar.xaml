@@ -6,5 +6,10 @@
              xmlns:local="clr-namespace:Ranger2"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TextBox x:Name="TextBoxInstance" KeyUp="TextBoxInstance_KeyUp" />
+    <TextBox x:Name="TextBoxInstance" 
+             KeyUp="TextBoxInstance_KeyUp" 
+             AllowDrop="True"
+             PreviewDragOver="TextBoxInstance_OnPreviewDragOver"
+             DragOver="TextBoxInstance_OnDragOver"
+             Drop="TextBoxInstance_OnDrop" />
 </UserControl>

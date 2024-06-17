@@ -69,7 +69,7 @@ namespace Ranger2
 
         private void OnDirectoryChanged(string path, string previousPath, string pathToSelect)
         {
-            TextBoxInstance.Text = path;
+            TextBoxInstance.Text = !string.IsNullOrEmpty(pathToSelect) ? pathToSelect : path;
         }
 
         private void TextBoxInstance_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
@@ -82,12 +82,44 @@ namespace Ranger2
 
                 if (File.Exists(path))
                 {
-                    selectedFile = Path.GetFileName(path);
+                    selectedFile = path;
                     path = Path.GetDirectoryName(path);
                 }
 
                 DirectoryChangeRequester.SetDirectory(path, selectedFile);
             }
+        }
+
+        private void TextBoxInstance_OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files.Length > 0)
+                {
+                    TextBoxInstance.Text = files[0];
+                }
+            }
+        }
+
+        private void TextBoxInstance_OnDragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            e.Handled = false;
+        }
+
+        private void TextBoxInstance_OnPreviewDragOver(object sender, DragEventArgs e)
+        {
+            // Disable default TextBox drag and drop behaviour.
+            // https://stackoverflow.com/questions/4281857/wpf-drag-and-drop-to-a-textbox
+            e.Handled = true;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 
 namespace Ranger2
 {
@@ -17,10 +18,11 @@ namespace Ranger2
 
                 if (DataContext is ViewModel viewModel)
                 {
-                    foreach (var file in data)
+                    var pathToAdd = data.FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(pathToAdd))
                     {
-                        viewModel.AddBookmark(null, file, openInExplorer: false, bookmarkGroup: App.UserSettings.ActiveBookmarkGroup);
-                        break;
+                        viewModel.AddBookmark(null, pathToAdd, openInExplorer: false, bookmarkGroup: App.UserSettings.ActiveBookmarkGroup);
                     }
                 }
             }

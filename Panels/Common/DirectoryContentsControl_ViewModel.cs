@@ -151,7 +151,7 @@ namespace Ranger2
 
             private void OnDirectoryChangedInternal(string path, string previousPath, string pathToSelect)
             {
-                if (m_currentDirectory != path)
+                if (m_currentDirectory != path || !string.IsNullOrEmpty(pathToSelect))
                 {
                     m_currentDirectory = path;
                     m_settings.Path = path;
