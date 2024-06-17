@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +15,8 @@ namespace Ranger2
         {
             InitializeComponent();
             m_dragDropSelection = new(ListViewInstance, DragSelectionCanvas, DragSelectionBorder);
+
+            ListViewInstance.Items.SortDescriptions.Add(new SortDescription(nameof(FileSystemObjectViewModel.NameSortValue), ListSortDirection.Ascending));
 
             DataContextChanged += (s, e) =>
             {

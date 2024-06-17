@@ -45,7 +45,11 @@ namespace Ranger2
 
                 if (!m_dispatcher.CheckAccess())
                 {
-                    m_dispatcher.Invoke(() => { SetIcon(icon); });
+                    try
+                    {
+                        m_dispatcher.Invoke(() => { SetIcon(icon); });
+                    }
+                    catch { }
                 }
                 else
                 {

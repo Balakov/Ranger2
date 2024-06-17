@@ -7,6 +7,8 @@ using System.Windows.Documents;
 
 namespace Ranger2
 {
+    // https://stackoverflow.com/questions/994148/best-way-to-make-wpf-listview-gridview-sort-on-column-header-clicking
+
     public class GridViewSort
     {
         #region Public attached properties
