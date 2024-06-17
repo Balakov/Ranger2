@@ -13,7 +13,7 @@ namespace Ranger2
                     case WatcherChangeTypes.Created:
                         {
                             FileSystemObjectViewModel newItem = null;
-                            if (Directory.Exists(path))
+                            if (FileSystemEnumeration.DirectoryExists(path))
                             {
                                 newItem = CreateDirectoryViewModel(path, m_viewMask);
                                 if (newItem != null)
@@ -23,7 +23,7 @@ namespace Ranger2
                                     UpdateStatusBar(driveSpaceChanged: true);
                                 }
                             }
-                            else if (File.Exists(path))
+                            else if (FileSystemEnumeration.FileExists(path))
                             {
                                 newItem = OnItemAdded(path);
                                 UpdateUIVisibility();
@@ -48,14 +48,14 @@ namespace Ranger2
                     case WatcherChangeTypes.Changed:
                         if (TryFindFile(path, out var changedViewModel))
                         {
-                            if (Directory.Exists(path))
+                            if (FileSystemEnumeration.DirectoryExists(path))
                             {
                                 if (FileSystemObjectViewModel.DirectoryPassesViewFilter(path, m_viewMask, out var info))
                                 {
                                     changedViewModel.UpdateView(info);
                                 }
                             }
-                            else if (File.Exists(path))
+                            else if (FileSystemEnumeration.FileExists(path))
                             {
                                 if (FileSystemObjectViewModel.FilePassesViewFilter(path, m_viewMask, out var info))
                                 {
@@ -69,7 +69,7 @@ namespace Ranger2
                         {
                             m_files.Remove(renamedViewModel);
 
-                            if (Directory.Exists(path))
+                            if (FileSystemEnumeration.DirectoryExists(path))
                             {
                                 var directoryViewModel = CreateDirectoryViewModel(path, m_viewMask);
                                 if (directoryViewModel != null)
@@ -77,7 +77,7 @@ namespace Ranger2
                                     m_files.Add(directoryViewModel);
                                 }
                             }
-                            else if (File.Exists(path))
+                            else if (FileSystemEnumeration.FileExists(path))
                             {
                                 OnItemAdded(path);
                             }

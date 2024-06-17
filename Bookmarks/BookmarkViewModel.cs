@@ -88,7 +88,7 @@ namespace Ranger2
 
             private bool IsFile(string path)
             {
-                return path.StartsWith("\\\\") ? false : File.Exists(m_bookmark.Path);
+                return path.StartsWith("\\\\") ? false : FileSystemEnumeration.FileExists(m_bookmark.Path);
             }
 
             public static void SetupDynamicProperties()

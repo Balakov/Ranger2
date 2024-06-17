@@ -11,7 +11,7 @@ namespace Ranger2
                 string newFilePath = Path.Combine(CurrentPath, "New File.txt");
                 int i = 0;
 
-                while (File.Exists(newFilePath))
+                while (FileSystemEnumeration.FileExists(newFilePath))
                 {
                     i++;
                     if (i > 99)
@@ -39,7 +39,7 @@ namespace Ranger2
                 string newFolderPath = Path.Combine(CurrentPath, "New Folder");
                 int i = 0;
 
-                while (Directory.Exists(newFolderPath))
+                while (FileSystemEnumeration.DirectoryExists(newFolderPath))
                 {
                     i++;
                     if (i > 99)

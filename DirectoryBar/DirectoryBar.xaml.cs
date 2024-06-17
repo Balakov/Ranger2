@@ -80,7 +80,7 @@ namespace Ranger2
                 string path = TextBoxInstance.Text;
                 string selectedFile = null;
 
-                if (File.Exists(path))
+                if (FileSystemEnumeration.FileExists(path))
                 {
                     selectedFile = path;
                     path = Path.GetDirectoryName(path);

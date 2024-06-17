@@ -21,7 +21,8 @@ namespace Ranger2
         {
             File,
             Directory,
-            Drive
+            FixedDrive,
+            RemovableDrive
         }
 
         private class QueuedIcon
@@ -67,6 +68,7 @@ namespace Ranger2
         public static BitmapSource m_defaultFileIcon;
         public static BitmapSource m_defaultDirectoryIcon;
         public static BitmapSource m_defaultDriveIcon;
+        public static BitmapSource m_defaultRemovableDriveIcon;
 
         public IconCache(System.Windows.Threading.Dispatcher dispatcher)
         {
@@ -88,6 +90,12 @@ namespace Ranger2
             {
                 m_defaultDriveIcon = GetBitmapSourceFromIcon(icon);
                 m_defaultDriveIcon.Freeze();
+            }
+
+            using (var icon = ShellIcons.GetStockIcon(Shell32.SHSTOCKICONID.SIID_DRIVEREMOVE, out int iIconRemovableDrive))
+            {
+                m_defaultRemovableDriveIcon = GetBitmapSourceFromIcon(icon);
+                m_defaultRemovableDriveIcon.Freeze();
             }
         }
 
@@ -112,8 +120,11 @@ namespace Ranger2
                 case IconType.Directory:
                     owner.IconLoaded(m_defaultDirectoryIcon);
                     break;
-                case IconType.Drive:
+                case IconType.FixedDrive:
                     owner.IconLoaded(m_defaultDriveIcon);
+                    break;
+                case IconType.RemovableDrive:
+                    owner.IconLoaded(m_defaultRemovableDriveIcon);
                     break;
             }
 
@@ -164,7 +175,7 @@ namespace Ranger2
                             case IconType.Directory:
                                 iconToProcess.SetIcon(GetIconForDirectory(iconToProcess.m_path));
                                 break;
-                            case IconType.Drive:
+                            case IconType.FixedDrive:
                                 iconToProcess.SetIcon(GetIconForDrive(iconToProcess.m_path));
                                 break;
                             default:

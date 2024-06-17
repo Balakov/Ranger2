@@ -62,7 +62,7 @@ namespace Ranger2
                 return;
             }
 
-            if (File.Exists(directory))
+            if (FileSystemEnumeration.FileExists(directory))
             {
                 directory = Path.GetDirectoryName(directory);
             }
@@ -119,7 +119,7 @@ namespace Ranger2
                         return;
                     }
 
-                    if (!Directory.Exists(directory))
+                    if (!FileSystemEnumeration.DirectoryExists(directory))
                     {
                         e.Result = ScanResult.Empty();
                         return;
@@ -147,11 +147,11 @@ namespace Ranger2
                     }
                     else
                     {
-                        directories.AddRange(Directory.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly));
+                        directories.AddRange(FileSystemEnumeration.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly));
 
                         bool isRoot = directory.Length < 4;
 
-                        foreach (var directory in Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly))
+                        foreach (var directory in FileSystemEnumeration.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly))
                         {
                             bool fileAllowed = true;
 

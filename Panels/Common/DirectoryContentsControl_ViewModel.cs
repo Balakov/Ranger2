@@ -267,7 +267,7 @@ namespace Ranger2
                 {
                     try
                     {
-                        var files = Directory.EnumerateFiles(CurrentPath, "*", SearchOption.AllDirectories);
+                        var files = FileSystemEnumeration.EnumerateFiles(CurrentPath, "*", SearchOption.AllDirectories);
                         if (files.Any())
                         {
                             ClipboardManager.CopyPathsToClipboard(files.Select(x => new ClipboardManager.FileOperationPath() { FullPath = x }),

@@ -25,8 +25,8 @@ namespace Ranger2
         {
             OKButtonInstance.IsEnabled = !string.IsNullOrEmpty(NameTextBoxInstance.Text) && 
                                          !string.IsNullOrEmpty(PathTextBoxInstance.Text) &&
-                                         File.Exists(PathTextBoxInstance.Text) ||
-                                         Directory.Exists(PathTextBoxInstance.Text);
+                                         FileSystemEnumeration.FileExists(PathTextBoxInstance.Text) ||
+                                         FileSystemEnumeration.DirectoryExists(PathTextBoxInstance.Text);
         }
 
         private void OKButtonClick(object sender, RoutedEventArgs e)

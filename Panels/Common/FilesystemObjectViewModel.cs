@@ -267,21 +267,21 @@ namespace Ranger2
 
             MenuOpenInExplorerCommand = DelegateCommand.Create(() =>
             {
-                string directory = Directory.Exists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
+                string directory = FileSystemEnumeration.DirectoryExists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
                 FileOperations.ExecuteWithExplorer(directory);
             });
 
             MenuCommandPropmtCommand = DelegateCommand.Create(() =>
             {
-                string directory = Directory.Exists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
+                string directory = FileSystemEnumeration.DirectoryExists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
                 FileOperations.ExecuteFile("cmd.exe", null, false, directory);
             });
 
             MenuEditCommand = DelegateCommand.Create(() =>
             {
-                if (File.Exists(FullPath))
+                if (FileSystemEnumeration.FileExists(FullPath))
                 {
-                    if (App.UserSettings.DefaultEditorPath == null || !File.Exists(App.UserSettings.DefaultEditorPath))
+                    if (App.UserSettings.DefaultEditorPath == null || !FileSystemEnumeration.FileExists(App.UserSettings.DefaultEditorPath))
                     {
                         var dialog = new Microsoft.Win32.OpenFileDialog();
                         dialog.Filter = App.UserSettings.DefaultEditorPath;
@@ -296,7 +296,7 @@ namespace Ranger2
                         }
                     }
 
-                    if (App.UserSettings.DefaultEditorPath != null && File.Exists(App.UserSettings.DefaultEditorPath))
+                    if (App.UserSettings.DefaultEditorPath != null && FileSystemEnumeration.FileExists(App.UserSettings.DefaultEditorPath))
                     {
                         List<string> selectedPaths = new List<string>();
                         FileOperations.ExecuteFile(App.UserSettings.DefaultEditorPath, FullPath);
@@ -306,11 +306,11 @@ namespace Ranger2
 
             MenuCopyFileListCommand = DelegateCommand.Create(() =>
             {
-                string directory = Directory.Exists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
+                string directory = FileSystemEnumeration.DirectoryExists(FullPath) ? FullPath : m_parentViewModel.CurrentPath;
 
                 try
                 {
-                    var files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories);
+                    var files = FileSystemEnumeration.EnumerateFiles(directory, "*", SearchOption.AllDirectories);
                     if (files.Any())
                     {
                         ClipboardManager.CopyPathsToClipboard(files.Select(x => new ClipboardManager.FileOperationPath() { FullPath = x }),
@@ -337,7 +337,7 @@ namespace Ranger2
                 string fileName = Path.GetFileNameWithoutExtension(FullPath) + " - Shortcut.lnk";
                 string destination = Path.Combine(directory, fileName);
 
-                if (!File.Exists(destination))
+                if (!FileSystemEnumeration.FileExists(destination))
                 {
                     m_parentViewModel.AddNewShortcut(destination, FullPath);
                 }

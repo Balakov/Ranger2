@@ -1,4 +1,6 @@
 ﻿using HandyControl.Tools.Command;
+using MediaDevices;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -91,7 +93,7 @@ namespace Ranger2
                         if (!existingDrives.ContainsKey(driveRootDirectory))
                         {
                             var driveViewModel = new DrivesTreeDirectoryViewModel($"{drive.Name} ({drive.VolumeLabel})", drive.RootDirectory.FullName, this);
-                            m_iconCache.QueueIconLoad(drive.RootDirectory.FullName, IconCache.IconType.Drive, driveViewModel);
+                            m_iconCache.QueueIconLoad(drive.RootDirectory.FullName, IconCache.IconType.FixedDrive, driveViewModel);
 
                             rootDirectories.Add(driveViewModel);
 
@@ -102,6 +104,30 @@ namespace Ranger2
                             existingDrives.Remove(driveRootDirectory);
                         }
                     }
+                }
+
+                var mediaDevices = MediaDevice.GetDevices().ToList();
+                foreach (var mediaDevice in mediaDevices)
+                {
+                    mediaDevice.Connect();
+                    if (mediaDevice.DeviceType == DeviceType.Generic)
+                    {
+                        if (!existingDrives.ContainsKey(mediaDevice.FriendlyName))
+                        {
+                            var driveViewModel = new DrivesTreeDirectoryViewModel($"{mediaDevice.FriendlyName}", null, this);
+                            m_iconCache.QueueIconLoad(null, IconCache.IconType.RemovableDrive, driveViewModel);
+                        
+                            rootDirectories.Add(driveViewModel);
+                        }
+                        else
+                        {
+                            existingDrives.Remove(mediaDevice.FriendlyName);
+                        }
+
+                        var fsis = mediaDevice.GetRootDirectory().EnumerateFileSystemInfos();
+                        Debug.Log(fsis.ToString());
+                    }
+                    mediaDevice.Disconnect();
                 }
 
                 foreach (var removedDrivePair in existingDrives)
@@ -153,7 +179,7 @@ namespace Ranger2
 
                     foreach (var childDirectory in currentDirectory.Directories)
                     {
-                        if (childDirectory.Path.ToLower() == currentPath)
+                        if (childDirectory.Path?.ToLower() == currentPath)
                         {
                             if (i == pathSplit.Length - 1)
                             {

@@ -30,7 +30,7 @@ namespace Ranger2
             {
                 List<ScanResult.Filename> fontFiles = new();
 
-                if (File.Exists(m_adobeEntitlementsPath))
+                if (FileSystemEnumeration.FileExists(m_adobeEntitlementsPath))
                 {
                     XDocument doc = XDocument.Load(m_adobeEntitlementsPath);
 
@@ -38,7 +38,7 @@ namespace Ranger2
 
                     Dictionary<string, int> filesPerDirectory = new();
 
-                    foreach (string file in Directory.GetFiles(m_adobeLiveTypePath, "*", SearchOption.AllDirectories))
+                    foreach (string file in FileSystemEnumeration.EnumerateFiles(m_adobeLiveTypePath, "*", SearchOption.AllDirectories))
                     {
                         var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
                         var headerBuffer = new byte[4];

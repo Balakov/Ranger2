@@ -150,9 +150,7 @@ namespace Ranger2
                     string filePath = Path.Combine(Path.GetTempPath(), fileName.ToString());
                     File.WriteAllBytes(filePath, fileBytes);
 
-                    FileInfo tempFile = new FileInfo(filePath);
-
-                    if (tempFile.Exists)
+                    if(FileSystemEnumeration.FileExists(filePath))
                     {
                         return new DroppedFiles()
                         {

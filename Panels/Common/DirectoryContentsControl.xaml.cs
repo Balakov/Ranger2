@@ -61,7 +61,7 @@ namespace Ranger2
         public void EnableDirectoryWatcher(string directory)
         {
             if (!string.IsNullOrEmpty(directory) &&
-                Directory.Exists(directory))
+                FileSystemEnumeration.DirectoryExists(directory))
             {
                 try
                 {

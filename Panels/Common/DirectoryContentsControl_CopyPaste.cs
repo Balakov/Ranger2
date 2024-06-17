@@ -119,8 +119,8 @@ namespace Ranger2
                         if (pasteOverSelf == FileOperations.PasteOverSelfType.Allowed)
                         {
                             // Duplicate the file or directory
-                            bool isDirectory = Directory.Exists(destinationPath);
-                            bool isFile = File.Exists(destinationPath);
+                            bool isDirectory = FileSystemEnumeration.DirectoryExists(destinationPath);
+                            bool isFile = FileSystemEnumeration.FileExists(destinationPath);
 
                             if (isDirectory || isFile)
                             {
@@ -128,8 +128,8 @@ namespace Ranger2
                                 {
                                     string newDestinationPath = Path.Combine(Path.GetDirectoryName(destinationPath),
                                                                              Path.GetFileNameWithoutExtension(destinationPath) + " (" + i.ToString() + ")" + Path.GetExtension(destinationPath));
-                                    if ((isFile && !File.Exists(newDestinationPath)) ||
-                                        (isDirectory && !Directory.Exists(newDestinationPath)))
+                                    if ((isFile && !FileSystemEnumeration.FileExists(newDestinationPath)) ||
+                                        (isDirectory && !FileSystemEnumeration.DirectoryExists(newDestinationPath)))
                                     {
                                         copyFrom.Add(path.FullPath);
                                         copyTo.Add(newDestinationPath);

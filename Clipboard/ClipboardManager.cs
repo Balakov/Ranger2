@@ -123,7 +123,7 @@ namespace Ranger2
                     if (!string.IsNullOrEmpty(line))
                     {
                         line = line.Trim();
-                        if (File.Exists(line) || Directory.Exists(line))
+                        if (FileSystemEnumeration.FileExists(line) || FileSystemEnumeration.DirectoryExists(line))
                         {
                             paths.Add(new FileOperationPath() { FullPath = line });
                         }

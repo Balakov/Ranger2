@@ -38,13 +38,13 @@ namespace Ranger2.Dialogs
                 DuplicateWarning.Visibility = Visibility.Collapsed;
                 OKButtonInstance.IsEnabled = false;
             }
-            else if (File.Exists(RenamedFile))
+            else if (FileSystemEnumeration.FileExists(RenamedFile))
             {
                 DuplicateWarning.Visibility = Visibility.Visible;
                 DuplicateWarning.ToolTip = "There is already an existing file with that name.";
                 OKButtonInstance.IsEnabled = false;
             }
-            else if (Directory.Exists(RenamedFile))
+            else if (FileSystemEnumeration.DirectoryExists(RenamedFile))
             {
                 DuplicateWarning.Visibility = Visibility.Visible;
                 DuplicateWarning.ToolTip = "There is already an existing directory with that name.";

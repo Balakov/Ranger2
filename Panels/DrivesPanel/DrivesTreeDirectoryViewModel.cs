@@ -90,7 +90,7 @@ namespace Ranger2
                         // Evaulate all of the directories in the new path
                         try
                         {
-                            foreach (string dir in Directory.EnumerateDirectories(newDir).OrderBy(x => x))
+                            foreach (string dir in FileSystemEnumeration.EnumerateDirectories(newDir).OrderBy(x => x))
                             {
                                 try
                                 {
