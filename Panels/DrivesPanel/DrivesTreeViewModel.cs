@@ -55,7 +55,7 @@ namespace Ranger2
                 DualPanelCommand = DelegateCommand.Create(() => m_panelLayout.SetActivePanelCount(2));
                 TriplePanelCommand = DelegateCommand.Create(() => m_panelLayout.SetActivePanelCount(3));
 
-                var root = new DrivesTreeDirectoryViewModel("Computer", null, this);
+                var root = new DrivesTreeDirectoryViewModel("Computer", null, null, this);
                 Directories.Add(root);
 
                 DrivesTreeDirectoryViewModel firstReadyDrive = OnDrivesChanged();
@@ -92,7 +92,7 @@ namespace Ranger2
                         // Add new drives                        
                         if (!existingDrives.ContainsKey(driveRootDirectory))
                         {
-                            var driveViewModel = new DrivesTreeDirectoryViewModel($"{drive.Name} ({drive.VolumeLabel})", drive.RootDirectory.FullName, this);
+                            var driveViewModel = new DrivesTreeDirectoryViewModel($"{drive.Name} ({drive.VolumeLabel})", drive.RootDirectory.FullName, null, this);
                             m_iconCache.QueueIconLoad(drive.RootDirectory.FullName, IconCache.IconType.FixedDrive, driveViewModel);
 
                             rootDirectories.Add(driveViewModel);
@@ -106,28 +106,33 @@ namespace Ranger2
                     }
                 }
 
-                var mediaDevices = MediaDevice.GetDevices().ToList();
+                List<MediaDevice> mediaDevices = MediaDevice.GetDevices().ToList();
                 foreach (var mediaDevice in mediaDevices)
                 {
                     mediaDevice.Connect();
                     if (mediaDevice.DeviceType == DeviceType.Generic)
                     {
-                        if (!existingDrives.ContainsKey(mediaDevice.FriendlyName))
+                        foreach (var drive in mediaDevice.GetDrives())
                         {
-                            var driveViewModel = new DrivesTreeDirectoryViewModel($"{mediaDevice.FriendlyName}", null, this);
-                            m_iconCache.QueueIconLoad(null, IconCache.IconType.RemovableDrive, driveViewModel);
-                        
-                            rootDirectories.Add(driveViewModel);
-                        }
-                        else
-                        {
-                            existingDrives.Remove(mediaDevice.FriendlyName);
-                        }
+                            MediaDirectoryInfo driveRoot = drive.RootDirectory != null ? drive.RootDirectory
+                                                                                       : mediaDevice.GetRootDirectory();
+                            string driveName = !string.IsNullOrEmpty(drive.Name) ? drive.Name 
+                                                                                 : mediaDevice.FriendlyName;
 
-                        var fsis = mediaDevice.GetRootDirectory().EnumerateFileSystemInfos();
-                        Debug.Log(fsis.ToString());
+                            if (!existingDrives.ContainsKey(driveName))
+                            {
+                                var driveViewModel = new DrivesTreeDirectoryViewModel($"{driveName}", driveRoot.FullName, driveRoot, this);
+                                m_iconCache.QueueIconLoad(null, IconCache.IconType.RemovableDrive, driveViewModel);
+                        
+                                rootDirectories.Add(driveViewModel);
+                            }
+                            else
+                            {
+                                existingDrives.Remove(mediaDevice.FriendlyName);
+                            }
+                        }
                     }
-                    mediaDevice.Disconnect();
+                    //mediaDevice.Disconnect();
                 }
 
                 foreach (var removedDrivePair in existingDrives)

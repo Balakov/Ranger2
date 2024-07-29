@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MediaDevices;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -14,6 +17,7 @@ namespace Ranger2
             {
                 private ViewModel m_parentViewModel;
                 private ViewFilter.ViewMask m_viewMask = 0;
+                private MediaDirectoryInfo m_mediaDeviceDrive;
 
                 public string Name { get; set; }
                 public string Path { get; set; }
@@ -63,11 +67,12 @@ namespace Ranger2
 
                 public ObservableCollection<DrivesTreeDirectoryViewModel> Directories { get; set; } = new();
 
-                public static DrivesTreeDirectoryViewModel DummyNode(string name = null) => new DrivesTreeDirectoryViewModel(name ?? "Dummy", null, null);
+                public static DrivesTreeDirectoryViewModel DummyNode(string name = null) => new DrivesTreeDirectoryViewModel(name ?? "Dummy", null, null, null);
 
-                public DrivesTreeDirectoryViewModel(string name, string path, ViewModel parentViewModel)
+                public DrivesTreeDirectoryViewModel(string name, string path, MediaDirectoryInfo mediaDeviceDrive, ViewModel parentViewModel)
                 {
                     m_parentViewModel = parentViewModel;
+                    m_mediaDeviceDrive = mediaDeviceDrive;
 
                     Name = name;
                     Path = path;
@@ -90,16 +95,34 @@ namespace Ranger2
                         // Evaulate all of the directories in the new path
                         try
                         {
-                            foreach (string dir in FileSystemEnumeration.EnumerateDirectories(newDir).OrderBy(x => x))
+                            IEnumerable<string> directories;
+
+                            if (m_mediaDeviceDrive != null)
+                            {
+                                //m_mediaDevice.Connect(MediaDeviceAccess.GenericRead);
+                                directories = m_mediaDeviceDrive.EnumerateDirectories().Select(x => x.FullName);
+                                //m_mediaDevice.Disconnect();
+                            }
+                            else
+                            {
+                                directories = FileSystemEnumeration.EnumerateDirectories(newDir);
+                            }
+
+                            foreach (string dir in directories.OrderBy(x => x))
                             {
                                 try
                                 {
-                                    DirectoryInfo di = new DirectoryInfo(dir);
                                     string leafName = System.IO.Path.GetFileName(dir);
 
-                                    if (ViewFilter.FilterViewByAttributes(di.Attributes, m_viewMask, leafName.StartsWith("."), out var greyedOut))
+                                    FileAttributes attributes = new DirectoryInfo(dir).Attributes;
+                                    if ((int)attributes == -1)
                                     {
-                                        var directoryViewModel = new DrivesTreeDirectoryViewModel(leafName, dir, m_parentViewModel);
+                                        attributes = FileAttributes.Normal;
+                                    }
+
+                                    if (ViewFilter.FilterViewByAttributes(attributes, m_viewMask, leafName.StartsWith("."), out var greyedOut))
+                                    {
+                                        var directoryViewModel = new DrivesTreeDirectoryViewModel(leafName, dir, null, m_parentViewModel);
                                         m_parentViewModel.m_iconCache.QueueIconLoad(dir, IconCache.IconType.Directory, directoryViewModel);
                                         Directories.Add(directoryViewModel);
                                     }

@@ -257,7 +257,7 @@ namespace Ranger2
         private static void AddSortGlyph(GridViewColumnHeader columnHeader, ListSortDirection direction, ImageSource sortGlyph)
         {
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            adornerLayer.Add(
+            adornerLayer?.Add(
                 new SortGlyphAdorner(
                     columnHeader,
                     direction,
@@ -268,7 +268,7 @@ namespace Ranger2
         private static void RemoveSortGlyph(GridViewColumnHeader columnHeader)
         {
             AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(columnHeader);
-            Adorner[] adorners = adornerLayer.GetAdorners(columnHeader);
+            Adorner[] adorners = adornerLayer?.GetAdorners(columnHeader);
             if (adorners != null)
             {
                 foreach (Adorner adorner in adorners)
