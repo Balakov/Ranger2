@@ -313,6 +313,7 @@ namespace Ranger2
             }
                 
             m_viewModel.ScaleToFit();
+            Focus();
         }
     }
 }

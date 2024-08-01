@@ -18,6 +18,12 @@ namespace Ranger2
             void GrabFocus();
         }
 
+        public interface IVisualOrderProvider
+        {
+            FileSystemObjectViewModel ItemAtVisualIndex(int index);
+            List<FileSystemObjectViewModel> GetVisualItems();
+        }
+
         public abstract partial class ViewModel : Utility.ViewModelBase,
                                                   KeySearch.IVisualSearchProvider
         {
@@ -29,6 +35,9 @@ namespace Ranger2
 
             private UIElement m_dragDropTarget;
             public void SetDragDropTarget(UIElement element) => m_dragDropTarget = element;
+
+            protected IVisualOrderProvider m_visualOrderProvider;
+            public void SetVisualOrderProvider(IVisualOrderProvider visualOrderProvider) => m_visualOrderProvider = visualOrderProvider;
 
             private IScrollIntoViewProvider m_scrollIntoViewProvider;
             public void SetScrollIntoViewProvider(IScrollIntoViewProvider scrollIntoViewProvider) => m_scrollIntoViewProvider = scrollIntoViewProvider;
@@ -42,7 +51,6 @@ namespace Ranger2
             protected bool m_isLoading;
 
             protected ObservableCollection<FileSystemObjectViewModel> m_files { get; } = new();
-
             public IEnumerable<FileSystemObjectViewModel> Files => m_files;
 
             public bool ShowLoadingUI => m_isLoading;
@@ -167,7 +175,7 @@ namespace Ranger2
             {
                 if (!string.IsNullOrEmpty(path))
                 {
-                    var fileToSelect = m_files.FirstOrDefault(x => x.FullPath == path);
+                    var fileToSelect = m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
                     if (fileToSelect != null)
                     {
                         fileToSelect.IsSelected = true;
@@ -179,7 +187,7 @@ namespace Ranger2
 
             private bool TryFindFile(string path, out FileSystemObjectViewModel fileViewModel)
             {
-                fileViewModel = m_files.FirstOrDefault(x => x.FullPath == path);
+                fileViewModel = m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
                 return fileViewModel != null;
             }
 

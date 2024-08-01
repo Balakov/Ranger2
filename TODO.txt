@@ -1,5 +1,1 @@
-﻿Bring into view of a directory when going up a directory ?
-Select new folder or file once created
-Can't see iPhone when connected.
-Can't drag/drop iphone photos
-Can't move image viewer window after fullscreen
+﻿Can't move image viewer window after fullscreen

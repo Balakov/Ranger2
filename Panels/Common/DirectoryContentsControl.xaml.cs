@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -214,6 +215,18 @@ namespace Ranger2
                     (DataContext as ViewModel)?.OnFileSystemChange(e.FullPath, null, e.ChangeType);
                 }
             }
+        }
+
+        public static List<FileSystemObjectViewModel> GetItemsAsViewModels(ItemCollection collection)
+        {
+            List<FileSystemObjectViewModel> visualItems = new();
+            foreach (object item in collection)
+            {
+                if (item is FileSystemObjectViewModel viewModel)
+                    visualItems.Add(viewModel);
+            }
+
+            return visualItems;
         }
 
         private BreadcrumbsViewModel.PathPart GetBreadcrumb(object sender)

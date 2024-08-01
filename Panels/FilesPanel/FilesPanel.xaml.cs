@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,7 +8,8 @@ using System.Windows.Input;
 namespace Ranger2
 {
     public partial class FilesPanel : UserControl,
-                                      DirectoryContentsControl.IScrollIntoViewProvider
+                                      DirectoryContentsControl.IScrollIntoViewProvider,
+                                      DirectoryContentsControl.IVisualOrderProvider
     {
         private DragDropSelectionSupport m_dragDropSelection;
 
@@ -24,6 +26,7 @@ namespace Ranger2
                 {
                     viewModel.SetScrollIntoViewProvider(this);
                     viewModel.SetDragDropTarget(ListViewInstance);
+                    viewModel.SetVisualOrderProvider(this);
                 }
             };
         }
@@ -85,6 +88,21 @@ namespace Ranger2
         {
             ListViewInstance.Focus();
             Keyboard.Focus(ListViewInstance);
+        }
+
+        public FileSystemObjectViewModel ItemAtVisualIndex(int index)
+        {
+            if (index >= 0 && ListViewInstance.Items.Count < index)
+            {
+                return ListViewInstance.Items[index] as FileSystemObjectViewModel;
+            }
+
+            return null;
+        }
+
+        public List<FileSystemObjectViewModel> GetVisualItems()
+        {
+            return DirectoryContentsControl.GetItemsAsViewModels(ListViewInstance.Items);
         }
 
         private void ListView_Selected(object sender, SelectionChangedEventArgs e)

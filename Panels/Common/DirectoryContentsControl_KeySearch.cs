@@ -11,7 +11,7 @@ namespace Ranger2
             {
                 search = search.ToLower();
 
-                List<FileSystemObjectViewModel> matches = m_files.Where(x => x.Name.ToLower().StartsWith(search)).ToList();
+                List<FileSystemObjectViewModel> matches = m_visualOrderProvider.GetVisualItems().Where(x => x.Name.ToLower().StartsWith(search)).ToList();
 
                 if (matches.Any())
                 {
@@ -26,7 +26,7 @@ namespace Ranger2
                         choosenMatch = matches[searchIndex % matches.Count];
                     }
 
-                    foreach (var file in Files)
+                    foreach (FileSystemObjectViewModel file in m_files)
                     {
                         file.IsSelected = file == choosenMatch;
                     }

@@ -1,11 +1,14 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Ranger2
 {
     public partial class ImagePanel : UserControl, 
-                                      DirectoryContentsControl.IScrollIntoViewProvider
+                                      DirectoryContentsControl.IScrollIntoViewProvider,
+                                      DirectoryContentsControl.IVisualOrderProvider
     {
         private DragDropSelectionSupport m_dragDropSelection;
 
@@ -14,12 +17,15 @@ namespace Ranger2
             InitializeComponent();
             m_dragDropSelection = new(ListBoxInstance, DragSelectionCanvas, DragSelectionBorder);
 
+            ListBoxInstance.Items.SortDescriptions.Add(new SortDescription(nameof(FileSystemObjectViewModel.NameSortValue), ListSortDirection.Ascending));
+
             DataContextChanged += (s, e) =>
             {
                 if (DataContext is ViewModel viewModel)
                 {
                     viewModel.SetScrollIntoViewProvider(this);
                     viewModel.SetDragDropTarget(ListBoxInstance);
+                    viewModel.SetVisualOrderProvider(this);
                 }
             };
         }
@@ -51,6 +57,21 @@ namespace Ranger2
         {
             ListBoxInstance.Focus();
             Keyboard.Focus(ListBoxInstance);
+        }
+
+        public FileSystemObjectViewModel ItemAtVisualIndex(int index)
+        {
+            if (index >= 0 && ListBoxInstance.Items.Count < index)
+            {
+                return ListBoxInstance.Items[index] as FileSystemObjectViewModel;
+            }
+
+            return null;
+        }
+
+        public List<FileSystemObjectViewModel> GetVisualItems()
+        {
+            return DirectoryContentsControl.GetItemsAsViewModels(ListBoxInstance.Items);
         }
 
         private void ListBox_Selected(object sender, SelectionChangedEventArgs e)

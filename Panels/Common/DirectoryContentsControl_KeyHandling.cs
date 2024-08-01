@@ -89,7 +89,9 @@ namespace Ranger2
 
             public void OnCommonPreviewKeyDown(KeyEventArgs e)
             {
-                bool isNavigationKey = !KeyboardUtilities.AnyModifiersDown && 
+                // Allow shift through for multi-select.
+                bool isNavigationKey = !KeyboardUtilities.IsAltDown && 
+                                       !KeyboardUtilities.IsControlDown &&
                                        (e.Key == Key.Down || 
                                         e.Key == Key.Up || 
                                         e.Key == Key.Left || 
@@ -116,9 +118,11 @@ namespace Ranger2
 
                 bool clearSelection = !KeyboardUtilities.IsShiftDown;
 
-                for (int i = 0; i < m_files.Count; i++)
+                var files = m_visualOrderProvider.GetVisualItems();
+
+                for (int i = 0; i < files.Count; i++)
                 {
-                    if (m_files[i].IsSelected)
+                    if (files[i].IsSelected)
                     {
                         if (previouslySelectedMinIndex == -1)
                         {
@@ -131,9 +135,9 @@ namespace Ranger2
                             // Don't deselect if we're not going to actually move the selection 
                             // as it causes a flicker.
                             if ((keyPrevious && i != 0) ||
-                                (keyNext && i != m_files.Count - 1))
+                                (keyNext && i != files.Count - 1))
                             {
-                                m_files[i].IsSelected = false;
+                                files[i].IsSelected = false;
                             }
                         }
                         else
@@ -144,9 +148,9 @@ namespace Ranger2
                     }
                 }
 
-                if (previouslySelectedMinIndex == -1 && m_files.Count > 0)
+                if (previouslySelectedMinIndex == -1 && files.Count > 0)
                 {
-                    m_files.First().IsSelected = true;
+                    files.First().IsSelected = true;
                 }
                 else
                 {
@@ -157,16 +161,16 @@ namespace Ranger2
                         {
                             if (previouslySelectedMinIndex > 0)
                             {
-                                m_files[previouslySelectedMinIndex - 1].IsSelected = true;
-                                m_scrollIntoViewProvider.ScrollIntoView(m_files[previouslySelectedMinIndex - 1]);
+                                files[previouslySelectedMinIndex - 1].IsSelected = true;
+                                m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
                             }
                         }
                         else if (keyNext)
                         {
-                            if (previouslySelectedMaxIndex < m_files.Count - 1)
+                            if (previouslySelectedMaxIndex < files.Count - 1)
                             {
-                                m_files[previouslySelectedMaxIndex + 1].IsSelected = true;
-                                m_scrollIntoViewProvider.ScrollIntoView(m_files[previouslySelectedMaxIndex + 1]);
+                                files[previouslySelectedMaxIndex + 1].IsSelected = true;
+                                m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
                             }
                         }
 
@@ -182,28 +186,28 @@ namespace Ranger2
                             {
                                 if (previouslySelectedMinIndex > 0)
                                 {
-                                    m_files[previouslySelectedMinIndex - 1].IsSelected = true;
-                                    m_scrollIntoViewProvider.ScrollIntoView(m_files[previouslySelectedMinIndex - 1]);
+                                    files[previouslySelectedMinIndex - 1].IsSelected = true;
+                                    m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
                                 }
                             }
                             else if (m_lastKeyNavigationDirection == KeyNavigationDirection.Down)
                             {
-                                m_files[previouslySelectedMaxIndex].IsSelected = false;
+                                files[previouslySelectedMaxIndex].IsSelected = false;
                             }
                         }
                         else if (keyNext)
                         {
                             if (m_lastKeyNavigationDirection == KeyNavigationDirection.Down)
                             {
-                                if (previouslySelectedMaxIndex < m_files.Count - 1)
+                                if (previouslySelectedMaxIndex < files.Count - 1)
                                 {
-                                    m_files[previouslySelectedMaxIndex + 1].IsSelected = true;
-                                    m_scrollIntoViewProvider.ScrollIntoView(m_files[previouslySelectedMaxIndex + 1]);
+                                    files[previouslySelectedMaxIndex + 1].IsSelected = true;
+                                    m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
                                 }
                             }
                             else if (m_lastKeyNavigationDirection == KeyNavigationDirection.Up)
                             {
-                                m_files[previouslySelectedMinIndex].IsSelected = false;
+                                files[previouslySelectedMinIndex].IsSelected = false;
                             }
                         }
                     }
