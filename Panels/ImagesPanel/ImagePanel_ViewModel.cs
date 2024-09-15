@@ -100,7 +100,7 @@ namespace Ranger2
 
             protected override void OnActivateSelectedItems()
             {
-                var viewModel = m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.IsSelected);
+                var viewModel = m_visualOrderProvider?.GetVisualItems().FirstOrDefault(x => x.IsSelected);
 
                 if (viewModel is ImageViewModel imageViewModel)
                 {

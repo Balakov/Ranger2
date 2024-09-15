@@ -105,7 +105,7 @@ namespace Ranger2
 
             protected override void OnActivateSelectedItems()
             {
-                m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.IsSelected)?.OnActivate();
+                m_visualOrderProvider?.GetVisualItems().FirstOrDefault(x => x.IsSelected)?.OnActivate();
             }
 
             protected override void OnDirectoryChanged(string path, string pathToSelect)

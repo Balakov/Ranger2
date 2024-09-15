@@ -118,7 +118,7 @@ namespace Ranger2
 
                 bool clearSelection = !KeyboardUtilities.IsShiftDown;
 
-                var files = m_visualOrderProvider.GetVisualItems();
+                var files = m_visualOrderProvider?.GetVisualItems();
 
                 for (int i = 0; i < files.Count; i++)
                 {
@@ -162,7 +162,7 @@ namespace Ranger2
                             if (previouslySelectedMinIndex > 0)
                             {
                                 files[previouslySelectedMinIndex - 1].IsSelected = true;
-                                m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
+                                m_scrollIntoViewProvider?.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
                             }
                         }
                         else if (keyNext)
@@ -170,7 +170,7 @@ namespace Ranger2
                             if (previouslySelectedMaxIndex < files.Count - 1)
                             {
                                 files[previouslySelectedMaxIndex + 1].IsSelected = true;
-                                m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
+                                m_scrollIntoViewProvider?.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
                             }
                         }
 
@@ -187,7 +187,7 @@ namespace Ranger2
                                 if (previouslySelectedMinIndex > 0)
                                 {
                                     files[previouslySelectedMinIndex - 1].IsSelected = true;
-                                    m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
+                                    m_scrollIntoViewProvider?.ScrollIntoView(files[previouslySelectedMinIndex - 1]);
                                 }
                             }
                             else if (m_lastKeyNavigationDirection == KeyNavigationDirection.Down)
@@ -202,7 +202,7 @@ namespace Ranger2
                                 if (previouslySelectedMaxIndex < files.Count - 1)
                                 {
                                     files[previouslySelectedMaxIndex + 1].IsSelected = true;
-                                    m_scrollIntoViewProvider.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
+                                    m_scrollIntoViewProvider?.ScrollIntoView(files[previouslySelectedMaxIndex + 1]);
                                 }
                             }
                             else if (m_lastKeyNavigationDirection == KeyNavigationDirection.Up)
