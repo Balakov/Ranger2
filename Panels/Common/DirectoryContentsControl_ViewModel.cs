@@ -45,7 +45,7 @@ namespace Ranger2
             protected PanelContext m_context;
             protected DirectoryScanner m_directoryScanner = new DirectoryScanner();
             protected UserSettings.FilePanelSettings m_settings;
-            protected ViewFilter.ViewMask m_viewMask = ViewFilter.ViewMask.ShowHidden | ViewFilter.ViewMask.ShowSystem;
+            protected ViewFilter.ViewMask m_viewMask = ViewFilter.ViewMask.ShowHidden | ViewFilter.ViewMask.ShowSystem | ViewFilter.ViewMask.ShowDot;
             protected IDirectoryWatcher m_directoryWatcher;
             protected PathHistory m_pathHistory;
             protected bool m_isLoading;
