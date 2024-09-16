@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,8 +34,7 @@ namespace Ranger2
             private KeySearch m_keySearch;
             private KeyNavigationDirection m_lastKeyNavigationDirection = KeyNavigationDirection.Down;
 
-            private UIElement m_dragDropTarget;
-            public void SetDragDropTarget(UIElement element) => m_dragDropTarget = element;
+            public void SetDragDropTarget(UIElement element) {}
 
             protected IVisualOrderProvider m_visualOrderProvider;
             public void SetVisualOrderProvider(IVisualOrderProvider visualOrderProvider) => m_visualOrderProvider = visualOrderProvider;
@@ -175,19 +175,19 @@ namespace Ranger2
             {
                 if (!string.IsNullOrEmpty(path))
                 {
-                    var fileToSelect = m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
+                    var fileToSelect = m_visualOrderProvider?.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
                     if (fileToSelect != null)
                     {
                         fileToSelect.IsSelected = true;
-                        m_scrollIntoViewProvider.ScrollIntoView(fileToSelect);
-                        m_scrollIntoViewProvider.GrabFocus();
+                        m_scrollIntoViewProvider?.ScrollIntoView(fileToSelect);
+                        m_scrollIntoViewProvider?.GrabFocus();
                     }
                 }
             }
 
             private bool TryFindFile(string path, out FileSystemObjectViewModel fileViewModel)
             {
-                fileViewModel = m_visualOrderProvider.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
+                fileViewModel = m_visualOrderProvider?.GetVisualItems().FirstOrDefault(x => x.FullPath == path);
                 return fileViewModel != null;
             }
 
