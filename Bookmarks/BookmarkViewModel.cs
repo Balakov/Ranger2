@@ -93,12 +93,15 @@ namespace Ranger2
 
             public static void SetupDynamicProperties()
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     s_dynamicPropertyManager.Properties.Add(DynamicPropertyManager<BookmarkViewModel>.CreateProperty<BookmarkViewModel, bool>($"IsInBookmarkGroup{i}",
-                                                                                                                                              OnGetDynamicProperty,
-                                                                                                                                              OnSetDynamicProperty,
+                                                                                                                                              OnGetIsInBookmarkGroupProperty,
+                                                                                                                                              OnSetIsInBookmarkGroupProperty,
                                                                                                                                               null));
+                    s_dynamicPropertyManager.Properties.Add(DynamicPropertyManager<BookmarkViewModel>.CreateProperty<BookmarkViewModel, string>($"BookmarkGroupName{i}",
+                                                                                                                                                OnGetBookmarkGroupNameProperty,
+                                                                                                                                                null));
                 }
             }
 
@@ -136,13 +139,28 @@ namespace Ranger2
                 }
             }
 
-            public static bool OnGetDynamicProperty(BookmarkViewModel vm, string key)
+            public static string OnGetBookmarkGroupNameProperty(BookmarkViewModel vm, string key)
+            {
+                int bookmarkGroup = int.Parse(key.Substring(key.Length - 1, 1));
+                string name = vm.m_parentViewModel.GetBookmarkGroupName(bookmarkGroup);
+
+                if (int.TryParse(name, out var unused))
+                {
+                    return $"Bookmark Group {name}";
+                }
+                else
+                {
+                    return $"Bookmark Group \"{name}\"";
+                }
+            }
+
+            public static bool OnGetIsInBookmarkGroupProperty(BookmarkViewModel vm, string key)
             {
                 int bookmarkGroup = int.Parse(key.Substring(key.Length - 1, 1));
                 return vm.m_bookmark.BookmarkGroups.Any(x => x.Group == bookmarkGroup);
             }
 
-            public static void OnSetDynamicProperty(BookmarkViewModel vm, string key, bool value)
+            public static void OnSetIsInBookmarkGroupProperty(BookmarkViewModel vm, string key, bool value)
             {
                 int bookmarkGroup = int.Parse(key.Substring(key.Length - 1, 1));
 

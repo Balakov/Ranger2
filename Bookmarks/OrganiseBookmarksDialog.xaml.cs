@@ -6,9 +6,20 @@ namespace Ranger2
 {
     public partial class OrganiseBookmarksDialog : Window
     {
-        public IEnumerable<UserSettings.Bookmark> SortedBookmarks => ListBoxInstance.Items.Cast<UserSettings.Bookmark>();
+        public class ViewModel : Utility.ViewModelBase
+        {
+            public string GroupName { get; }
 
-        public OrganiseBookmarksDialog(IEnumerable<UserSettings.Bookmark> bookmarks)
+            public ViewModel(string name)
+            {
+                GroupName = name;
+            }
+        }
+
+        public IEnumerable<UserSettings.Bookmark> SortedBookmarks => ListBoxInstance.Items.Cast<UserSettings.Bookmark>();
+        public string GroupName => GroupNameTextBox.Text;
+
+        public OrganiseBookmarksDialog(IEnumerable<UserSettings.Bookmark> bookmarks, string groupName)
         {
             InitializeComponent();
 
@@ -18,6 +29,19 @@ namespace Ranger2
             }
 
             ListBoxInstance.SelectedIndex = ListBoxInstance.Items.Count - 1;
+
+            if (int.TryParse(groupName, out int unused))
+            {
+                TitleTextBlock.Text = $"Bookmark Group {groupName}";
+            }
+            else
+            {
+                TitleTextBlock.Text = $"Bookmark Group \"{groupName}\"";
+            }
+
+            GroupNameTextBox.Text = groupName;
+
+            DataContext = new ViewModel(groupName);
         }
 
         private void OKButtonClick(object sender, RoutedEventArgs e)

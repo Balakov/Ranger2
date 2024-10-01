@@ -29,19 +29,40 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Grid.Row="0" Text="Organise Bookmarks" Style="{StaticResource TextBlockSubTitle}" Margin="0,0,0,10" />
 
-                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <TextBlock Grid.Row="0" Style="{StaticResource TextBlockSubTitle}" x:Name="TitleTextBlock" Margin="0,0,0,10" />
+
+                    <Grid Grid.Row="1" Margin="0,0,0,5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <ListBox x:Name="ListBoxInstance" 
-                                 SelectionChanged="OnSelectionChanged"
-                                 SelectionMode="Single" 
-                                 Margin="0,0,5,0" />
+
+                        <Grid Grid.Column="0" Margin="0,0,5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <ListBox Grid.Row="0"
+                                     x:Name="ListBoxInstance" 
+                                     SelectionChanged="OnSelectionChanged"
+                                     SelectionMode="Single"
+                                     Margin="0,0,0,10"/>
+                            
+                            <Grid Grid.Row="1" Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="Name" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="1" x:Name="GroupNameTextBox" />
+                            </Grid>
+                        </Grid>
+
                         <StackPanel Grid.Column="1">
                             <Button Margin="0,0,0,5" Click="UpButton_Click" x:Name="UpArrowInstance">
                                 <bi:BootstrapIcon Icon="ArrowUp" Foreground="{DynamicResource PrimaryTextBrush}" />
@@ -51,8 +72,8 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-
-                    <hc:SimpleStackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
+                        
+                    <hc:SimpleStackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
                         <Button Content="OK" 
                                 IsDefault="True"
                                 Margin="0,0,3,0" 

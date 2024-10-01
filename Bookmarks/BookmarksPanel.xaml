@@ -75,27 +75,39 @@
                 <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="0">
                     <StackPanel Orientation="Horizontal">
                         <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup0,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
-                        <TextBlock Text="1" />
+                        <TextBlock Text="{Binding BookmarkGroupName0}" />
                     </StackPanel>
                 </Button>
                 <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="1">
                     <StackPanel Orientation="Horizontal">
                         <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup1,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
-                        <TextBlock Text="2" />
+                        <TextBlock Text="{Binding BookmarkGroupName1}" />
+                    </StackPanel>
+                </Button>
+                <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="2">
+                    <StackPanel Orientation="Horizontal">
+                        <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup2,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
+                        <TextBlock Text="{Binding BookmarkGroupName2}" />
                     </StackPanel>
                 </Button>
             </hc:UniformSpacingPanel>
             <hc:UniformSpacingPanel Orientation="Horizontal" Spacing="2">
-                <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="2">
-                    <StackPanel Orientation="Horizontal">
-                        <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup2,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
-                        <TextBlock Text="3" />
-                    </StackPanel>
-                </Button>
                 <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="3">
                     <StackPanel Orientation="Horizontal">
                         <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup3,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
-                        <TextBlock Text="4" />
+                        <TextBlock Text="{Binding BookmarkGroupName3}" />
+                    </StackPanel>
+                </Button>
+                <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="4">
+                    <StackPanel Orientation="Horizontal">
+                        <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup4,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
+                        <TextBlock Text="{Binding BookmarkGroupName4}" />
+                    </StackPanel>
+                </Button>
+                <Button Padding="7,0" Margin="0" BorderThickness="1" Height="24" Command="{Binding SwitchBookmarkToGroupCommand}" CommandParameter="5">
+                    <StackPanel Orientation="Horizontal">
+                        <bi:BootstrapIcon Icon="{Binding IsActiveBookmarkGroup5,Converter={StaticResource BoolToIconConverter}}" Foreground="{DynamicResource PrimaryTextBrush}" Width="16" Margin="0,0,3,0" />
+                        <TextBlock Text="{Binding BookmarkGroupName5}" />
                     </StackPanel>
                 </Button>
             </hc:UniformSpacingPanel>
@@ -123,10 +135,12 @@
 
                                 <MenuItem Header="Open in Explorer" IsCheckable="True" IsChecked="{Binding OpenInExplorer}" />
                                 <Separator Margin="0,0,30,0"/>
-                                <MenuItem Header="Bookmark Group 1" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup0}" />
-                                <MenuItem Header="Bookmark Group 2" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup1}" />
-                                <MenuItem Header="Bookmark Group 3" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup2}" />
-                                <MenuItem Header="Bookmark Group 4" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup3}" />
+                                <MenuItem Header="{Binding BookmarkGroupName0}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup0}" />
+                                <MenuItem Header="{Binding BookmarkGroupName1}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup1}" />
+                                <MenuItem Header="{Binding BookmarkGroupName2}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup2}" />
+                                <MenuItem Header="{Binding BookmarkGroupName3}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup3}" />
+                                <MenuItem Header="{Binding BookmarkGroupName4}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup4}" />
+                                <MenuItem Header="{Binding BookmarkGroupName5}" IsCheckable="True" IsChecked="{Binding IsInBookmarkGroup5}" />
                                 <Separator Margin="0,0,30,0"/>
                                 <MenuItem Header="Organise Bookmarks" Command="{Binding OrganiseBookmarksCommand}" />
                             </ContextMenu>

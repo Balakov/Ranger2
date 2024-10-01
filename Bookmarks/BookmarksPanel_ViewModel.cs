@@ -84,18 +84,32 @@ namespace Ranger2
 
             public static void SetupDynamicProperties()
             {
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     s_dynamicPropertyManager.Properties.Add(DynamicPropertyManager<ViewModel>.CreateProperty<ViewModel, bool>($"IsActiveBookmarkGroup{i}", 
-                                                                                                                              OnGetDynamicProperty, 
+                                                                                                                              OnGetIsActiveBookmarkGroup, 
                                                                                                                               null));
+                    s_dynamicPropertyManager.Properties.Add(DynamicPropertyManager<ViewModel>.CreateProperty<ViewModel, string>($"BookmarkGroupName{i}",
+                                                                                                                                OnGetBookmarkGroupName,
+                                                                                                                                null));
                 }
             }
 
-            public static bool OnGetDynamicProperty(ViewModel vm, string key)
+            public static bool OnGetIsActiveBookmarkGroup(ViewModel vm, string key)
             {
                 int bookmarkGroup = int.Parse(key.Substring(key.Length - 1, 1));
                 return vm.m_activeBookmarkGroup == bookmarkGroup;
+            }
+
+            public static string OnGetBookmarkGroupName(ViewModel vm, string key)
+            {
+                int bookmarkGroup = int.Parse(key.Substring(key.Length - 1, 1));
+                return vm.GetBookmarkGroupName(bookmarkGroup);
+            }
+
+            public string GetBookmarkGroupName(int bookmarkGroupIndex)
+            {
+                return m_settings.BookmarkGroups.FirstOrDefault(x => x.Group == bookmarkGroupIndex)?.Name ?? (bookmarkGroupIndex + 1).ToString();
             }
 
             public void LoadBookmarks(UserSettings settings, IconCache iconCache, IDirectoryChangeRequest directoryChangeRequester, IPanelLayout panelLayout)
@@ -155,9 +169,10 @@ namespace Ranger2
                     m_toolbarBookmarks.Add(new BookmarkViewModel(bookmark, m_context, this));
                 }
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     OnPropertyChanged($"IsActiveBookmarkGroup{i}");
+                    OnPropertyChanged($"BookmarkGroupName{i}");
                 }
             }
 
@@ -176,7 +191,7 @@ namespace Ranger2
 
             public void OrganiseBookmarks()
             {
-                var dialog = new OrganiseBookmarksDialog(GetSortedBookmarks(m_activeBookmarkGroup));
+                var dialog = new OrganiseBookmarksDialog(GetSortedBookmarks(m_activeBookmarkGroup), GetBookmarkGroupName(m_activeBookmarkGroup));
                 if (dialog.ShowDialog() == true)
                 {
                     int currentSortOrder = 0;
@@ -192,6 +207,18 @@ namespace Ranger2
                         group.SortOrder = currentSortOrder;
 
                         currentSortOrder++;
+                    }
+
+                    if (!string.IsNullOrEmpty(dialog.GroupName))
+                    {
+                        var existingBookmarkGroup = m_settings.BookmarkGroups.FirstOrDefault(x => x.Group == m_activeBookmarkGroup);
+                        if (existingBookmarkGroup == null)
+                        {
+                            existingBookmarkGroup = new UserSettings.BookmarkGroup() { Group = m_activeBookmarkGroup };
+                            m_settings.BookmarkGroups.Add(existingBookmarkGroup);
+                        }
+
+                        existingBookmarkGroup.Name = dialog.GroupName;
                     }
 
                     SetActiveBookmarkGroup(m_activeBookmarkGroup);

@@ -13,6 +13,12 @@ namespace Ranger2
             public DirectoryContentsControl.DirectoryListingType? ListingType { get; set; }
         }
 
+        public class BookmarkGroup
+        {
+            public int Group { get; set; }
+            public string Name { get; set; }
+        }
+
         public class BookmarkGroupEntry
         {
             public int Group { get; set; }
@@ -21,7 +27,6 @@ namespace Ranger2
         
         public class Bookmark
         {
-
             public string Name { get; set; }
             public string Path { get; set; }
             public bool OpenInExplorer { get; set; }
@@ -33,7 +38,7 @@ namespace Ranger2
         //
         // Serialised settings
         //
-        
+
         public bool DarkMode { get; set; }
 
         public string DefaultEditorPath { get; set; }
@@ -55,6 +60,7 @@ namespace Ranger2
 
         public int ActiveBookmarkGroup { get; set; }
         public List<Bookmark> Bookmarks { get; set; } = new();
+        public List<BookmarkGroup> BookmarkGroups { get; set; } = new();
         
         public List<string> IgnoredDrives { get; set; } = new();
 
