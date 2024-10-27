@@ -41,18 +41,19 @@ namespace Ranger2
                     foreach (string file in FileSystemEnumeration.EnumerateFiles(m_adobeLiveTypePath, "*", SearchOption.AllDirectories))
                     {
                         var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        var headerBuffer = new byte[4];
-                        if (fs.Read(headerBuffer, 0, 4) != 0)
+                        var headerBuffer = new byte[16];
+                        if (fs.Read(headerBuffer, 0, 16) != 0)
                         {
                             // Is it a font?
-                            if (headerBuffer[0] == 'O' &&
-                                headerBuffer[1] == 'T' &&
-                                headerBuffer[2] == 'T' &&
-                                headerBuffer[3] == 'O')
+                            if ((headerBuffer[0] == 'O' && headerBuffer[1] == 'T' && headerBuffer[2] == 'T' && headerBuffer[3] == 'O') ||
+                                (headerBuffer[12] == 'D' && headerBuffer[13] == 'S' && headerBuffer[14] == 'I' && headerBuffer[15] == 'G'))
                             {
                                 string id = Path.GetFileName(file);
-                                idToPath.Add(id, file);
 
+                                if (!idToPath.ContainsKey(id))
+                                {
+                                    idToPath.Add(id, file);
+                                }
 
                                 string dir = Path.GetDirectoryName(file);
                                 if (!filesPerDirectory.ContainsKey(dir))
