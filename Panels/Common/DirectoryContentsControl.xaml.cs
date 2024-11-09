@@ -165,7 +165,7 @@ namespace Ranger2
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (IsKeyboardFocused)
+            if (IsFocused)
             {
                 (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
             }
@@ -173,7 +173,7 @@ namespace Ranger2
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (IsKeyboardFocused)
+            if (IsFocused)
             {
                 (DataContext as ViewModel)?.OnCommonKeyDown(e);
             }

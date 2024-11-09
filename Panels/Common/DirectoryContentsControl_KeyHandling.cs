@@ -70,16 +70,7 @@ namespace Ranger2
                 }
                 else if (e.Key == Key.Delete)
                 {
-                    if (TryGetSelectedFiles(out var files))
-                    {
-                        var deletableFiles = files.Where(x => x.CanDelete).Select(x => x.FullPath).ToList();
-                        if (deletableFiles.Any())
-                        {
-                            // Shift will delete permanently
-                            bool toRecycleBin = !KeyboardUtilities.IsShiftDown;
-                            FileOperations.DeleteFiles(deletableFiles, toRecycleBin);
-                        }
-                    }
+                    HandleDelete();
                 }
                 else
                 {

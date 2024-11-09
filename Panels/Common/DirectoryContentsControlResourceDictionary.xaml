@@ -23,6 +23,7 @@
         <MenuItem Header="Copy" Command="{Binding MenuCopyCommand}" />
         <MenuItem Header="Cut" Command="{Binding MenuCutCommand}" />
         <MenuItem Header="Paste" Command="{Binding MenuPasteCommand}" />
+        <MenuItem Header="Delete" Command="{Binding MenuDeleteCommand}" />
         <Separator Margin="-5,0,25,0"/>
         <MenuItem Header="Properties" Command="{Binding MenuPropertiesCommand}" />
     </x:Array>

@@ -131,6 +131,7 @@ namespace Ranger2
         public ICommand MenuCopyCommand { get; private set; }
         public ICommand MenuCutCommand { get; private set; }
         public ICommand MenuPasteCommand { get; private set; }
+        public ICommand MenuDeleteCommand { get; private set; }
         public ICommand MenuPropertiesCommand { get; private set; }
 
         public FileSystemObjectViewModel(string name, FileSystemObjectInfo info, DirectoryContentsControl.ViewModel parentViewModel)
@@ -356,6 +357,11 @@ namespace Ranger2
             MenuPasteCommand = DelegateCommand.Create(() => 
             {
                 m_parentViewModel.HandlePaste();
+            });
+
+            MenuDeleteCommand = DelegateCommand.Create(() =>
+            {
+                m_parentViewModel.HandleDelete();
             });
 
             MenuPropertiesCommand = DelegateCommand.Create(() => 

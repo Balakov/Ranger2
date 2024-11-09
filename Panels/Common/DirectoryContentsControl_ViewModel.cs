@@ -34,7 +34,7 @@ namespace Ranger2
             private KeySearch m_keySearch;
             private KeyNavigationDirection m_lastKeyNavigationDirection = KeyNavigationDirection.Down;
 
-            public void SetDragDropTarget(UIElement element) {}
+            public void SetDragDropTarget(UIElement element) { }
 
             protected IVisualOrderProvider m_visualOrderProvider;
             public void SetVisualOrderProvider(IVisualOrderProvider visualOrderProvider) => m_visualOrderProvider = visualOrderProvider;
@@ -311,7 +311,21 @@ namespace Ranger2
                     FileOperations.ShowMultiFileProperties(selectedFileViewModels.Select(x => x.FullPath).ToList());
                 }
             }
-        }
 
+            public void HandleDelete()
+            {
+                if (TryGetSelectedFiles(out var files))
+                {
+                    var deletableFiles = files.Where(x => x.CanDelete).Select(x => x.FullPath).ToList();
+                    if (deletableFiles.Any())
+                    {
+                        // Shift will delete permanently
+                        bool toRecycleBin = !KeyboardUtilities.IsShiftDown;
+                        FileOperations.DeleteFiles(deletableFiles, toRecycleBin);
+                    }
+                }
+            }
+        }
     }
+
 }
