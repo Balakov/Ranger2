@@ -7,6 +7,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:skia="clr-namespace:SkiaSharp.Views.WPF"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
              mc:Ignorable="d"
              FocusManager.FocusedElement="{Binding ElementName=ListViewInstance}">
     <UserControl.Resources>
@@ -35,12 +36,24 @@
         <Grid Visibility="{Binding ShowFilesUI,Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <hc:SearchBar Text="{Binding FontFilterText,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5" />
+            <hc:SearchBar Grid.Row="0" Text="{Binding FontFilterText,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5" />
 
-            <ListView Grid.Row="1" 
+            <Grid Grid.Row="1" Margin="0,0,0,5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding FontPreviewText,UpdateSourceTrigger=PropertyChanged}" Margin="0,0,5,0" />
+                <Button Grid.Column="1" Command="{Binding ResetFontPreviewTextCommand}">
+                    <bi:BootstrapIcon Icon="ArrowRepeat" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" />
+                </Button>
+            </Grid>
+
+            <ListView Grid.Row="2" 
                       x:Name="ListViewInstance"
                       SelectionMode="Extended"
                       ItemsSource="{Binding FilteredFiles}"

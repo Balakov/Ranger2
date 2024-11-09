@@ -1,4 +1,5 @@
-﻿using HandyControl.Tools.Extension;
+﻿using HandyControl.Tools.Command;
+using HandyControl.Tools.Extension;
 using SkiaSharp;
 using SkiaSharp.Views.WPF;
 using System;
@@ -7,6 +8,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Ranger2
 {
@@ -45,12 +47,17 @@ namespace Ranger2
                 public void FontSKPaintLoaded(SKPaint paint)
                 {
                     Paint = paint;
-                    m_skElement?.InvalidateVisual();
+                    RefreshFontPreview();
                 }
 
                 public override void OnActivate()
                 {
                     FileOperations.ExecuteFile(FullPath);
+                }
+
+                public void RefreshFontPreview()
+                {
+                    m_skElement?.InvalidateVisual();
                 }
             }
 
@@ -65,6 +72,10 @@ namespace Ranger2
             private CollectionViewSource m_filteredFiles;
             public ICollectionView FilteredFiles => m_filteredFiles?.View;
 
+            public ICommand ResetFontPreviewTextCommand { get; }
+
+            private const string c_defaultFontPreviewText = "The Quick Brown Fox Jumps Over the Lazy Dog";
+
             private string m_fontFilterText;
             public string FontFilterText
             {
@@ -74,6 +85,27 @@ namespace Ranger2
                     if (OnPropertyChanged(ref m_fontFilterText, value))
                     {
                         m_filteredFiles.View.Refresh();
+                    }
+                }
+            }
+
+            private string m_fontPreviewText;
+            public string FontPreviewText
+            {
+                get => m_fontPreviewText;
+                set
+                {
+                    if (OnPropertyChanged(ref m_fontPreviewText, value))
+                    {
+                        m_context.UserSettings.FontPreviewText = m_fontPreviewText;
+
+                        foreach (FileSystemObjectViewModel model in m_files)
+                        {
+                            if (model is FontViewModel fontModel)
+                            {
+                                fontModel.RefreshFontPreview();
+                            }
+                        }
                     }
                 }
             }
@@ -98,6 +130,14 @@ namespace Ranger2
                     }
                 };
 
+                m_fontPreviewText = context.UserSettings.FontPreviewText;
+
+                if (string.IsNullOrEmpty(m_fontPreviewText))
+                {
+                    m_fontPreviewText = c_defaultFontPreviewText;
+                }
+
+                ResetFontPreviewTextCommand = DelegateCommand.Create(() => FontPreviewText = c_defaultFontPreviewText);
 
                 m_directoryScanner.OnDirectoryScanComplete += OnDirectoryScanComplete;
                 m_adobeDirectorScanner.OnDirectoryScanComplete += OnDirectoryScanComplete;

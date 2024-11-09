@@ -55,7 +55,8 @@ namespace Ranger2
 
         private void OnPaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
         {
-            if (sender is SKElement element &&
+            if (DataContext is ViewModel viewModel &&
+                sender is SKElement element &&
                 element.DataContext is ViewModel.FontViewModel fontViewModel &&
                 fontViewModel.Paint != null)
             {
@@ -67,7 +68,7 @@ namespace Ranger2
 
                 fontViewModel.SetPaintColourFromTheme();
 
-                canvas.DrawText("The Quick Brown Fox Jumps Over The Lazy Dog", 0, 30, fontViewModel.Paint);
+                canvas.DrawText(viewModel.FontPreviewText, 0, 30, fontViewModel.Paint);
             }
         }
 

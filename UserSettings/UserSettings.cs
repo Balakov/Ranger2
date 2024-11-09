@@ -66,6 +66,8 @@ namespace Ranger2
 
         public BitmapScalingMode? ImageViewerScalingMode { get; set; }
 
+        public string FontPreviewText { get; set; } = "The Quick Brown Fox Jumps Over The Lazy Dog 1234567890";
+
         //
         // Non-serialised
         //

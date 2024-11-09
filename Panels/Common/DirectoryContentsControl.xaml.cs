@@ -165,12 +165,18 @@ namespace Ranger2
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
+            if (IsKeyboardFocused)
+            {
+                (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
+            }
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            (DataContext as ViewModel)?.OnCommonKeyDown(e);
+            if (IsKeyboardFocused)
+            {
+                (DataContext as ViewModel)?.OnCommonKeyDown(e);
+            }
         }
 
         public void SetPanelVisibility(bool visible)
