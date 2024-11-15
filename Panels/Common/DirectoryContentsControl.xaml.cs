@@ -23,6 +23,13 @@ namespace Ranger2
             Fonts
         }
 
+        public enum ThumbnailSizeType
+        {
+            Small,
+            Medium,
+            Large
+        }
+
         protected PanelContext m_context;
         protected UserSettings.FilePanelSettings m_settings;
         protected PathHistory m_pathHistory;
@@ -135,6 +142,15 @@ namespace Ranger2
             }
         }
 
+        public void SetThumbnailSize(ThumbnailSizeType size)
+        {
+            if (DataContext is ViewModel vm)
+            {
+                vm.SetThumbnailSize(size);
+                m_settings.ThumbnailSize = size;
+            }
+        }
+
         public void OnSwitchFocus(bool hasFocus)
         {
             if (DataContext is ViewModel panelViewModel)
@@ -156,6 +172,21 @@ namespace Ranger2
         private void OnSetFontMode(object sender, RoutedEventArgs e)
         {
             SetListingType(DirectoryListingType.Fonts);
+        }
+
+        private void OnSetThumbnailSizeSmall(object sender, RoutedEventArgs e)
+        {
+            SetThumbnailSize(ThumbnailSizeType.Small);
+        }
+
+        private void OnSetThumbnailSizeMedium(object sender, RoutedEventArgs e)
+        {
+            SetThumbnailSize(ThumbnailSizeType.Medium);
+        }
+
+        private void OnSetThumbnailSizeLarge(object sender, RoutedEventArgs e)
+        {
+            SetThumbnailSize(ThumbnailSizeType.Large);
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

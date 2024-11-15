@@ -42,6 +42,8 @@ namespace Ranger2
             // ViewModel
 
             public override DirectoryContentsControl.DirectoryListingType ListingType => DirectoryContentsControl.DirectoryListingType.Files;
+            public override void SetThumbnailSize(DirectoryContentsControl.ThumbnailSizeType size) { }
+            public override bool ShowThumbnailSizeSelector => false;
 
             public ViewModel(PanelContext context,
                              UserSettings.FilePanelSettings settings,

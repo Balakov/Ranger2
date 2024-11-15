@@ -73,19 +73,39 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <hc:UniformSpacingPanel Grid.Column="1" Spacing="3" Orientation="Horizontal" Focusable="False" Margin="0,0,0,3">
-                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Files}" Click="OnSetFileMode" Padding="5,0">
-                    <bi:BootstrapIcon Icon="Files" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
-                </RadioButton>
+            <hc:SimpleStackPanel Orientation="Horizontal" Grid.Column="1" Focusable="False" Margin="0,0,0,10">
 
-                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Images}" Click="OnSetImageMode" Padding="5,0">
-                    <bi:BootstrapIcon Icon="Image" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
-                </RadioButton>
+                <!-- Image Thumbnail Size-->
+                <hc:UniformSpacingPanel Spacing="3" Orientation="Horizontal" Focusable="False" Margin="0,0,3,0" Visibility="{Binding ShowThumbnailSizeSelector,Converter={StaticResource BoolToVisibilityConverter}}">
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ThumbnailSize,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Small}" Click="OnSetThumbnailSizeSmall" Width="29" Padding="0,0,1,0">
+                        <bi:BootstrapIcon Icon="Square" Width="8" Height="8" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center" />
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ThumbnailSize,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Medium}" Click="OnSetThumbnailSizeMedium" Width="29" Padding="0,0,1,0">
+                        <bi:BootstrapIcon Icon="Square" Width="12" Height="12" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ThumbnailSize,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Large}" Click="OnSetThumbnailSizeLarge" Width="29" Padding="0,0,1,0">
+                        <bi:BootstrapIcon Icon="Square" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                    </RadioButton>
 
-                <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Fonts}" Click="OnSetFontMode" Padding="5,0">
-                    <bi:BootstrapIcon Icon="Fonts" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
-                </RadioButton>
-            </hc:UniformSpacingPanel>
+                    <hc:Divider Orientation="Vertical" Margin="7,1"  />
+
+                </hc:UniformSpacingPanel>
+
+                <!-- File View Mode -->
+                <hc:UniformSpacingPanel Spacing="3" Orientation="Horizontal" Focusable="False">
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Files}" Click="OnSetFileMode" Padding="5,0">
+                        <bi:BootstrapIcon Icon="Files" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Images}" Click="OnSetImageMode" Padding="5,0">
+                        <bi:BootstrapIcon Icon="Image" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource RadioButtonIcon}" IsChecked="{Binding ListingType,Mode=OneTime,Converter={StaticResource EnumerationValueToBooleanConverter},ConverterParameter=Fonts}" Click="OnSetFontMode" Padding="5,0">
+                        <bi:BootstrapIcon Icon="Fonts" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                    </RadioButton>
+                </hc:UniformSpacingPanel>
+            </hc:SimpleStackPanel>
         </Grid>
 
         <ContentPresenter Grid.Row="2" ContentTemplateSelector="{StaticResource DirectoryContentsTemplateSelector}" Content="{Binding {}}" Margin="0,0,0,5">

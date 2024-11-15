@@ -114,6 +114,9 @@ namespace Ranger2
 
             // Derived class overrides
             public abstract DirectoryListingType ListingType { get; }
+            public abstract void SetThumbnailSize(ThumbnailSizeType size);
+            public abstract bool ShowThumbnailSizeSelector { get; }
+
             protected abstract void OnDirectoryChanged(string path, string pathToSelect);
             protected abstract void OnActivateSelectedItems();
             protected abstract FileSystemObjectViewModel OnItemAdded(string path);

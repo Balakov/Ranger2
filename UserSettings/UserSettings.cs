@@ -11,6 +11,7 @@ namespace Ranger2
         {
             public string Path { get; set; }
             public DirectoryContentsControl.DirectoryListingType? ListingType { get; set; }
+            public DirectoryContentsControl.ThumbnailSizeType? ThumbnailSize { get; set; }
         }
 
         public class BookmarkGroup

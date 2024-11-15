@@ -68,6 +68,8 @@ namespace Ranger2
             protected AdobeFontsDirectoryScanner m_adobeDirectorScanner = new AdobeFontsDirectoryScanner();
 
             public override DirectoryContentsControl.DirectoryListingType ListingType => DirectoryContentsControl.DirectoryListingType.Fonts;
+            public override void SetThumbnailSize(DirectoryContentsControl.ThumbnailSizeType size) { }
+            public override bool ShowThumbnailSizeSelector => false;
 
             private CollectionViewSource m_filteredFiles;
             public ICollectionView FilteredFiles => m_filteredFiles?.View;

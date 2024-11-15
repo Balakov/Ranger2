@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Media;
+using System.Windows.Xps.Packaging;
 
 namespace Ranger2
 {
@@ -45,18 +46,19 @@ namespace Ranger2
                 public ImageViewModel(FileSystemObjectInfo info,
                                       int imageWidth,
                                       int imageHeight,
+                                      int thumbnailWidth,
                                       ImageCache imageCache,
                                       bool fromChangeEvent,
                                       DirectoryContentsControl.ViewModel parentViewModel) : base(null, info, parentViewModel)
                 {
                     float aspect = (float)imageWidth / (float)imageHeight;
-                    Width = 200;
-                    Height = (int)(200.0f / aspect);
+                    Width = thumbnailWidth;
+                    Height = (int)(thumbnailWidth / aspect);
 
                     IsLoading = true;
 
                     imageCache.QueueThumbnailLoad(info.Path,
-                                                  c_desiredThumbnailWidth,
+                                                  thumbnailWidth,
                                                   info.LastWriteTime,
                                                   this,
                                                   fromChangeEvent ? TimeSpan.FromMilliseconds(100)
@@ -79,9 +81,53 @@ namespace Ranger2
                 }
             }
 
-            private const int c_desiredThumbnailWidth = 200;
+            private int m_thumbnailWidth = 200;
+            public int ThumbnailWidth
+            {
+                get => m_thumbnailWidth;
+                set
+                {
+                    if (OnPropertyChanged(ref m_thumbnailWidth, value))
+                    {
+                        OnPropertyChanged(nameof(ImageContainerColumnWidth));
+                        OnPropertyChanged(nameof(ImageFileNameWidth));
+                        RefreshDirectory();
+                    }
+                }
+            }
 
             public override DirectoryContentsControl.DirectoryListingType ListingType => DirectoryContentsControl.DirectoryListingType.Images;
+            public override bool ShowThumbnailSizeSelector => true;
+
+            private int ThumbnailSizeToWidth(DirectoryContentsControl.ThumbnailSizeType size)
+            {
+                switch (size)
+                {
+                    default:
+                    case DirectoryContentsControl.ThumbnailSizeType.Small:
+                        return 200;
+                    case DirectoryContentsControl.ThumbnailSizeType.Medium:
+                        return 300;
+                    case DirectoryContentsControl.ThumbnailSizeType.Large:
+                        return 400;
+                }
+            }
+
+            public override void SetThumbnailSize(DirectoryContentsControl.ThumbnailSizeType size)
+            {
+                ThumbnailSize = size;
+                ThumbnailWidth = ThumbnailSizeToWidth(size);
+            }
+
+            private DirectoryContentsControl.ThumbnailSizeType  m_thumbnailSize;
+            public DirectoryContentsControl.ThumbnailSizeType ThumbnailSize
+            {
+                get => m_thumbnailSize;
+                set => OnPropertyChanged(ref m_thumbnailSize, value);
+            }
+
+            public int ImageContainerColumnWidth => m_thumbnailWidth + 16;
+            public int ImageFileNameWidth => m_thumbnailWidth;
 
             public ViewModel(PanelContext context,
                              UserSettings.FilePanelSettings settings,
@@ -89,6 +135,7 @@ namespace Ranger2
                              IDirectoryWatcher directoryWatcher) : base(context, settings, pathHistory, directoryWatcher)
             {
                 m_directoryScanner.OnDirectoryScanComplete += OnDirectoryScanComplete;
+                m_thumbnailWidth = ThumbnailSizeToWidth(settings.ThumbnailSize ?? DirectoryContentsControl.ThumbnailSizeType.Small);
             }
 
             public void ViewImage(ImageViewModel imageViewModel)
@@ -160,7 +207,7 @@ namespace Ranger2
 
                     if (FileSystemObjectViewModel.FilePassesViewFilter(path, m_viewMask, out var info))
                     {
-                        var viewModel = new ImageViewModel(info, w, h, m_context.ImageCache, fromChangeEvent, this);
+                        var viewModel = new ImageViewModel(info, w, h, m_thumbnailWidth, m_context.ImageCache, fromChangeEvent, this);
                         m_files.Add(viewModel);
                         return viewModel;
                     }

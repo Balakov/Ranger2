@@ -92,7 +92,7 @@
                 <ItemsPanelTemplate>
                     <hc:WaterfallPanel hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY200}" 
                                        AutoGroup="True" 
-                                       DesiredLength="216" 
+                                       DesiredLength="{Binding ImageContainerColumnWidth}" 
                                        HorizontalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
