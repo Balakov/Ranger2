@@ -41,8 +41,8 @@ namespace Ranger2
                             if (desiredWidth > 0)
                             {
                                 float aspect = (float)magickImage.Width / (float)magickImage.Height;
-                                int width = desiredWidth;
-                                int height = (int)(desiredWidth / aspect);
+                                uint width = (uint)desiredWidth;
+                                uint height = (uint)(desiredWidth / aspect);
 
                                 magickImage.Thumbnail(width, height);
                             }

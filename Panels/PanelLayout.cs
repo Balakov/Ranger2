@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Ranger2
