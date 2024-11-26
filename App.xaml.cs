@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.IO;
+using System.Threading;
 
 namespace Ranger2
 {
@@ -16,8 +17,20 @@ namespace Ranger2
         public delegate void OnThemeChangedDelegate();
         public event OnThemeChangedDelegate OnThemeChanged;
 
+        private Mutex m_mutex;
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            const string appName = "MyAppName";
+            bool createdNew;
+
+            m_mutex = new Mutex(true, appName, out createdNew);
+            if (!createdNew)
+            {
+                //app is already running! Exiting the application
+                Application.Current.Shutdown();
+            }
+
             base.OnStartup(e);
 
             s_instance = this;
