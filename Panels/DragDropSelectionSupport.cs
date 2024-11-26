@@ -122,6 +122,8 @@ namespace Ranger2
                 {
                     if (TryGetClickedOnViewModel(e.GetPosition(m_listBox), out var viewModel))
                     {
+                        //m_listBox.SetValue(ScrollViewer.PanningModeProperty, PanningMode.None);
+
                         if (!IsMultiSelectKeyPressed())
                         {
                             DateTime clickTime = DateTime.UtcNow;
@@ -183,6 +185,8 @@ namespace Ranger2
 
         private void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            //m_listBox.SetValue(ScrollViewer.PanningModeProperty, PanningMode.VerticalOnly);
+
             if (sender is ListBox listBox)
             {
                 if (!m_scrollActive)

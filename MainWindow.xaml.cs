@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Ranger2
 {
     public partial class MainWindow : HandyControl.Controls.Window
@@ -8,6 +9,8 @@ namespace Ranger2
         public MainWindow()
         {
             InitializeComponent();
+
+            AppContext.SetSwitch("Switch.System.Windows.Input.Stylus.EnablePointerSupport", true);
 
             UserSettings userSettings = App.UserSettings;
 
