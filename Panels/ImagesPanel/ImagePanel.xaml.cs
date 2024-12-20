@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,7 +9,8 @@ namespace Ranger2
 {
     public partial class ImagePanel : UserControl, 
                                       DirectoryContentsControl.IScrollIntoViewProvider,
-                                      DirectoryContentsControl.IVisualOrderProvider
+                                      DirectoryContentsControl.IVisualOrderProvider,
+                                      DirectoryContentsControl.IFocusOwner
     {
         private DragDropSelectionSupport m_dragDropSelection;
 
@@ -24,6 +26,7 @@ namespace Ranger2
                 if (DataContext is ViewModel viewModel)
                 {
                     viewModel.SetScrollIntoViewProvider(this);
+                    viewModel.SetFocusOwner(this);
                     viewModel.SetDragDropTarget(ListBoxInstance);
                     viewModel.SetVisualOrderProvider(this);
                 }
@@ -57,6 +60,16 @@ namespace Ranger2
         {
             ListBoxInstance.Focus();
             Keyboard.Focus(ListBoxInstance);
+        }
+
+        public bool HasFocus() => ListBoxInstance.IsKeyboardFocused;
+
+        private void ListBoxInstance_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (DataContext is ViewModel viewModel)
+            {
+                viewModel.SwitchFocus();
+            }
         }
 
         public FileSystemObjectViewModel ItemAtVisualIndex(int index)

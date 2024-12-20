@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Ranger2
 {
@@ -41,9 +42,19 @@ namespace Ranger2
             PushPath(path);
         }
 
+        private bool HasPathChanged(string path)
+        {
+            if (m_paths.Any())
+            {
+                return !m_paths.LastOrDefault().Equals(path);
+            }
+
+            return true;
+        }
+
         public void PushPath(string path)
         {
-            if (m_pathPushEnabled)
+            if (m_pathPushEnabled && HasPathChanged(path))
             {
                 if (m_currentIndex != m_paths.Count - 1)
                 {
@@ -51,8 +62,19 @@ namespace Ranger2
                     m_paths.RemoveRange(m_currentIndex + 1, (m_paths.Count - 1) - m_currentIndex);
                 }
 
+
                 m_paths.Add(path);
                 m_currentIndex = m_paths.Count - 1;
+            }
+        }
+
+        private void DumpHistory()
+        {
+            int i = 0;
+            foreach (string path in m_paths)
+            {
+                Debug.Log($"    {i}: {path}");
+                i++;
             }
         }
 

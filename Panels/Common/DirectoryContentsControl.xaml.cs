@@ -104,6 +104,20 @@ namespace Ranger2
             }
         }
 
+        public DirectoryListingType ListingType
+        {
+            get
+            {
+                if (DataContext is FilesPanel.ViewModel)
+                    return DirectoryListingType.Files;
+                if (DataContext is ImagePanel.ViewModel)
+                    return DirectoryListingType.Images;
+                if (DataContext is FontPanel.ViewModel)
+                    return DirectoryListingType.Fonts;
+                return DirectoryListingType.None;
+            }
+        }
+
         public void SetListingType(DirectoryListingType type)
         {
             bool isCurrentPanel = false;
@@ -193,21 +207,14 @@ namespace Ranger2
         {
             m_context.PanelLayout.SwitchFocus(this);
         }
-
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (IsFocused)
-            {
-                (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
-            }
+            (DataContext as ViewModel)?.OnCommonPreviewKeyDown(e);
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (IsFocused)
-            {
-                (DataContext as ViewModel)?.OnCommonKeyDown(e);
-            }
+            (DataContext as ViewModel)?.OnCommonKeyDown(e);
         }
 
         public void SetPanelVisibility(bool visible)
@@ -215,16 +222,16 @@ namespace Ranger2
             SetListingType(visible ? m_settings.ListingType.Value : DirectoryListingType.None);
         }
 
-        protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+        public void SetContentFromPath(string path, DirectoryListingType listingType)
         {
             m_context.PanelLayout.SwitchFocus(this);
+            m_context.DirectoryChangeRequester.SetDirectory(path, null);
+            SetListingType(listingType);
         }
 
         public void SetContentFromPanel(DirectoryContentsControl otherPanel)
         {
-            m_context.PanelLayout.SwitchFocus(this);
-            m_context.DirectoryChangeRequester.SetDirectory(otherPanel.m_settings.Path, null);
-            SetListingType(otherPanel.m_settings.ListingType.Value);
+            SetContentFromPath(otherPanel.m_settings.Path, otherPanel.m_settings.ListingType.Value);
         }
 
         public void OnFilesChanged(object source, FileSystemEventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static Ranger2.DirectoryContentsControl;
 
 namespace Ranger2
 {
@@ -15,7 +16,9 @@ namespace Ranger2
     {
         void SetActivePanelCount(int panelCount);
         void SwitchFocus(DirectoryContentsControl activePanel);
+        void SwitchFocus(DirectoryContentsControl.ViewModel activeViewModel);
         void DuplicateCurrentContent(DuplicateContentDirection direction);
+        void SwitchCurrentContent();
         DirectoryContentsControl CurrentPanel { get; }
         event OnSwitchPanelFocusDelegate OnSwitchPanelFocus;
     }
@@ -70,8 +73,23 @@ namespace Ranger2
             }
         }
 
+        public void SwitchFocus(DirectoryContentsControl.ViewModel activeViewModel)
+        {
+            foreach (var panel in m_filePanels)
+            {
+                if (panel.DataContext == activeViewModel)
+                {
+                    SwitchFocus(panel);
+                    break;
+                }
+            }
+        }
+
         public void SwitchFocus(DirectoryContentsControl activePanel)
         {
+            if (activePanel.IsCurrentPanel)
+                return;
+
             foreach (var panel in m_filePanels)
             {
                 bool isNewActivePanel = (panel == activePanel);
@@ -81,8 +99,11 @@ namespace Ranger2
                 if (isNewActivePanel)
                 {
                     OnSwitchPanelFocus?.Invoke(panel);
-                    panel.Focus();
-                    System.Windows.Input.Keyboard.Focus(panel);
+
+                    if (panel.DataContext is DirectoryContentsControl.ViewModel viewModel)
+                    {
+                        viewModel.FocusOwner.GrabFocus();
+                    }
                 }
             }
         }
@@ -104,6 +125,21 @@ namespace Ranger2
 
                     break;
                 }
+            }
+        }
+
+        public void SwitchCurrentContent()
+        {
+            // Switch the first two panels
+            if (m_filePanels.Count >= 2)
+            {
+                string panel1Path = m_filePanels[1].CurrentPath;
+                DirectoryListingType panel1ListingType = m_filePanels[1].ListingType;
+                string panel2Path = m_filePanels[0].CurrentPath;
+                DirectoryListingType panel2ListingType = m_filePanels[0].ListingType;
+                
+                m_filePanels[0].SetContentFromPath(panel1Path, panel1ListingType);
+                m_filePanels[1].SetContentFromPath(panel2Path, panel2ListingType);
             }
         }
     }

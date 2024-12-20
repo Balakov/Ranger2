@@ -88,7 +88,8 @@
                  Drop="ListBox_Drop"
                  SelectionChanged="ListBox_Selected"
                  hc:Empty.ShowEmpty="True"
-                 ScrollViewer.PanningMode="VerticalOnly">
+                 ScrollViewer.PanningMode="VerticalOnly"
+                 GotKeyboardFocus="ListBoxInstance_GotKeyboardFocus">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <hc:WaterfallPanel hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY200}" 

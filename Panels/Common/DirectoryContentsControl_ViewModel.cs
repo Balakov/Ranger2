@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,13 +15,18 @@ namespace Ranger2
         public interface IScrollIntoViewProvider
         {
             void ScrollIntoView(FileSystemObjectViewModel item);
-            void GrabFocus();
         }
 
         public interface IVisualOrderProvider
         {
             FileSystemObjectViewModel ItemAtVisualIndex(int index);
             List<FileSystemObjectViewModel> GetVisualItems();
+        }
+
+        public interface IFocusOwner
+        {
+            void GrabFocus();
+            bool HasFocus();
         }
 
         public abstract partial class ViewModel : Utility.ViewModelBase,
@@ -38,6 +42,10 @@ namespace Ranger2
 
             protected IVisualOrderProvider m_visualOrderProvider;
             public void SetVisualOrderProvider(IVisualOrderProvider visualOrderProvider) => m_visualOrderProvider = visualOrderProvider;
+
+            protected IFocusOwner m_focusOwner;
+            public IFocusOwner FocusOwner => m_focusOwner; 
+            public void SetFocusOwner(IFocusOwner focusOwner) => m_focusOwner = focusOwner;
 
             private IScrollIntoViewProvider m_scrollIntoViewProvider;
             public void SetScrollIntoViewProvider(IScrollIntoViewProvider scrollIntoViewProvider) => m_scrollIntoViewProvider = scrollIntoViewProvider;
@@ -183,7 +191,7 @@ namespace Ranger2
                     {
                         fileToSelect.IsSelected = true;
                         m_scrollIntoViewProvider?.ScrollIntoView(fileToSelect);
-                        m_scrollIntoViewProvider?.GrabFocus();
+                        m_focusOwner?.GrabFocus();
                     }
                 }
             }
@@ -327,6 +335,11 @@ namespace Ranger2
                         FileOperations.DeleteFiles(deletableFiles, toRecycleBin);
                     }
                 }
+            }
+
+            public void SwitchFocus()
+            {
+                m_context.PanelLayout.SwitchFocus(this);
             }
         }
     }

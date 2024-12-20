@@ -69,7 +69,7 @@ namespace Ranger2
 
         private void OnDirectoryChanged(string path, string previousPath, string pathToSelect)
         {
-            TextBoxInstance.Text = !string.IsNullOrEmpty(pathToSelect) ? pathToSelect : path;
+            TextBoxInstance.Text = path;
         }
 
         private void TextBoxInstance_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)

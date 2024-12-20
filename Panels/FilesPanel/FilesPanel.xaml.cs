@@ -9,7 +9,8 @@ namespace Ranger2
 {
     public partial class FilesPanel : UserControl,
                                       DirectoryContentsControl.IScrollIntoViewProvider,
-                                      DirectoryContentsControl.IVisualOrderProvider
+                                      DirectoryContentsControl.IVisualOrderProvider,
+                                      DirectoryContentsControl.IFocusOwner
     {
         private DragDropSelectionSupport m_dragDropSelection;
 
@@ -25,6 +26,7 @@ namespace Ranger2
                 if (DataContext is ViewModel viewModel)
                 {
                     viewModel.SetScrollIntoViewProvider(this);
+                    viewModel.SetFocusOwner(this);
                     viewModel.SetDragDropTarget(ListViewInstance);
                     viewModel.SetVisualOrderProvider(this);
                 }
@@ -88,6 +90,16 @@ namespace Ranger2
         {
             ListViewInstance.Focus();
             Keyboard.Focus(ListViewInstance);
+        }
+
+        public bool HasFocus() => ListViewInstance.IsKeyboardFocused;
+
+        private void ListViewInstance_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (DataContext is ViewModel viewModel)
+            {
+                viewModel.SwitchFocus();
+            }
         }
 
         public FileSystemObjectViewModel ItemAtVisualIndex(int index)

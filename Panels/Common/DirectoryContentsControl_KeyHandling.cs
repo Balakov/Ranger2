@@ -8,17 +8,18 @@ namespace Ranger2
     {
         public partial class ViewModel
         {
+            private bool IsPreviousNavigationKey(Key key) => ListingType == DirectoryListingType.Images ? key == Key.Up || key == Key.Left 
+                                                                                                        : key == Key.Up;
+            private bool IsNextNavigationKey(Key key) => ListingType == DirectoryListingType.Images ? key == Key.Down || key == Key.Right
+                                                                                                    : key == Key.Down;
+
             public void OnCommonKeyDown(KeyEventArgs e)
             {
                 if (KeyboardUtilities.IsControlDown)
                 {
-                    if (e.Key == Key.Left)
+                    if (e.Key == Key.I)
                     {
-                        m_context.PanelLayout.DuplicateCurrentContent(DuplicateContentDirection.Left);
-                    }
-                    else if (e.Key == Key.Right)
-                    {
-                        m_context.PanelLayout.DuplicateCurrentContent(DuplicateContentDirection.Right);
+                        m_context.PanelLayout.SwitchCurrentContent();
                     }
                     else if (e.Key == Key.A)
                     {
@@ -83,10 +84,7 @@ namespace Ranger2
                 // Allow shift through for multi-select.
                 bool isNavigationKey = !KeyboardUtilities.IsAltDown && 
                                        !KeyboardUtilities.IsControlDown &&
-                                       (e.Key == Key.Down || 
-                                        e.Key == Key.Up || 
-                                        e.Key == Key.Left || 
-                                        e.Key == Key.Right);
+                                       (IsPreviousNavigationKey(e.Key) ||  IsNextNavigationKey(e.Key));
 
                 if (isNavigationKey)
                 {
@@ -101,8 +99,8 @@ namespace Ranger2
 
             private void OnNavigationKeyDown(Key key)
             {
-                bool keyPrevious = key == Key.Up || key == Key.Left;
-                bool keyNext = key == Key.Down || key == Key.Right;
+                bool keyPrevious = IsPreviousNavigationKey(key);
+                bool keyNext = IsNextNavigationKey(key);
 
                 int previouslySelectedMinIndex = -1;
                 int previouslySelectedMaxIndex = -1;

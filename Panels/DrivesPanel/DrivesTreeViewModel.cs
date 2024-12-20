@@ -161,6 +161,8 @@ namespace Ranger2
                 if (string.IsNullOrEmpty(path))
                     return;
 
+                //Debug.Log($"Set Directory to \"{path}\"");
+
                 // Expand the nodes of the tree up to the selected directory
                 DrivesTreeDirectoryViewModel currentDirectory = Directories.First();
 
