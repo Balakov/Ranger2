@@ -131,6 +131,7 @@ namespace Ranger2
             m_imageDecoders.Add(".tiff", new RegisteredExtension(imageMagickDecoder, true));
             m_imageDecoders.Add(".tif", new RegisteredExtension(imageMagickDecoder, true));
             m_imageDecoders.Add(".tga", new RegisteredExtension(imageMagickDecoder, true));
+            m_imageDecoders.Add(".heic", new RegisteredExtension(imageMagickDecoder, true));
         }
 
         public bool CanDecode(string path) => m_imageDecoders.ContainsKey(Path.GetExtension(path).ToLower());
