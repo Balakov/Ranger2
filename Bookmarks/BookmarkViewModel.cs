@@ -66,6 +66,7 @@ namespace Ranger2
                 set => OnPropertyChanged(ref m_icon, value);
             }
 
+            public ICommand ActivateAndRunBookmarkCommand { get; }
             public ICommand ActivateBookmarkCommand { get; }
             public ICommand DeleteBookmarkCommand { get; }
             public ICommand EditBookmarkCommand { get; }
@@ -80,6 +81,7 @@ namespace Ranger2
 
                 context.IconCache.QueueIconLoad(m_bookmark.Path, m_isFile ? IconCache.IconType.File : IconCache.IconType.Directory, this);
 
+                ActivateAndRunBookmarkCommand = DelegateCommand.Create(ActivateAndRun);
                 ActivateBookmarkCommand = DelegateCommand.Create(Activate);
                 DeleteBookmarkCommand = DelegateCommand.Create(Delete);
                 EditBookmarkCommand = DelegateCommand.Create(EditBookmark);
@@ -110,7 +112,10 @@ namespace Ranger2
                 Icon = icon;
             }
 
-            private void Activate()
+            private void Activate() => ActivateInternal(automaticallyExecuteFiles: false);
+            private void ActivateAndRun() => ActivateInternal(automaticallyExecuteFiles: true);
+
+            private void ActivateInternal(bool automaticallyExecuteFiles)
             {
                 if (OpenInExplorer)
                 {
@@ -118,8 +123,15 @@ namespace Ranger2
                 }
                 else
                 {
-                    string directory = m_isFile ? System.IO.Path.GetDirectoryName(m_bookmark.Path) : m_bookmark.Path;
-                    m_context.DirectoryChangeRequester.SetDirectory(directory, m_bookmark.Path);
+                    if (m_isFile && automaticallyExecuteFiles && File.Exists(m_bookmark.Path))
+                    {
+                        FileOperations.ExecuteFile(m_bookmark.Path);
+                    }
+                    else
+                    {
+                        string directory = m_isFile ? System.IO.Path.GetDirectoryName(m_bookmark.Path) : m_bookmark.Path;
+                        m_context.DirectoryChangeRequester.SetDirectory(directory, m_bookmark.Path);
+                    }
                 }
             }
 

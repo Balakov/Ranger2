@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Ranger2
 {
@@ -39,6 +41,21 @@ namespace Ranger2
             else
             {
                 e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void BookmarkButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                // Example: call a command
+                var button = sender as Button;
+                if (button?.DataContext is BookmarkViewModel viewModel)
+                {
+                    viewModel.ActivateAndRunBookmarkCommand.Execute(null);
+                }
+                    
+                e.Handled = true;
             }
         }
     }
