@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
@@ -402,7 +403,28 @@ namespace Ranger2
             return stream;
         }
 
-
+        public static bool IsValidPath(string path)
+        {
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                try
+                {
+                    string fullPath = Path.GetFullPath(path);
+                    if (!string.IsNullOrEmpty(fullPath))
+                    {
+                        // Check for invalid characters
+                        char[] invalidChars = Path.GetInvalidPathChars();
+                        return !path.Any(c => invalidChars.Contains(c)) && (File.Exists(fullPath) || Directory.Exists(fullPath));
+                    }
+                }
+                catch (Exception)
+                {
+                    // ArgumentException, NotSupportedException, PathTooLongException, etc.
+                }
+            }
+                
+            return false;
+        }
 
     }
 }

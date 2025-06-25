@@ -4,12 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Ranger2"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:bi="https://github.com/helluvamatt/BootstrapIcons.Wpf/"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <TextBox x:Name="TextBoxInstance" 
-             KeyUp="TextBoxInstance_KeyUp" 
-             AllowDrop="True"
-             PreviewDragOver="TextBoxInstance_OnPreviewDragOver"
-             DragOver="TextBoxInstance_OnDragOver"
-             Drop="TextBoxInstance_OnDrop" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox Grid.Column="0"
+                 x:Name="TextBoxInstance" 
+                 KeyUp="TextBoxInstance_KeyUp" 
+                 AllowDrop="True"
+                 PreviewDragOver="TextBoxInstance_OnPreviewDragOver"
+                 DragOver="TextBoxInstance_OnDragOver"
+                 Drop="TextBoxInstance_OnDrop"
+                 Margin="0,0,1,0"/>
+        
+        <hc:UniformSpacingPanel Grid.Column="1" Spacing="1" Orientation="Horizontal" Focusable="False">
+            <Button ToolTip="Copy Path" Click="CopyButton_Click">
+                <bi:BootstrapIcon Icon="Copy" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+            </Button>
+
+            <Button ToolTip="Navigate to Path on Clipboard" Click="PasteButton_Click">
+                <bi:BootstrapIcon Icon="ClipboardCheck" Width="16" Height="16" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+            </Button>
+        </hc:UniformSpacingPanel>
+    </Grid>
 </UserControl>
