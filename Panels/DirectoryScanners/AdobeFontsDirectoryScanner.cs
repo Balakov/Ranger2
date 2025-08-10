@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace Ranger2
@@ -40,28 +41,35 @@ namespace Ranger2
 
                     foreach (string file in FileSystemEnumeration.EnumerateFiles(m_adobeLiveTypePath, "*", SearchOption.AllDirectories))
                     {
-                        var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        var headerBuffer = new byte[16];
-                        if (fs.Read(headerBuffer, 0, 16) != 0)
+                        try
                         {
-                            // Is it a font?
-                            if ((headerBuffer[0] == 'O' && headerBuffer[1] == 'T' && headerBuffer[2] == 'T' && headerBuffer[3] == 'O') ||
-                                (headerBuffer[12] == 'D' && headerBuffer[13] == 'S' && headerBuffer[14] == 'I' && headerBuffer[15] == 'G'))
+                            var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+                            var headerBuffer = new byte[16];
+                            if (fs.Read(headerBuffer, 0, 16) != 0)
                             {
-                                string id = Path.GetFileName(file);
-
-                                if (!idToPath.ContainsKey(id))
+                                // Is it a font?
+                                if ((headerBuffer[0] == 'O' && headerBuffer[1] == 'T' && headerBuffer[2] == 'T' && headerBuffer[3] == 'O') ||
+                                    (headerBuffer[12] == 'D' && headerBuffer[13] == 'S' && headerBuffer[14] == 'I' && headerBuffer[15] == 'G'))
                                 {
-                                    idToPath.Add(id, file);
-                                }
+                                    string id = Path.GetFileName(file);
 
-                                string dir = Path.GetDirectoryName(file);
-                                if (!filesPerDirectory.ContainsKey(dir))
-                                {
-                                    filesPerDirectory[dir] = 0;
+                                    if (!idToPath.ContainsKey(id))
+                                    {
+                                        idToPath.Add(id, file);
+                                    }
+
+                                    string dir = Path.GetDirectoryName(file);
+                                    if (!filesPerDirectory.ContainsKey(dir))
+                                    {
+                                        filesPerDirectory[dir] = 0;
+                                    }
+                                    filesPerDirectory[dir]++;
                                 }
-                                filesPerDirectory[dir]++;
                             }
+                        }
+                        catch(Exception ex) 
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
                         }
                     }
 
