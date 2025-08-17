@@ -196,6 +196,14 @@ namespace Ranger2
                 }
             }
 
+            protected void ClearSelection()
+            {
+                foreach (var file in Files)
+                {
+                    file.IsSelected = false;
+                }
+            }
+
             private bool TryFindFile(string path, out FileSystemObjectViewModel fileViewModel)
             {
                 fileViewModel = m_visualOrderProvider?.GetVisualItems().FirstOrDefault(x => x.FullPath == path);

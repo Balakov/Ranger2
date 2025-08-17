@@ -32,6 +32,7 @@ namespace Ranger2
 
                             if (newItem != null && newItem.FullPath == m_pendingSelelectedPath)
                             {
+                                ClearSelection();
                                 newItem.IsSelected = true;
                                 m_pendingSelelectedPath = null;
                             }
