@@ -34,6 +34,7 @@
                   local:GridViewSort.AutoSort="True"
                   hc:Empty.ShowEmpty="True"
                   ScrollViewer.PanningMode="VerticalOnly"
+                  Background="{DynamicResource LighterRegionBrush}"
                   GotKeyboardFocus="ListViewInstance_GotKeyboardFocus">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem" BasedOn="{StaticResource DCCListBoxItemBaseStyle}">

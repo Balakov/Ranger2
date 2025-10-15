@@ -6,6 +6,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:Ranger2"
         mc:Ignorable="d"
+        Background="{DynamicResource LighterRegionBrush}"
         Title="Ranger 2"  Width="1500" Height="1000">
     <DockPanel>
         <!-- Tool Bar -->
