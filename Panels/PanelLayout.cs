@@ -102,7 +102,7 @@ namespace Ranger2
 
                     if (panel.DataContext is DirectoryContentsControl.ViewModel viewModel)
                     {
-                        viewModel.FocusOwner.GrabFocus();
+                        viewModel.FocusOwner?.GrabFocus();
                     }
                 }
             }

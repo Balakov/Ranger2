@@ -115,6 +115,7 @@ namespace Ranger2
             m_imageDecoders.Add(".png", new RegisteredExtension(skiaDecoder, true));
             m_imageDecoders.Add(".webp", new RegisteredExtension(skiaDecoder, true));
 
+            m_imageDecoders.Add(".af", new RegisteredExtension(affinityDecoder, false));
             m_imageDecoders.Add(".afdesign", new RegisteredExtension(affinityDecoder, false));
             m_imageDecoders.Add(".afpub", new RegisteredExtension(affinityDecoder, false));
             m_imageDecoders.Add(".afphoto", new RegisteredExtension(affinityDecoder, false));
